@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Domain Security Scanner</title>
+  <meta name="description" content="Free DNS, email authentication and TLS security check. Get a grade and plain-English next steps emailed to you." />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Free domain audit</p>
+      <h1>Is your domain secure?</h1>
+      <p class="sub">
+        Check your DNS, email authentication (SPF, DKIM, DMARC), TLS and HTTP
+        security in seconds. Get a grade and a plain-English to-do list emailed to you.
+      </p>
+
+      <form id="scan-form" class="card form" autocomplete="off">
+        <div class="field">
+          <label for="domain">Domain</label>
+          <input id="domain" name="domain" type="text" inputmode="url"
+                 placeholder="example.com" required />
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="muted">(to receive your next steps)</span></label>
+          <input id="email" name="email" type="email" placeholder="you@company.com" />
+        </div>
+        <button id="submit" type="submit">Scan domain</button>
+        <p id="form-error" class="error" hidden></p>
+      </form>
+    </header>
+
+    <section id="result" class="result" hidden>
+      <div class="card summary">
+        <div id="grade" class="grade">–</div>
+        <div class="summary-meta">
+          <h2 id="result-domain"></h2>
+          <p id="result-score" class="score"></p>
+          <p id="result-counts" class="muted"></p>
+          <p id="mail-status" class="mail-status" hidden></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Your next steps</h3>
+        <ol id="next-steps" class="steps"></ol>
+        <p id="no-steps" class="all-clear" hidden>Every check passed — nothing to fix right now.</p>
+      </div>
+
+      <div class="card">
+        <h3>All checks</h3>
+        <div id="findings" class="findings"></div>
+      </div>
+
+      <p class="disclaimer">
+        This automated scan is a starting point, not a full security audit.
+      </p>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
