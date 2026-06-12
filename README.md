@@ -36,6 +36,15 @@ cp .env.example .env   # then fill in SMTP_* and MAIL_FROM
 
 Works with SendGrid, Mailgun, Amazon SES, Postmark, or a Gmail app password.
 
+## Deploy to AWS
+
+The repo ships ready to launch on **AWS App Runner** — either straight from
+GitHub with no Docker (`apprunner.yaml`) or as a container via
+`./deploy/aws/deploy.sh` (ECR + App Runner, one command). Email delivery maps
+onto Amazon SES via the existing `SMTP_*` variables. Full instructions,
+including SES setup, custom domains and costs:
+[`deploy/aws/DEPLOY.md`](./deploy/aws/DEPLOY.md).
+
 ## Tests
 
 ```bash
