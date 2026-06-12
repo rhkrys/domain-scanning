@@ -10,24 +10,32 @@
 <body>
   <main class="wrap">
     <header class="hero">
-      <p class="eyebrow">Free domain audit</p>
-      <h1>Is your domain secure?</h1>
+      <p class="eyebrow">Free website security check</p>
+      <h1>Is your website secure?</h1>
       <p class="sub">
-        Check your DNS, email authentication (SPF, DKIM, DMARC), TLS and HTTP
-        security in seconds. Get a grade and a plain-English to-do list emailed to you.
+        Enter your website address and we’ll run 12 safety checks — covering your
+        domain setup, email protection and site encryption. You’ll get a simple
+        grade and a plain-English to-do list, no jargon.
       </p>
 
-      <form id="scan-form" class="card form" autocomplete="off">
+      <form id="scan-form" class="card form" autocomplete="off" novalidate>
         <div class="field">
-          <label for="domain">Domain</label>
+          <label for="domain">Your website address</label>
           <input id="domain" name="domain" type="text" inputmode="url"
-                 placeholder="example.com" required />
+                 placeholder="example.com" required
+                 aria-describedby="domain-hint" />
+          <p id="domain-hint" class="hint">It’s fine to paste your full website link — we’ll tidy it up.</p>
+          <p id="domain-error" class="error field-error" hidden></p>
         </div>
         <div class="field">
-          <label for="email">Email <span class="muted">(to receive your next steps)</span></label>
-          <input id="email" name="email" type="email" placeholder="you@company.com" />
+          <label for="email">Your email <span class="muted">(optional)</span></label>
+          <input id="email" name="email" type="email" placeholder="you@example.com"
+                 aria-describedby="email-hint" />
+          <p id="email-hint" class="hint">We’ll send your results and what to do next. Nothing else — no spam.</p>
+          <p id="email-error" class="error field-error" hidden></p>
         </div>
-        <button id="submit" type="submit">Scan domain</button>
+        <button id="submit" type="submit">Check my website</button>
+        <p id="progress" class="progress" hidden>Checking your website… this usually takes under a minute.</p>
         <p id="form-error" class="error" hidden></p>
       </form>
     </header>
@@ -37,6 +45,7 @@
         <div id="grade" class="grade">–</div>
         <div class="summary-meta">
           <h2 id="result-domain"></h2>
+          <p id="cleaned-note" class="muted small" hidden></p>
           <p id="result-score" class="score"></p>
           <p id="result-counts" class="muted"></p>
           <p id="mail-status" class="mail-status" hidden></p>
@@ -44,7 +53,8 @@
       </div>
 
       <div class="card">
-        <h3>Your next steps</h3>
+        <h3>What to do next</h3>
+        <p class="muted small" style="margin-top:-8px">If these look unfamiliar, forward them to whoever manages your website or IT — they’ll know what to do.</p>
         <ol id="next-steps" class="steps"></ol>
         <p id="no-steps" class="all-clear" hidden>Every check passed — nothing to fix right now.</p>
       </div>

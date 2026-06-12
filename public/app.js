@@ -1,20 +1,41 @@
 const form = document.getElementById('scan-form');
 const errorEl = document.getElementById('form-error');
+const domainErrorEl = document.getElementById('domain-error');
+const emailErrorEl = document.getElementById('email-error');
+const progressEl = document.getElementById('progress');
 const submitBtn = document.getElementById('submit');
 const resultEl = document.getElementById('result');
 
-const STATUS_LABEL = { pass: 'OK', warn: 'Review', fail: 'Action needed', info: 'Info' };
+const STATUS_LABEL = { pass: 'OK', warn: 'Worth a look', fail: 'Needs fixing', info: 'Info' };
+
+function clearErrors() {
+  for (const el of [errorEl, domainErrorEl, emailErrorEl]) {
+    el.hidden = true;
+    el.textContent = '';
+  }
+}
+
+function showError(message, field) {
+  const el = field === 'domain' ? domainErrorEl : field === 'email' ? emailErrorEl : errorEl;
+  el.textContent = message;
+  el.hidden = false;
+  if (field) document.getElementById(field).focus();
+}
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  errorEl.hidden = true;
+  clearErrors();
 
   const domain = document.getElementById('domain').value.trim();
   const email = document.getElementById('email').value.trim();
-  if (!domain) return;
+  if (!domain) {
+    showError('Please enter your website address, e.g. example.com.', 'domain');
+    return;
+  }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Scanning…';
+  submitBtn.textContent = 'Checking…';
+  progressEl.hidden = false;
 
   try {
     const res = await fetch('/api/scan', {
@@ -23,22 +44,38 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ domain, email }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Scan failed.');
-    render(data);
-  } catch (err) {
-    errorEl.textContent = err.message;
-    errorEl.hidden = false;
+    if (!res.ok) {
+      showError(data.error || 'Something went wrong. Please try again.', data.field);
+      return;
+    }
+    render(data, domain);
+  } catch {
+    showError('We couldn’t reach the scanner. Check your connection and try again.');
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Scan domain';
+    submitBtn.textContent = 'Check my website';
+    progressEl.hidden = true;
   }
 });
 
-function render({ report, mail }) {
+function render({ report, mail }, typedDomain) {
   document.getElementById('result-domain').textContent = report.domain;
   document.getElementById('result-score').textContent = `${report.score}/100`;
   document.getElementById('result-counts').textContent =
-    `${report.counts.pass} passed · ${report.counts.warn} to review · ${report.counts.fail} need action`;
+    `${report.counts.pass} OK · ${report.counts.warn} worth a look · ${report.counts.fail} need fixing`;
+
+  // If we tidied up what they typed (pasted URL, www., etc.), say so.
+  const cleanedNote = document.getElementById('cleaned-note');
+  const typed = typedDomain.toLowerCase();
+  if (typed !== report.domain && typed !== `www.${report.domain}`) {
+    cleanedNote.textContent = `You entered “${typedDomain}” — we checked ${report.domain}.`;
+    cleanedNote.hidden = false;
+  } else if (typed === `www.${report.domain}`) {
+    cleanedNote.textContent = `We checked ${report.domain} (the security settings live there, not on www).`;
+    cleanedNote.hidden = false;
+  } else {
+    cleanedNote.hidden = true;
+  }
 
   const grade = document.getElementById('grade');
   grade.textContent = report.grade;
@@ -46,13 +83,13 @@ function render({ report, mail }) {
 
   const mailStatus = document.getElementById('mail-status');
   if (mail && mail.delivered) {
-    mailStatus.textContent = '✓ Your next steps have been emailed to you.';
+    mailStatus.textContent = '✓ We’ve emailed you this report with your to-do list.';
     mailStatus.hidden = false;
   } else if (mail && mail.mode === 'preview') {
-    mailStatus.textContent = 'Email preview generated (SMTP not configured on this server).';
+    mailStatus.textContent = 'Email preview generated (email sending isn’t set up on this server yet).';
     mailStatus.hidden = false;
   } else if (mail && mail.mode === 'error') {
-    mailStatus.textContent = 'We could not send the email, but your report is below.';
+    mailStatus.textContent = 'We couldn’t send the email just now, but your full report is below.';
     mailStatus.hidden = false;
   } else {
     mailStatus.hidden = true;

@@ -58,7 +58,11 @@ button {
 button:disabled { opacity: .6; cursor: progress; }
 
 .error { color: var(--fail); font-size: 14px; margin: 12px 0 0; }
+.field-error { margin: 6px 0 0; }
+.hint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+.progress { color: var(--accent); font-size: 14px; margin: 12px 0 0; text-align: center; }
 .muted { color: var(--muted); }
+.small { font-size: 13px; }
 
 /* Summary */
 .summary { display: flex; align-items: center; gap: 22px; }
