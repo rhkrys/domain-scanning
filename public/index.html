@@ -3,13 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Domain Security Scanner</title>
+  <title>Cyber Protection — Website Security Scanner</title>
   <meta name="description" content="Free DNS, email authentication and TLS security check. Get a grade and plain-English next steps emailed to you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Open+Sans:wght@600;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
 </head>
 <body>
+  <header class="brandbar">
+    <div class="brandbar-inner">
+      <img src="/logo.svg" alt="Cyber Protection" />
+      <div class="wordmark">
+        <span class="name">Cyber Protection</span>
+        <span class="descriptor">Consulting Services</span>
+      </div>
+    </div>
+  </header>
+
   <main class="wrap">
-    <header class="hero">
+    <section class="hero">
+      <span class="stripe-corner" aria-hidden="true"></span>
       <p class="eyebrow">Free website security check</p>
       <h1>Is your website secure?</h1>
       <p class="sub">
@@ -18,7 +33,7 @@
         grade and a plain-English to-do list, no jargon.
       </p>
 
-      <form id="scan-form" class="card form" autocomplete="off" novalidate>
+      <form id="scan-form" class="card accent form" autocomplete="off" novalidate>
         <div class="field">
           <label for="domain">Your website address</label>
           <input id="domain" name="domain" type="text" inputmode="url"
@@ -38,10 +53,10 @@
         <p id="progress" class="progress" hidden>Checking your website… this usually takes under a minute.</p>
         <p id="form-error" class="error" hidden></p>
       </form>
-    </header>
+    </section>
 
     <section id="result" class="result" hidden>
-      <div class="card summary">
+      <div class="card accent summary">
         <div id="grade" class="grade">–</div>
         <div class="summary-meta">
           <h2 id="result-domain"></h2>
@@ -69,6 +84,18 @@
       </p>
     </section>
   </main>
+
+  <footer class="brandfoot">
+    <div class="brandfoot-inner">
+      <img src="/logo.svg" alt="" aria-hidden="true" />
+      <div class="wordmark">
+        <span class="name">Cyber Protection</span>
+        <span class="descriptor">Consulting Services</span>
+      </div>
+      <span class="note">Automated domain audit — a starting point, not a full security audit.</span>
+    </div>
+  </footer>
+
   <script src="/app.js"></script>
 </body>
 </html>

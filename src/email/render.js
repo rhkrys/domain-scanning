@@ -2,8 +2,29 @@
 // summary, the grade, and a prioritised list of next steps. Pure functions so
 // they can be unit-tested without a mail server.
 
+// Cyber Protection (CPI) brand tokens. Email clients rarely load web fonts, so
+// the display face falls back through Oswald → Arial Narrow → Arial.
+const CPI = {
+  navy: '#203a7b',
+  navyDeep: '#142534',
+  gold: '#e8ae5c',
+  surface: '#ffffff',
+  paper: '#f1f8fa',
+  paperAlt: '#faf6ef',
+  ink: '#0d1a26',
+  muted: '#6a7886',
+  border: '#d9dee4',
+  pass: '#1f7a5a',
+  warn: '#c98a2b',
+  fail: '#c0392b',
+  info: '#6a7886',
+  fontBody: "'Open Sans', Arial, Helvetica, sans-serif",
+  fontDisplay: "'Oswald', 'Arial Narrow', Arial, sans-serif",
+};
+
+// Grade fill uses the added semantic status set (the brand defines none).
 const GRADE_COLOUR = {
-  A: '#1a7f37', B: '#2da44e', C: '#bf8700', D: '#cf6d00', E: '#cf222e', F: '#a40e26',
+  A: CPI.pass, B: CPI.pass, C: CPI.warn, D: CPI.warn, E: CPI.fail, F: CPI.fail,
 };
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Review', fail: 'Action needed', info: 'Info' };
@@ -18,7 +39,9 @@ export function subjectFor(report) {
 
 export function renderText(report) {
   const lines = [];
-  lines.push(`Domain security scan — ${report.domain}`);
+  lines.push('CYBER PROTECTION — Consulting Services');
+  lines.push('');
+  lines.push(`Website security scan — ${report.domain}`);
   lines.push(`Overall grade: ${report.grade}  (${report.score}/100)`);
   lines.push(
     `Checks: ${report.counts.pass} passed, ${report.counts.warn} to review, ${report.counts.fail} need action.`,
@@ -47,63 +70,81 @@ export function renderText(report) {
 }
 
 export function renderHtml(report) {
-  const colour = GRADE_COLOUR[report.grade] ?? '#57606a';
+  const colour = GRADE_COLOUR[report.grade] ?? CPI.info;
+  const headingStyle = `font-family:${CPI.fontDisplay};font-weight:400;text-transform:uppercase;letter-spacing:0.02em;color:${CPI.navyDeep};margin:0 0 12px;font-size:19px;border-bottom:2px solid ${CPI.gold};padding-bottom:6px;display:inline-block`;
 
   const steps = report.priorities.length
     ? `<ol style="padding-left:20px;margin:0">${report.priorities
         .map(
-          (f) => `<li style="margin-bottom:12px">
-            <strong>${esc(f.title)}</strong>
-            <span style="color:#fff;background:${colour};border-radius:10px;padding:1px 8px;font-size:11px;margin-left:6px">${esc(
+          (f) => `<li style="margin-bottom:14px">
+            <strong style="color:${CPI.navyDeep}">${esc(f.title)}</strong>
+            <span style="color:#fff;background:${severityColour(f.severity)};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em">${esc(
               f.severity.toUpperCase(),
             )}</span><br>
-            <span style="color:#57606a">${esc(f.summary)}.</span><br>
-            <span>${esc(f.recommendation)}</span>
+            <span style="color:${CPI.muted}">${esc(f.summary)}.</span><br>
+            <span style="color:${CPI.ink}">${esc(f.recommendation)}</span>
           </li>`,
         )
         .join('')}</ol>`
-    : '<p style="color:#1a7f37"><strong>No action items — every check passed.</strong></p>';
+    : `<p style="color:${CPI.pass}"><strong>No action items — every check passed.</strong></p>`;
 
   const rows = report.findings
     .map((f) => {
-      const badge = { pass: '#1a7f37', warn: '#bf8700', fail: '#cf222e', info: '#57606a' }[f.status];
+      const badge = { pass: CPI.pass, warn: CPI.warn, fail: CPI.fail, info: CPI.info }[f.status];
       return `<tr>
-        <td style="padding:6px 10px;border-bottom:1px solid #eaeef2">${esc(f.title)}</td>
-        <td style="padding:6px 10px;border-bottom:1px solid #eaeef2;color:${badge};font-weight:600">${esc(
+        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.navyDeep};font-weight:700">${esc(f.title)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${badge};font-weight:700">${esc(
           STATUS_LABEL[f.status],
         )}</td>
-        <td style="padding:6px 10px;border-bottom:1px solid #eaeef2;color:#57606a">${esc(f.summary)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.muted}">${esc(f.summary)}</td>
       </tr>`;
     })
     .join('');
 
-  return `<!doctype html><html><body style="margin:0;background:#f6f8fa;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1f2328">
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Open+Sans:wght@600;700&display=swap" rel="stylesheet"></head>
+  <body style="margin:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight:600;color:${CPI.ink}">
   <div style="max-width:640px;margin:0 auto;padding:24px">
-    <div style="background:#fff;border:1px solid #d0d7de;border-radius:12px;overflow:hidden">
-      <div style="padding:24px;border-bottom:1px solid #eaeef2">
-        <p style="margin:0 0 4px;color:#57606a;font-size:13px">Domain security scan</p>
-        <h1 style="margin:0;font-size:22px">${esc(report.domain)}</h1>
+    <div style="background:${CPI.surface};border:1px solid ${CPI.border};border-radius:2px;overflow:hidden">
+      <!-- Brand header -->
+      <div style="padding:20px 24px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
+        <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection</div>
+        <div style="font-family:${CPI.fontBody};font-weight:700;color:${CPI.gold};font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-top:5px">Consulting Services</div>
       </div>
-      <div style="padding:24px;display:flex;align-items:center;gap:20px">
-        <div style="width:72px;height:72px;border-radius:50%;background:${colour};color:#fff;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;text-align:center;line-height:72px">${esc(
-          report.grade,
-        )}</div>
-        <div>
-          <div style="font-size:24px;font-weight:700">${report.score}/100</div>
-          <div style="color:#57606a;font-size:14px">${report.counts.pass} passed · ${report.counts.warn} to review · ${report.counts.fail} need action</div>
-        </div>
+      <div style="padding:22px 24px 6px;border-bottom:1px solid ${CPI.border}">
+        <p style="margin:0 0 4px;color:${CPI.navy};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em">Website security scan</p>
+        <h1 style="margin:0 0 16px;font-family:${CPI.fontDisplay};font-weight:400;font-size:30px;text-transform:uppercase;color:${CPI.navyDeep};letter-spacing:0.01em">${esc(report.domain)}</h1>
       </div>
-      <div style="padding:0 24px 8px"><h2 style="font-size:16px;margin:0 0 12px">Your next steps</h2>${steps}</div>
-      <div style="padding:16px 24px 24px">
-        <h2 style="font-size:16px;margin:0 0 12px">All ${report.findings.length} checks</h2>
+      <!-- Grade -->
+      <div style="padding:22px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td style="width:76px;height:76px;background:${colour};color:#ffffff;font-family:${CPI.fontDisplay};font-weight:400;font-size:40px;text-align:center;vertical-align:middle;border-radius:2px">${esc(
+            report.grade,
+          )}</td>
+          <td style="padding-left:18px;vertical-align:middle">
+            <div style="font-family:${CPI.fontDisplay};font-size:26px;color:${CPI.navy}">${report.score}/100</div>
+            <div style="color:${CPI.muted};font-size:14px">${report.counts.pass} OK · ${report.counts.warn} to review · ${report.counts.fail} need action</div>
+          </td>
+        </tr></table>
+      </div>
+      <div style="padding:0 24px 10px"><h2 style="${headingStyle}">What to do next</h2>${steps}</div>
+      <div style="padding:14px 24px 24px">
+        <h2 style="${headingStyle}">All ${report.findings.length} checks</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table>
       </div>
-      <div style="padding:16px 24px;background:#f6f8fa;color:#57606a;font-size:12px">
+      <div style="padding:16px 24px;background:${CPI.paperAlt};color:${CPI.muted};font-size:12px">
         Scanned at ${esc(report.scannedAt)}. This automated scan is a starting point, not a full security audit.
       </div>
     </div>
+    <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection · Consulting Services</div>
   </div>
 </body></html>`;
+}
+
+function severityColour(severity) {
+  if (severity === 'critical' || severity === 'high') return CPI.fail;
+  if (severity === 'medium') return CPI.warn;
+  return CPI.navy;
 }
 
 export function renderEmail(report) {

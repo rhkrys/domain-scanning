@@ -1,0 +1,20 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cyber Protection mark">
+  <!-- Placeholder for the gold woven-sphere foil mark (assets/logo-gold.png).
+       Evokes an interlaced/woven globe in the brand gold. -->
+  <defs>
+    <linearGradient id="cpiGold" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0c889"/>
+      <stop offset="0.5" stop-color="#e8ae5c"/>
+      <stop offset="1" stop-color="#c98a2b"/>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#cpiGold)" stroke-width="1.5" fill="none">
+    <circle cx="24" cy="24" r="18"/>
+    <ellipse cx="24" cy="24" rx="7" ry="18"/>
+    <ellipse cx="24" cy="24" rx="14" ry="18"/>
+    <ellipse cx="24" cy="24" rx="18" ry="7"/>
+    <ellipse cx="24" cy="24" rx="18" ry="14"/>
+    <line x1="6" y1="24" x2="42" y2="24"/>
+    <line x1="24" y1="6" x2="24" y2="42"/>
+  </g>
+</svg>
