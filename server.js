@@ -87,10 +87,6 @@ export function createApp({ audit = runAudit, send = sendReport, rateLimit = {} 
       }
     }
 
-    // Privacy-safe request log: domain + whether an email was supplied (not the
-    // address). Helps diagnose "email didn't arrive" reports.
-    console.log(JSON.stringify({ evt: 'scan', domain: cleanDomain, hasEmail: Boolean(cleanEmail) }));
-
     try {
       const report = await audit(cleanDomain);
 
@@ -101,7 +97,6 @@ export function createApp({ audit = runAudit, send = sendReport, rateLimit = {} 
         } catch (err) {
           mail = { delivered: false, mode: 'error', error: err.message };
         }
-        console.log(JSON.stringify({ evt: 'mail', domain: cleanDomain, mode: mail?.mode, delivered: mail?.delivered }));
       }
 
       res.json({ report, mail });
