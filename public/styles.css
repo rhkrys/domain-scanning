@@ -137,6 +137,12 @@ button:disabled { opacity: 0.6; cursor: progress; }
   color: var(--navy); font-size: 14px; margin: 14px 0 0; text-align: center;
   font-weight: 700; letter-spacing: 0.02em;
 }
+.notice {
+  margin: 14px 0 0; padding: 12px 14px; text-align: center;
+  font-size: 14px; font-weight: 700; color: var(--navy-deep);
+  background: var(--paper-alt); border: 1px solid var(--gold);
+  border-radius: 2px;
+}
 .muted { color: var(--muted); }
 .small { font-size: 13px; }
 

@@ -8,6 +8,13 @@ const resultEl = document.getElementById('result');
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Worth a look', fail: 'Needs fixing', info: 'Info' };
 
+// When the site is deployed without the scan backend (static S3+CloudFront),
+// config.js sets apiEnabled:false so we explain it's coming soon rather than
+// calling an endpoint that isn't there.
+const API_ENABLED = !(window.APP_CONFIG && window.APP_CONFIG.apiEnabled === false);
+const comingSoonEl = document.getElementById('coming-soon');
+if (!API_ENABLED && comingSoonEl) comingSoonEl.hidden = false;
+
 function clearErrors() {
   for (const el of [errorEl, domainErrorEl, emailErrorEl]) {
     el.hidden = true;
@@ -30,6 +37,13 @@ form.addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim();
   if (!domain) {
     showError('Please enter your website address, e.g. example.com.', 'domain');
+    return;
+  }
+
+  // Static deployment without the backend: explain, don't call a dead endpoint.
+  if (!API_ENABLED) {
+    if (comingSoonEl) comingSoonEl.hidden = false;
+    showError('The live scanner isn’t switched on for this site yet — it’s coming soon. Please check back shortly.');
     return;
   }
 
