@@ -95,15 +95,20 @@ function render({ report, mail }, typedDomain) {
   grade.textContent = report.grade;
   grade.className = `grade ${report.grade}`;
 
+  // The email entered on the scan form is delivered during the scan, and its
+  // confirmation matches the post-report "Email me the report" section exactly.
+  const enteredEmail = document.getElementById('email').value.trim();
   const mailStatus = document.getElementById('mail-status');
   if (mail && mail.delivered) {
-    mailStatus.textContent = '✓ We’ve emailed you this report with your to-do list.';
+    mailStatus.textContent = enteredEmail
+      ? `✓ Sent to ${enteredEmail}. Check your inbox.`
+      : '✓ We’ve emailed you this report with your to-do list.';
     mailStatus.hidden = false;
   } else if (mail && mail.mode === 'preview') {
     mailStatus.textContent = 'Email preview generated (email sending isn’t set up on this server yet).';
     mailStatus.hidden = false;
   } else if (mail && mail.mode === 'error') {
-    mailStatus.textContent = 'We couldn’t send the email just now, but your full report is below.';
+    mailStatus.textContent = 'We couldn’t send that just now — please try again shortly.';
     mailStatus.hidden = false;
   } else {
     mailStatus.hidden = true;
