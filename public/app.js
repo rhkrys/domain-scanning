@@ -149,8 +149,99 @@ function render({ report, mail }, typedDomain) {
     container.appendChild(group);
   }
 
+  // Second-chance CTA: email a copy + book a free Zoom review.
+  setupCta(report.domain, mail, typedDomain);
+
   resultEl.hidden = false;
+  ensureCalendly(); // now that the container is visible, size the widget correctly
   resultEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Calendly's inline widget renders blank if initialised while its container is
+// display:none, so we init it explicitly once the results are shown. The widget
+// script loads async, so retry until it's available.
+let calendlyInited = false;
+function ensureCalendly() {
+  if (calendlyInited) return;
+  const el = document.getElementById('calendly-embed');
+  if (!el) return;
+  if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+    el.innerHTML = '';
+    window.Calendly.initInlineWidget({ url: el.dataset.url, parentElement: el });
+    calendlyInited = true;
+  } else {
+    setTimeout(ensureCalendly, 300);
+  }
+}
+
+// Remembers the last scanned domain so the "email me the report" form can
+// re-request delivery without the user retyping anything.
+let lastScannedDomain = null;
+
+function setupCta(domain, mail, typedDomain) {
+  lastScannedDomain = domain;
+  const lead = document.getElementById('cta-email-lead');
+  const captureEmail = document.getElementById('capture-email');
+  const captureStatus = document.getElementById('capture-status');
+  captureStatus.hidden = true;
+
+  if (mail && mail.delivered) {
+    // They already got it — offer to send to another address.
+    lead.textContent = 'Want this report sent to someone else too? Add their email.';
+    captureEmail.value = '';
+  } else {
+    lead.textContent = 'Prefer it in writing? We’ll email you this report and your next steps.';
+    // Pre-fill if they typed an email that failed to send.
+    captureEmail.value = document.getElementById('email').value.trim();
+  }
+}
+
+const captureForm = document.getElementById('capture-form');
+if (captureForm) {
+  captureForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const captureEmail = document.getElementById('capture-email');
+    const captureStatus = document.getElementById('capture-status');
+    const captureSubmit = document.getElementById('capture-submit');
+    const email = captureEmail.value.trim();
+
+    captureStatus.hidden = true;
+    if (!email) {
+      captureStatus.textContent = 'Please enter an email address.';
+      captureStatus.className = 'capture-status err';
+      captureStatus.hidden = false;
+      return;
+    }
+
+    captureSubmit.disabled = true;
+    captureSubmit.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain: lastScannedDomain, email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        captureStatus.textContent = data.error || 'We couldn’t send that just now — please try again.';
+        captureStatus.className = 'capture-status err';
+      } else if (data.mail && data.mail.delivered) {
+        captureStatus.textContent = `✓ Sent to ${email}. Check your inbox.`;
+        captureStatus.className = 'capture-status ok';
+        captureEmail.value = '';
+      } else {
+        captureStatus.textContent = 'Scan finished, but the email couldn’t be sent. Please try again shortly.';
+        captureStatus.className = 'capture-status err';
+      }
+    } catch {
+      captureStatus.textContent = 'We couldn’t reach the scanner. Please try again.';
+      captureStatus.className = 'capture-status err';
+    } finally {
+      captureStatus.hidden = false;
+      captureSubmit.disabled = false;
+      captureSubmit.textContent = 'Email me the report';
+    }
+  });
 }
 
 function escapeHtml(s) {

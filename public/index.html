@@ -80,6 +80,32 @@
         <div id="findings" class="findings"></div>
       </div>
 
+      <div class="card accent cta">
+        <p class="eyebrow">Next step</p>
+        <h3>Want a hand with this?</h3>
+        <p class="cta-lead">
+          Book a free 15-minute review of your results over Zoom — we’ll walk you
+          through what to fix first and what it means for your business.
+        </p>
+
+        <div id="cta-email" class="cta-email">
+          <p class="cta-email-lead" id="cta-email-lead">Prefer it in writing? We’ll email you this report and your next steps.</p>
+          <form id="capture-form" autocomplete="off">
+            <input id="capture-email" type="email" placeholder="you@example.com" aria-label="Email address" />
+            <button type="submit" id="capture-submit">Email me the report</button>
+          </form>
+          <p id="capture-status" class="capture-status" hidden></p>
+        </div>
+
+        <div class="cta-divider"><span>or book a call</span></div>
+
+        <!-- Calendly inline widget (initialised by app.js once the results are
+             visible, so it doesn't render blank inside a hidden container) -->
+        <div id="calendly-embed" class="calendly-inline-widget"
+             data-url="https://calendly.com/cpconsulting/15min"
+             style="min-width:320px;height:700px;"></div>
+      </div>
+
       <p class="disclaimer">
         This automated scan is a starting point, not a full security audit.
       </p>
@@ -97,6 +123,8 @@
     </div>
   </footer>
 
+  <!-- Calendly inline widget script -->
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <script src="/config.js"></script>
   <script src="/app.js"></script>
 </body>
