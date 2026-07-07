@@ -65,19 +65,45 @@ Resources:
           MAIL_FROM: !Ref MailFrom
           PREVIEW_DIR: /tmp/previews
 
-  ApiFunctionUrl:
-    Type: AWS::Lambda::Url
+  # API Gateway HTTP API in front of the Lambda. A Function URL was ruled out:
+  # the account SCP blocks public (NONE) URLs, and CloudFront OAC (IAM) can't
+  # sign POST request bodies for Lambda URLs -> SignatureDoesNotMatch. HTTP API
+  # handles POST bodies natively and needs no SigV4 from CloudFront.
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
     Properties:
-      TargetFunctionArn: !Ref ApiFunction
-      AuthType: NONE
+      Name: !Sub "${AWS::StackName}-api"
+      ProtocolType: HTTP
 
-  ApiFunctionUrlPermission:
+  HttpApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ApiFunction.Arn
+      PayloadFormatVersion: "2.0"
+
+  HttpApiRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: "$default"
+      Target: !Sub "integrations/${HttpApiIntegration}"
+
+  HttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: "$default"
+      AutoDeploy: true
+
+  ApiInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !Ref ApiFunction
-      Action: lambda:InvokeFunctionUrl
-      Principal: "*"
-      FunctionUrlAuthType: NONE
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*"
 
   Certificate:
     Type: AWS::CertificateManager::Certificate
@@ -109,7 +135,7 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: ""
           - Id: lambda-api
-            DomainName: !Select [2, !Split ["/", !GetAtt ApiFunctionUrl.FunctionUrl]]
+            DomainName: !Select [2, !Split ["/", !GetAtt HttpApi.ApiEndpoint]]
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
               OriginSSLProtocols: [TLSv1.2]
@@ -126,18 +152,15 @@ Resources:
             TargetOriginId: lambda-api
             ViewerProtocolPolicy: redirect-to-https
             AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
-            Compress: true
+            # Must stay false: with OAC+SigV4, CloudFront compression rewrites
+            # Accept-Encoding after signing -> SignatureDoesNotMatch on POST.
+            Compress: false
             # Managed-CachingDisabled
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
             # Managed-AllViewerExceptHostHeader
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
-        CustomErrorResponses:
-          - ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-          - ErrorCode: 404
-            ResponseCode: 200
-            ResponsePagePath: /index.html
+        # No CustomErrorResponses: a single page needs no SPA rewrite, and
+        # mapping 403/404 -> index.html would mask real /api JSON errors as HTML.
 
   SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -175,7 +198,7 @@ Outputs:
     Value: !Ref Distribution
   FunctionName:
     Value: !Ref ApiFunction
-  FunctionUrl:
-    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  ApiEndpoint:
+    Value: !GetAtt HttpApi.ApiEndpoint
   SiteUrl:
     Value: !Sub "https://${SubDomainName}"
