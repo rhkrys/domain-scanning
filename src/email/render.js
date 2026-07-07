@@ -29,6 +29,9 @@ const GRADE_COLOUR = {
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Review', fail: 'Action needed', info: 'Info' };
 
+// Content-ID the mailer uses when attaching the logo inline.
+export const LOGO_CID = 'cpi-logo';
+
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 }
@@ -106,10 +109,15 @@ export function renderHtml(report) {
   <body style="margin:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight:600;color:${CPI.ink}">
   <div style="max-width:640px;margin:0 auto;padding:24px">
     <div style="background:${CPI.surface};border:1px solid ${CPI.border};border-radius:2px;overflow:hidden">
-      <!-- Brand header -->
-      <div style="padding:20px 24px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
-        <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection</div>
-        <div style="font-family:${CPI.fontBody};font-weight:700;color:${CPI.gold};font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-top:5px">Consulting Services</div>
+      <!-- Brand header (logo embedded as an inline CID attachment) -->
+      <div style="padding:18px 24px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:14px;vertical-align:middle"><img src="cid:${LOGO_CID}" width="44" height="44" alt="Cyber Protection" style="display:block;border:0"></td>
+          <td style="vertical-align:middle">
+            <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection</div>
+            <div style="font-family:${CPI.fontBody};font-weight:700;color:${CPI.gold};font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-top:5px">Consulting Services</div>
+          </td>
+        </tr></table>
       </div>
       <div style="padding:22px 24px 6px;border-bottom:1px solid ${CPI.border}">
         <p style="margin:0 0 4px;color:${CPI.navy};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em">Website security scan</p>
