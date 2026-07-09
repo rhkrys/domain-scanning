@@ -1,0 +1,12 @@
+node_modules
+previews
+.env
+.env.example
+.git
+.gitignore
+test
+*.md
+Dockerfile
+.dockerignore
+deploy
+apprunner.yaml

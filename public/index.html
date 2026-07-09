@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cyber Protection — Website Security Scanner</title>
+  <meta name="description" content="Free DNS, email authentication and TLS security check. Get a grade and plain-English next steps emailed to you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Open+Sans:wght@600;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/logo-gold.png" type="image/png" />
+</head>
+<body>
+  <header class="brandbar">
+    <div class="brandbar-inner">
+      <img src="/logo-gold.png" alt="Cyber Protection" />
+      <div class="wordmark">
+        <span class="name">Cyber Protection</span>
+        <span class="descriptor">Consulting Services</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <span class="stripe-corner" aria-hidden="true"></span>
+      <p class="eyebrow">Free website security check</p>
+      <h1>Is your website secure?</h1>
+      <p class="sub">
+        Enter your website address and we’ll run 12 safety checks — covering your
+        domain setup, email protection and site encryption. You’ll get a simple
+        grade and a plain-English to-do list, no jargon.
+      </p>
+
+      <form id="scan-form" class="card accent form" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="domain">Your website address</label>
+          <input id="domain" name="domain" type="text" inputmode="url"
+                 placeholder="example.com" required
+                 aria-describedby="domain-hint" />
+          <p id="domain-hint" class="hint">It’s fine to paste your full website link — we’ll tidy it up.</p>
+          <p id="domain-error" class="error field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="email">Your email <span class="muted">(optional)</span></label>
+          <input id="email" name="email" type="email" placeholder="you@example.com"
+                 aria-describedby="email-hint" />
+          <p id="email-hint" class="hint">We’ll send your results and what to do next. Nothing else — no spam.</p>
+          <p id="email-error" class="error field-error" hidden></p>
+        </div>
+        <button id="submit" type="submit">Check my website</button>
+        <p id="coming-soon" class="notice" hidden>⏳ Live scanning is being connected — coming soon. Check back shortly.</p>
+        <p id="progress" class="progress" hidden>Checking your website… this usually takes under a minute.</p>
+        <p id="form-error" class="error" hidden></p>
+      </form>
+    </section>
+
+    <section id="result" class="result" hidden>
+      <div class="card accent summary">
+        <div id="grade" class="grade">–</div>
+        <div class="summary-meta">
+          <h2 id="result-domain"></h2>
+          <p id="cleaned-note" class="muted small" hidden></p>
+          <p id="result-score" class="score"></p>
+          <p id="result-counts" class="muted"></p>
+          <p id="mail-status" class="mail-status" hidden></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>What to do next</h3>
+        <p class="muted small" style="margin-top:-8px">If these look unfamiliar, forward them to whoever manages your website or IT — they’ll know what to do.</p>
+        <ol id="next-steps" class="steps"></ol>
+        <p id="no-steps" class="all-clear" hidden>Every check passed — nothing to fix right now.</p>
+      </div>
+
+      <div class="card">
+        <h3>All checks</h3>
+        <div id="findings" class="findings"></div>
+      </div>
+
+      <div class="card accent cta">
+        <p class="eyebrow">Next step</p>
+        <h3>Want a hand with this?</h3>
+        <p class="cta-lead">
+          Book a free 15-minute review of your results over Zoom — we’ll walk you
+          through what to fix first and what it means for your business.
+        </p>
+
+        <div id="cta-email" class="cta-email">
+          <p class="cta-email-lead" id="cta-email-lead">Prefer it in writing? We’ll email you this report and your next steps.</p>
+          <form id="capture-form" autocomplete="off">
+            <input id="capture-email" type="email" placeholder="you@example.com" aria-label="Email address" />
+            <button type="submit" id="capture-submit">Email me the report</button>
+          </form>
+          <p id="capture-status" class="capture-status" hidden></p>
+        </div>
+
+        <div class="cta-divider"><span>or book a call</span></div>
+
+        <!-- Calendly inline widget (initialised by app.js once the results are
+             visible, so it doesn't render blank inside a hidden container) -->
+        <div id="calendly-embed" class="calendly-inline-widget"
+             data-url="https://calendly.com/cpconsulting/15min"
+             style="min-width:320px;height:700px;"></div>
+      </div>
+
+      <p class="disclaimer">
+        This automated scan is a starting point, not a full security audit.
+      </p>
+    </section>
+  </main>
+
+  <footer class="brandfoot">
+    <div class="brandfoot-inner">
+      <img src="/logo-gold.png" alt="" aria-hidden="true" />
+      <div class="wordmark">
+        <span class="name">Cyber Protection</span>
+        <span class="descriptor">Consulting Services</span>
+      </div>
+      <span class="note">Automated domain audit — a starting point, not a full security audit.</span>
+    </div>
+  </footer>
+
+  <!-- Calendly inline widget script -->
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

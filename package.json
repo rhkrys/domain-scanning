@@ -1,0 +1,21 @@
+{
+  "name": "domain-scanning",
+  "version": "1.0.0",
+  "description": "Domain security scanner web-app: audits DNS, email authentication, TLS and HTTP security, summarises the result and emails next steps to the user.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.1081.0",
+    "express": "^4.19.2",
+    "nodemailer": "^9.0.3",
+    "serverless-http": "^3.2.0"
+  }
+}
