@@ -225,6 +225,20 @@
   .faq-item summary:hover { color: var(--navy-600); }
   .faq-item .answer { padding: 0 22px 20px; color: var(--muted); font-size: 16px; font-weight: 600; }
 
+  /* ---------- Testimonials ---------- */
+  .testimonials { padding: 82px 0; background: #f1f8fa; }
+  .testimonials .eyebrow { display: block; width: fit-content; margin: 0 auto 16px; }
+  .testimonials h2 { text-align: center; font-size: clamp(30px, 4vw, 44px); text-transform: uppercase; margin-bottom: 10px; }
+  .testimonials .sub { text-align: center; color: var(--muted); margin-bottom: 44px; font-weight: 600; }
+  .tgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 960px; margin: 0 auto; }
+  @media (max-width: 760px) { .tgrid { grid-template-columns: 1fr; } }
+  .tcard { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 30px 28px; position: relative; }
+  .tcard .qmark { font-family: var(--font-display); font-size: 60px; line-height: 0.5; color: var(--gold-400); height: 30px; }
+  .tcard blockquote { margin: 6px 0 20px; font-size: 17px; color: var(--ink); font-weight: 600; line-height: 1.55; }
+  .tcard figcaption { display: flex; flex-direction: column; border-top: 1px solid var(--border); padding-top: 14px; }
+  .tcard .tname { font-family: var(--font-body); font-weight: 800; color: var(--navy-800); font-size: 15px; letter-spacing: .02em; }
+  .tcard .trole { color: var(--muted); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+
   /* ---------- Waitlist ---------- */
   .waitlist {
     padding: 84px 0;
@@ -475,6 +489,26 @@
   </div>
 </section>
 
+<section class="testimonials" id="testimonials">
+  <div class="wrap">
+    <span class="eyebrow">Client Results</span>
+    <h2>What clients say about working with us</h2>
+    <p class="sub">Real words from businesses we've helped secure.</p>
+    <div class="tgrid">
+      <figure class="tcard">
+        <div class="qmark" aria-hidden="true">&ldquo;</div>
+        <blockquote>CP Consulting Services is knowledgeable and, most importantly, responsive. You get real hands-on attention that is much needed, especially when you are starting out as a small business.</blockquote>
+        <figcaption><span class="tname">Afua Felle</span><span class="trole">CEO, Bosuo Global</span></figcaption>
+      </figure>
+      <figure class="tcard">
+        <div class="qmark" aria-hidden="true">&ldquo;</div>
+        <blockquote>Other firms had a set of systems they wanted us to fit into; meanwhile, CP Consulting took inventory of what systems we were already using, came up with solutions to secure those, and then offered other suggestions.</blockquote>
+        <figcaption><span class="tname">Adrienne Freeman</span><span class="trole">CEO, Produced by ANP</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <section class="faq" id="faq">
   <div class="wrap">
     <span class="eyebrow" style="display:block;text-align:center;width:fit-content;margin:0 auto 16px">Answers</span>
@@ -622,7 +656,19 @@
   "name": "Cyber Protection Consulting Services",
   "url": "https://awesomeblackbusiness.com/",
   "logo": "https://awesomeblackbusiness.com/logo-gold.png",
-  "description": "Personal cybersecurity monitoring, scam protection, and audits for individuals, families, and executives."
+  "description": "Personal cybersecurity monitoring, scam protection, and audits for individuals, families, and executives.",
+  "review": [
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "Afua Felle" },
+      "reviewBody": "CP Consulting Services is knowledgeable and, most importantly, responsive. You get real hands-on attention that is much needed, especially when you are starting out as a small business."
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "Adrienne Freeman" },
+      "reviewBody": "Other firms had a set of systems they wanted us to fit into; meanwhile, CP Consulting took inventory of what systems we were already using, came up with solutions to secure those, and then offered other suggestions."
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
