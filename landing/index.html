@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure &amp; Grow | Personal Cybersecurity Monitoring for Individuals, Families &amp; Executives</title>
+<meta name="description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off. Join the waitlist.">
+<link rel="canonical" href="https://techinpeace.com/">
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://techinpeace.com/">
+<meta property="og:title" content="Secure &amp; Grow | Personal Cybersecurity Monitoring for Individuals, Families &amp; Executives">
+<meta property="og:description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off.">
+<meta property="og:image" content="https://techinpeace.com/logo-gold.png">
+<meta property="og:site_name" content="Secure &amp; Grow · Cyber Protection Consulting">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Secure &amp; Grow | Personal Cybersecurity Monitoring for Individuals, Families &amp; Executives">
+<meta name="twitter:description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off.">
+<meta name="twitter:image" content="https://techinpeace.com/logo-gold.png">
+
+<link rel="icon" href="/logo-gold.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Cyber Protection (CPI) brand: navy + gold, League Gothic display ============ */
+  :root {
+    --navy-900: #101f36;
+    --navy-800: #142534;   /* CPI navy-deep — dark grounds */
+    --navy-700: #1b3060;
+    --navy-600: #203a7b;   /* CPI navy — primary */
+    --navy-100: #e8eff7;
+    --gold-500: #b9822a;   /* CPI gold-deep — legible as text */
+    --gold-400: #e8ae5c;   /* CPI gold — accent */
+    --gold-300: #f0c889;   /* CPI gold-soft */
+    --gold-100: #faf3dd;
+    --ink: #0d1a26;
+    --muted: #6a7886;
+    --border: #d9dee4;
+    --white: #ffffff;
+    --radius: 2px;
+    --shadow: 0 10px 30px rgba(20, 37, 52, .12);
+    --font-display: "League Gothic", "Oswald", "Bebas Neue", "Arial Narrow", sans-serif;
+    --font-body: "Open Sauce One", "Open Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--white);
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; letter-spacing: .01em; }
+  a { color: var(--navy-600); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .btn {
+    display: inline-block; padding: 13px 26px; border-radius: var(--radius);
+    font-family: var(--font-display); font-weight: 400; font-size: 18px; letter-spacing: .04em;
+    text-transform: uppercase; text-decoration: none; cursor: pointer;
+    border: none; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,37,52,.25); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-900); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid var(--gold-400); }
+  .btn-navy { background: var(--navy-600); color: var(--white); }
+  .eyebrow {
+    display: inline-block; font-family: var(--font-body); font-size: 13px; letter-spacing: .16em;
+    text-transform: uppercase; font-weight: 700; color: var(--navy-600);
+    padding-bottom: 7px; border-bottom: 2px solid var(--gold-400); margin-bottom: 16px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--navy-800); border-bottom: 2px solid var(--gold-400);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; color: var(--white); text-decoration: none; }
+  .logo img { height: 42px; width: auto; display: block; }
+  .logo .wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .logo .name { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: .14em; text-transform: uppercase; }
+  .logo .descriptor { font-family: var(--font-body); font-weight: 700; font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-400); margin-top: 5px; }
+  .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .nav-links a { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 600; }
+  .nav-links a:hover { color: var(--gold-300); }
+  .nav .btn { padding: 9px 18px; font-size: 15px; }
+  @media (max-width: 860px) { .nav-links a:not(.btn) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(1200px 500px at 80% -10%, rgba(232,174,92,.16), transparent 60%),
+      linear-gradient(160deg, var(--navy-900), var(--navy-800) 55%, var(--navy-700));
+    color: var(--white); padding: 84px 0 70px; text-align: center;
+  }
+  .hero .stripe-corner {
+    position: absolute; top: 0; right: 0; width: 72px; height: 72px;
+    background-image: repeating-linear-gradient(45deg, var(--navy-600) 0 6px, var(--gold-400) 6px 12px);
+    clip-path: polygon(100% 0, 0 0, 100% 100%); opacity: .9;
+  }
+  .hero .eyebrow { color: var(--gold-300); border-color: var(--gold-400); }
+  .hero h1 { font-size: clamp(40px, 6vw, 68px); text-transform: uppercase; max-width: 900px; margin: 0 auto 20px; }
+  .hero h1 em { font-style: normal; color: var(--gold-300); }
+  .hero p.sub { font-size: clamp(17px, 2vw, 21px); color: var(--navy-100); max-width: 660px; margin: 0 auto 32px; font-weight: 600; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .hero-note { margin-top: 18px; font-size: 14px; color: rgba(232,239,247,.78); }
+
+  /* ---------- Scanner strip ---------- */
+  .scanstrip { background: var(--gold-100); border-bottom: 1px solid var(--border); padding: 24px 0; }
+  .scanstrip .wrap { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .scanstrip .txt { display: flex; align-items: center; gap: 14px; }
+  .scanstrip .ico { font-size: 30px; }
+  .scanstrip strong { font-size: 17px; }
+  .scanstrip .sm { color: var(--muted); font-size: 14.5px; font-weight: 600; }
+
+  /* ---------- Persona chooser ---------- */
+  .chooser { padding: 70px 0 10px; text-align: center; }
+  .chooser h2 { font-size: clamp(30px, 4vw, 44px); text-transform: uppercase; margin-bottom: 10px; }
+  .chooser p { color: var(--muted); max-width: 580px; margin: 0 auto; font-weight: 600; }
+  .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 38px; }
+  @media (max-width: 860px) { .persona-grid { grid-template-columns: 1fr; } }
+  .persona-card {
+    text-align: left; background: var(--white); border: 1px solid var(--border);
+    border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 28px 26px;
+    display: flex; flex-direction: column; transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .persona-card:hover { box-shadow: var(--shadow); }
+  .persona-card .icon {
+    width: 48px; height: 48px; border-radius: var(--radius); display: grid; place-items: center;
+    font-size: 24px; margin-bottom: 16px; background: var(--navy-100); color: var(--navy-800);
+  }
+  .persona-card h3 { font-size: 26px; margin-bottom: 6px; }
+  .persona-card .who { font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--gold-500); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+  .persona-card p { color: var(--muted); font-size: 15.5px; flex: 1; font-weight: 600; }
+  .persona-card a { margin-top: 18px; font-weight: 700; text-decoration: none; color: var(--navy-600); font-family: var(--font-body); }
+  .persona-card a:hover { color: var(--gold-500); }
+
+  /* ---------- Persona sections ---------- */
+  .persona-section { padding: 74px 0; }
+  .persona-section.alt { background: var(--paper, #f1f8fa); }
+  .persona-section.dark { background: linear-gradient(160deg, var(--navy-900), var(--navy-800)); color: var(--white); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 54px; align-items: center; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; gap: 34px; } }
+  .persona-section h2 { font-size: clamp(30px, 4vw, 42px); margin-bottom: 16px; }
+  .persona-section .lead { font-size: 17.5px; color: var(--muted); margin-bottom: 22px; font-weight: 600; }
+  .persona-section.dark .lead { color: var(--navy-100); }
+  .feature-list { list-style: none; }
+  .feature-list li { padding: 10px 0 10px 36px; position: relative; font-size: 16px; }
+  .feature-list li::before {
+    content: "✔"; position: absolute; left: 0; top: 10px;
+    width: 24px; height: 24px; border-radius: 50%; font-size: 13px;
+    display: grid; place-items: center; background: var(--gold-100); color: var(--gold-500); font-weight: 700;
+  }
+  .persona-section.dark .feature-list li::before { background: rgba(232,174,92,.18); color: var(--gold-300); }
+  .price-tag { margin: 22px 0; }
+  .price-tag .amount { font-family: var(--font-display); font-size: 48px; font-weight: 400; }
+  .price-tag .per { color: var(--muted); font-size: 15px; font-weight: 600; }
+  .persona-section.dark .price-tag .per { color: var(--navy-100); }
+  .price-tag .amount.gold { color: var(--gold-500); }
+  .persona-section.dark .price-tag .amount.gold { color: var(--gold-300); }
+  .persona-visual {
+    border-radius: var(--radius); padding: 34px; box-shadow: var(--shadow);
+    background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400);
+  }
+  .persona-section.dark .persona-visual { background: rgba(255,255,255,.05); border-color: rgba(232,174,92,.3); }
+  .stat-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #edf1f6; font-size: 15px; }
+  .persona-section.dark .stat-row { border-color: rgba(255,255,255,.12); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .label { color: var(--muted); }
+  .persona-section.dark .stat-row .label { color: var(--navy-100); }
+  .stat-row .value { font-weight: 700; }
+  .stat-row .value.gold { color: var(--gold-500); }
+  .persona-section.dark .stat-row .value.gold { color: var(--gold-300); }
+
+  /* ---------- Pricing ---------- */
+  .pricing { padding: 80px 0; background: #f1f8fa; }
+  .pricing h2 { text-align: center; font-size: clamp(30px, 4vw, 44px); text-transform: uppercase; margin-bottom: 10px; }
+  .pricing .sub { text-align: center; color: var(--muted); margin-bottom: 44px; font-weight: 600; }
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
+  @media (max-width: 900px) { .tier-grid { grid-template-columns: 1fr; } }
+  .tier {
+    background: var(--white); border-radius: var(--radius); border: 1px solid var(--border);
+    padding: 34px 28px; display: flex; flex-direction: column; position: relative;
+  }
+  .tier.featured { border: 2px solid var(--gold-400); box-shadow: var(--shadow); }
+  .tier .badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    color: var(--navy-900); font-family: var(--font-body); font-size: 12px; font-weight: 800; letter-spacing: .08em;
+    text-transform: uppercase; padding: 5px 16px; border-radius: 999px; white-space: nowrap;
+  }
+  .tier h3 { font-size: 26px; margin-bottom: 4px; }
+  .tier .for { font-size: 13.5px; color: var(--muted); margin-bottom: 18px; font-weight: 600; }
+  .tier .price { font-family: var(--font-display); font-size: 46px; font-weight: 400; color: var(--navy-800); }
+  .tier .price span { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 600; }
+  .tier ul { list-style: none; margin: 22px 0 26px; flex: 1; }
+  .tier ul li { padding: 8px 0 8px 30px; position: relative; font-size: 15px; }
+  .tier ul li::before {
+    content: "✔"; position: absolute; left: 0; top: 8px; width: 20px; height: 20px;
+    border-radius: 50%; font-size: 11px; display: grid; place-items: center;
+    background: var(--gold-100); color: var(--gold-500); font-weight: 700;
+  }
+  .tier ul li.no { color: #9aa7b4; }
+  .tier ul li.no::before { content: "—"; background: #eef2f6; color: #9aa7b4; }
+  .tier .btn { width: 100%; text-align: center; margin-bottom: 10px; }
+  .tier .btn:last-child { margin-bottom: 0; }
+
+  /* ---------- FAQ ---------- */
+  .faq { padding: 82px 0; }
+  .faq h2 { text-align: center; font-size: clamp(30px, 4vw, 44px); text-transform: uppercase; margin-bottom: 10px; }
+  .faq .sub { text-align: center; color: var(--muted); margin-bottom: 40px; font-weight: 600; }
+  .faq-list { max-width: 820px; margin: 0 auto; }
+  .faq-item { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; background: var(--white); }
+  .faq-item summary {
+    list-style: none; cursor: pointer; padding: 20px 22px; font-family: var(--font-body);
+    font-weight: 700; font-size: 17px; color: var(--navy-800); display: flex; justify-content: space-between; gap: 16px; align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; font-family: var(--font-display); color: var(--gold-500); font-size: 26px; line-height: 1; }
+  .faq-item[open] summary::after { content: "–"; }
+  .faq-item summary:hover { color: var(--navy-600); }
+  .faq-item .answer { padding: 0 22px 20px; color: var(--muted); font-size: 16px; font-weight: 600; }
+
+  /* ---------- Testimonials ---------- */
+  .testimonials { padding: 82px 0; background: #f1f8fa; }
+  .testimonials .eyebrow { display: block; width: fit-content; margin: 0 auto 16px; }
+  .testimonials h2 { text-align: center; font-size: clamp(30px, 4vw, 44px); text-transform: uppercase; margin-bottom: 10px; }
+  .testimonials .sub { text-align: center; color: var(--muted); margin-bottom: 44px; font-weight: 600; }
+  .tgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 960px; margin: 0 auto; }
+  @media (max-width: 760px) { .tgrid { grid-template-columns: 1fr; } }
+  .tcard { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 30px 28px; position: relative; }
+  .tcard .qmark { font-family: var(--font-display); font-size: 60px; line-height: 0.5; color: var(--gold-400); height: 30px; }
+  .tcard blockquote { margin: 6px 0 20px; font-size: 17px; color: var(--ink); font-weight: 600; line-height: 1.55; }
+  .tcard figcaption { display: flex; flex-direction: column; border-top: 1px solid var(--border); padding-top: 14px; }
+  .tcard .tname { font-family: var(--font-body); font-weight: 800; color: var(--navy-800); font-size: 15px; letter-spacing: .02em; }
+  .tcard .trole { color: var(--muted); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+
+  /* ---------- Waitlist ---------- */
+  .waitlist {
+    padding: 84px 0;
+    background:
+      radial-gradient(900px 400px at 15% 0%, rgba(232,174,92,.14), transparent 60%),
+      linear-gradient(160deg, var(--navy-800), var(--navy-900));
+    color: var(--white);
+  }
+  .waitlist-inner { max-width: 640px; margin: 0 auto; text-align: center; }
+  .waitlist h2 { font-size: clamp(32px, 5vw, 48px); text-transform: uppercase; margin-bottom: 12px; }
+  .waitlist h2 em { font-style: normal; color: var(--gold-300); }
+  .waitlist p.sub { color: var(--navy-100); margin-bottom: 34px; font-weight: 600; }
+  .waitlist .eyebrow { color: var(--gold-300); }
+  form.signup {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(232,174,92,.3);
+    border-radius: var(--radius); padding: 32px 28px; text-align: left;
+  }
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-family: var(--font-body); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 7px; color: var(--gold-300); }
+  .field input, .field select {
+    width: 100%; padding: 13px 15px; border-radius: var(--radius); font-size: 16px; font-family: var(--font-body); font-weight: 600;
+    border: 1px solid rgba(255,255,255,.25); background: rgba(20,37,52,.6); color: var(--white);
+  }
+  .field input::placeholder { color: rgba(232,239,247,.5); }
+  .field input:focus, .field select:focus { outline: 2px solid var(--gold-400); border-color: transparent; }
+  .field select option { color: var(--ink); background: var(--white); }
+  form.signup .btn { width: 100%; margin-top: 6px; font-size: 18px; }
+  .form-note { font-size: 13px; color: rgba(232,239,247,.65); margin-top: 14px; text-align: center; }
+  #form-status { margin-top: 16px; font-size: 15px; text-align: center; display: none; padding: 12px; border-radius: var(--radius); }
+  #form-status.ok { display: block; background: rgba(31,122,90,.22); color: #9be9a8; }
+  #form-status.err { display: block; background: rgba(192,57,43,.22); color: #ffb3b3; }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--navy-900); color: rgba(232,239,247,.72); padding: 30px 0; font-size: 14px; border-top: 2px solid var(--gold-400); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  footer .foot-brand { display: flex; align-items: center; gap: 12px; }
+  footer .foot-brand img { height: 34px; width: auto; }
+  footer .foot-brand .name { font-family: var(--font-body); font-weight: 700; color: #fff; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
+  footer a { color: var(--gold-300); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">
+      <img src="/logo-gold.png" alt="Cyber Protection Consulting">
+      <span class="wordmark">
+        <span class="name">Secure &amp; Grow</span>
+        <span class="descriptor">by Cyber Protection Consulting</span>
+      </span>
+    </a>
+    <nav class="nav-links">
+      <a href="#individuals">For Individuals</a>
+      <a href="#teams">For VIP Solopreneurs</a>
+      <a href="#concierge">Executive Concierge</a>
+      <a href="#faq">FAQ</a>
+      <a href="#pricing">Pricing</a>
+      <a class="btn btn-outline" href="/scan">Check My Domain</a>
+      <a class="btn btn-gold" href="#waitlist">Join the Waitlist</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <span class="stripe-corner" aria-hidden="true"></span>
+  <div class="wrap">
+    <span class="eyebrow">Personal Cybersecurity Monitoring for Individuals, Families &amp; Executives</span>
+    <h1>Scams are getting smarter.<br>Your protection should be <em>smarter still</em>.</h1>
+    <p class="sub">Secure &amp; Grow audits your digital life, hardens it against fraud and scams, and, when you need it, watches over it around the clock. For individuals, families, and the people who can't afford a breach.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-gold" href="/scan">Check Your Domain Security — Free</a>
+      <a class="btn btn-outline" href="#waitlist">Join the Waitlist</a>
+      <a class="btn btn-outline" href="#pricing">See Plans</a>
+    </div>
+    <p class="hero-note">Free instant domain check at <strong>techinpeace.com/scan</strong> · No card required</p>
+  </div>
+</section>
+
+<section class="scanstrip">
+  <div class="wrap">
+    <div class="txt">
+      <span class="ico">🛡️</span>
+      <div>
+        <strong>Free website domain security check</strong>
+        <div class="sm">Get an instant A–F grade for your DNS, email authentication (SPF/DMARC/DKIM), and TLS — no sign-up.</div>
+      </div>
+    </div>
+    <a class="btn btn-gold" href="/scan">Check My Domain Security →</a>
+  </div>
+</section>
+
+<section class="chooser">
+  <div class="wrap">
+    <span class="eyebrow">Who is it for?</span>
+    <h2>Three levels of protection. One that fits you.</h2>
+    <p>Pick the description that sounds like you, and we'll show you exactly what you get.</p>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="icon">👤</div>
+        <div class="who">From $19 / month</div>
+        <h3>The Careful Individual</h3>
+        <p>You manage your own accounts and just want to know where you're exposed, and how to fix it. A professional audit, clear recommendations, and a fresh check every quarter.</p>
+        <a href="#individuals">See the plan →</a>
+      </div>
+      <div class="persona-card">
+        <div class="icon">👨‍👩‍👧‍👦</div>
+        <div class="who">$1,500 / month</div>
+        <h3>VIP Families &amp; Solopreneurs</h3>
+        <p>You're responsible for more than just yourself: staff, parents, kids, or your solo venture. Cover up to 5 people with a real support line to call, 9 to 5, whenever something looks off.</p>
+        <a href="#teams">See the VIP plan →</a>
+      </div>
+      <div class="persona-card">
+        <div class="icon">🏛</div>
+        <div class="who">$10,000 / month</div>
+        <h3>The High-Profile Principal</h3>
+        <p>Executives, founders, public figures. A dedicated support manager who knows your setup by name, and 24/7 monitoring that never clocks out.</p>
+        <a href="#concierge">See concierge →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="persona-section" id="individuals">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Personal Cybersecurity Audit · From $19/mo</span>
+      <h2>A Personal Cybersecurity Audit That Shows You Exactly Where You're Exposed</h2>
+      <p class="lead">Most people have no idea how exposed they are online: reused passwords, forgotten accounts, oversharing that scammers rely on. Our personal cybersecurity audit shows you exactly where the gaps are, then shows you how to close them.</p>
+      <ul class="feature-list">
+        <li>Full personal security audit of your accounts, devices, and public footprint</li>
+        <li>Plain-English recommendations, prioritized by risk</li>
+        <li>Quarterly re-audits so improvements stick and new gaps get caught</li>
+      </ul>
+      <div class="price-tag"><span class="amount">From $19</span> <span class="per">/ month · cancel anytime</span></div>
+      <a class="btn btn-gold" href="/scan">Run a Free Domain Scan Now →</a>
+      <a class="btn btn-navy" href="#waitlist" style="margin-left:10px">Join the Waitlist</a>
+      <p style="margin-top:14px;font-size:14.5px;color:var(--muted);font-weight:600">Instant, no sign-up: check your website's DNS, email, and TLS security at <a href="/scan" style="font-weight:700">techinpeace.com/scan</a>.</p>
+    </div>
+    <div class="persona-visual">
+      <div class="stat-row"><span class="label">Security audit</span><span class="value gold">Included</span></div>
+      <div class="stat-row"><span class="label">Recommendations report</span><span class="value gold">Included</span></div>
+      <div class="stat-row"><span class="label">Free domain security check</span><span class="value gold">Included</span></div>
+      <div class="stat-row"><span class="label">Re-audit cadence</span><span class="value">Quarterly</span></div>
+      <div class="stat-row"><span class="label">Price</span><span class="value gold">From $19/mo</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="persona-section alt" id="teams">
+  <div class="wrap split">
+    <div class="persona-visual">
+      <div class="stat-row"><span class="label">People covered</span><span class="value gold">Up to 5</span></div>
+      <div class="stat-row"><span class="label">Support line</span><span class="value">9am – 5pm, business days</span></div>
+      <div class="stat-row"><span class="label">Audits &amp; recommendations</span><span class="value gold">Everyone covered</span></div>
+      <div class="stat-row"><span class="label">Suspicious-message checks</span><span class="value gold">Included</span></div>
+      <div class="stat-row"><span class="label">Price</span><span class="value">$1,500 / month</span></div>
+    </div>
+    <div>
+      <span class="eyebrow">VIP Families or Solopreneurs Cybersecurity Monitoring · $1,500/mo</span>
+      <h2>One call answers "is this a scam?"</h2>
+      <p class="lead">VIP Families or Solopreneurs cybersecurity monitoring for up to 5 people — parents, kids, staff, or your solo venture — under one plan. When your parent gets a strange text, or a staff member gets an invoice that looks almost right, they call us, not you.</p>
+      <ul class="feature-list">
+        <li>Everything in the free plan, for every covered person</li>
+        <li>9–5 support line: forward anything suspicious, get a fast human answer</li>
+        <li>Hands-on help locking down accounts, devices, and payments for all 5 members</li>
+        <li>One monthly summary so you always know everyone's status</li>
+      </ul>
+      <div class="price-tag"><span class="amount gold">$1,500</span> <span class="per">/ month · up to 5 people</span></div>
+      <a class="btn btn-gold" href="#waitlist" onclick="preselect('team')">Join the VIP Waitlist</a>
+    </div>
+  </div>
+</section>
+
+<section class="persona-section dark" id="concierge">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Executive Cybersecurity Concierge · $10,000/mo</span>
+      <h2>Someone is always watching. So you never have to.</h2>
+      <p class="lead">Executives, founders, and public figures are scam targets by default — attacks don't keep office hours, and neither does this. A dedicated support manager and 24/7 monitoring team stay on it around the clock.</p>
+      <ul class="feature-list">
+        <li>Dedicated, named support manager who knows your entire setup</li>
+        <li>24/7 monitoring of accounts, credentials, and threats, with immediate response</li>
+        <li>Direct line, any hour: incidents handled while you sleep</li>
+        <li>Everything in the lower tiers, at concierge depth</li>
+      </ul>
+      <div class="price-tag"><span class="amount gold">$10,000</span> <span class="per">/ month · limited seats at launch</span></div>
+      <a class="btn btn-gold" href="#waitlist" onclick="preselect('concierge')">Request Concierge Access</a>
+    </div>
+    <div class="persona-visual">
+      <div class="stat-row"><span class="label">Support manager</span><span class="value gold">Dedicated, named</span></div>
+      <div class="stat-row"><span class="label">Monitoring</span><span class="value gold">24 / 7 / 365</span></div>
+      <div class="stat-row"><span class="label">Incident response</span><span class="value">Immediate</span></div>
+      <div class="stat-row"><span class="label">Availability at launch</span><span class="value">Limited seats</span></div>
+      <div class="stat-row"><span class="label">Price</span><span class="value">$10,000 / month</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <h2>Simple plans, side by side</h2>
+    <p class="sub">Start free. Upgrade when the people you're responsible for do.</p>
+    <div class="tier-grid">
+      <div class="tier">
+        <h3>Individual</h3>
+        <div class="for">For people protecting themselves</div>
+        <div class="price">From $19<span> / month</span></div>
+        <ul>
+          <li>Personal security audit</li>
+          <li>Prioritized recommendations</li>
+          <li>Quarterly re-audits</li>
+          <li>Free instant domain security check</li>
+          <li class="no">No live monitoring</li>
+          <li class="no">No support line</li>
+        </ul>
+        <a class="btn btn-gold" href="/scan">Check My Domain →</a>
+        <a class="btn btn-navy" href="#waitlist">Join the Waitlist</a>
+      </div>
+      <div class="tier featured">
+        <div class="badge">Most Popular</div>
+        <h3>VIP Families or Solopreneurs</h3>
+        <div class="for">For up to 5 staff or family members</div>
+        <div class="price">$1,500<span> / month</span></div>
+        <ul>
+          <li>Everything in Individual, ×5 people</li>
+          <li>9–5 support line</li>
+          <li>Suspicious message &amp; scam checks</li>
+          <li>Account &amp; device lockdown help</li>
+          <li>Monthly status summary</li>
+        </ul>
+        <a class="btn btn-gold" href="#waitlist" onclick="preselect('team')">Join VIP Waitlist</a>
+      </div>
+      <div class="tier">
+        <h3>Executive Concierge</h3>
+        <div class="for">For executives &amp; high-profile individuals</div>
+        <div class="price">$10,000<span> / month</span></div>
+        <ul>
+          <li>Everything in VIP Families or Solopreneurs</li>
+          <li>Dedicated support manager</li>
+          <li>24/7 monitoring &amp; response</li>
+          <li>Direct line, any hour</li>
+          <li>Limited seats at launch</li>
+        </ul>
+        <a class="btn btn-navy" href="#waitlist" onclick="preselect('concierge')">Request Access</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonials">
+  <div class="wrap">
+    <span class="eyebrow">Client Results</span>
+    <h2>What clients say about working with us</h2>
+    <p class="sub">Real words from businesses we've helped secure.</p>
+    <div class="tgrid">
+      <figure class="tcard">
+        <div class="qmark" aria-hidden="true">&ldquo;</div>
+        <blockquote>CP Consulting Services is knowledgeable and, most importantly, responsive. You get real hands-on attention that is much needed, especially when you are starting out as a small business.</blockquote>
+        <figcaption><span class="tname">Afua Felle</span><span class="trole">CEO, Bosuo Global</span></figcaption>
+      </figure>
+      <figure class="tcard">
+        <div class="qmark" aria-hidden="true">&ldquo;</div>
+        <blockquote>Other firms had a set of systems they wanted us to fit into; meanwhile, CP Consulting took inventory of what systems we were already using, came up with solutions to secure those, and then offered other suggestions.</blockquote>
+        <figcaption><span class="tname">Adrienne Freeman</span><span class="trole">CEO, Produced by ANP</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <span class="eyebrow" style="display:block;text-align:center;width:fit-content;margin:0 auto 16px">Answers</span>
+    <h2>Frequently asked questions</h2>
+    <p class="sub">Straight answers to what people ask before they're ready to buy.</p>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>How do I know if I've been targeted by a scam?</summary>
+        <div class="answer">Common signs: unexpected requests for money or login details, urgent pressure to act fast, slightly-off email addresses or phone numbers, and requests to move outside normal channels. A personal security audit checks your accounts and public footprint for the specific ways you're exposed.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What does a personal cybersecurity audit include?</summary>
+        <div class="answer">A full review of your accounts, devices, and public digital footprint, plus a plain-English report of what's exposed and how to fix it. The free audit includes prioritized recommendations and a quarterly re-check so improvements stick.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How can I protect elderly parents from scams?</summary>
+        <div class="answer">Give them a fast way to verify a suspicious message before acting on it, ideally a real person they can call. The VIP Families or Solopreneurs plan covers up to 5 people, including parents, with a 9–5 line for anything that looks off.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What is executive cybersecurity concierge protection?</summary>
+        <div class="answer">Dedicated, 24/7 monitoring and response for executives, founders, and public figures whose visibility makes them frequent targets. It includes a named support manager, continuous account and credential monitoring, and immediate incident response, any hour.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How much does personal cybersecurity monitoring cost?</summary>
+        <div class="answer">Three tiers: a free audit for individuals, $1,500/month for families and small teams (up to 5 people), and $10,000/month for executive concierge protection with 24/7 dedicated monitoring.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is a personal cybersecurity service worth it for a small business owner?</summary>
+        <div class="answer">If you're responsible for staff as well as yourself, a shared service catches what one person alone would miss, like a fake invoice or a spoofed vendor email. The VIP Families or Solopreneurs plan covers up to 5 people under one 9–5 support line.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="waitlist" id="waitlist">
+  <div class="wrap waitlist-inner">
+    <span class="eyebrow">Launching Soon</span>
+    <h2>Get in line. Get <em>protected first</em>.</h2>
+    <p class="sub">Join the waitlist and we'll reach out as soon as your tier opens. Members get their first audit at launch; tiers are onboarded in order of signup.</p>
+
+    <!-- ======================================================================
+         WAITLIST → GUMROAD FOLLOW
+         Emails submitted here are added to the @crystalpugh Gumroad audience.
+         Replace YOUR_GUMROAD_SELLER_ID with your Gumroad seller ID:
+         Gumroad → Settings, or copy the value of the hidden `seller_id` input
+         from your Gumroad "Follow form" embed code.
+         ====================================================================== -->
+    <form class="signup" id="waitlist-form" action="https://app.gumroad.com/follow_from_embed_form" method="post">
+      <input type="hidden" name="seller_id" value="YOUR_GUMROAD_SELLER_ID">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn btn-gold">Join the Waitlist</button>
+      <p class="form-note">No spam — you'll get one email when your tier opens. Powered by Gumroad.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-brand">
+      <img src="/logo-gold.png" alt="" aria-hidden="true">
+      <span class="name">Secure &amp; Grow · Cyber Protection Consulting</span>
+    </div>
+    <span>© 2026 Secure &amp; Grow · Cyber Protection Consulting Services. All rights reserved. · <a href="/scan">Check my domain security</a> · <a href="#faq">FAQ</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="#waitlist">Join the waitlist</a></span>
+  </div>
+</footer>
+
+<!-- ============ Structured data (JSON-LD) for SEO / AEO ============
+     FAQ text below matches the visible FAQ section word-for-word. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I know if I've been targeted by a scam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common signs: unexpected requests for money or login details, urgent pressure to act fast, slightly-off email addresses or phone numbers, and requests to move outside normal channels. A personal security audit checks your accounts and public footprint for the specific ways you're exposed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a personal cybersecurity audit include?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A full review of your accounts, devices, and public digital footprint, plus a plain-English report of what's exposed and how to fix it. The free audit includes prioritized recommendations and a quarterly re-check so improvements stick."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I protect elderly parents from scams?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Give them a fast way to verify a suspicious message before acting on it, ideally a real person they can call. The VIP Families or Solopreneurs plan covers up to 5 people, including parents, with a 9–5 line for anything that looks off."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is executive cybersecurity concierge protection?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dedicated, 24/7 monitoring and response for executives, founders, and public figures whose visibility makes them frequent targets. It includes a named support manager, continuous account and credential monitoring, and immediate incident response, any hour."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does personal cybersecurity monitoring cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three tiers: a free audit for individuals, $1,500/month for families and small teams (up to 5 people), and $10,000/month for executive concierge protection with 24/7 dedicated monitoring."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a personal cybersecurity service worth it for a small business owner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you're responsible for staff as well as yourself, a shared service catches what one person alone would miss, like a fake invoice or a spoofed vendor email. The VIP Families or Solopreneurs plan covers up to 5 people under one 9–5 support line."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Cyber Protection Consulting Services",
+  "url": "https://techinpeace.com/",
+  "logo": "https://techinpeace.com/logo-gold.png",
+  "description": "Personal cybersecurity monitoring, scam protection, and audits for individuals, families, and executives.",
+  "review": [
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "Afua Felle" },
+      "reviewBody": "CP Consulting Services is knowledgeable and, most importantly, responsive. You get real hands-on attention that is much needed, especially when you are starting out as a small business."
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "Adrienne Freeman" },
+      "reviewBody": "Other firms had a set of systems they wanted us to fit into; meanwhile, CP Consulting took inventory of what systems we were already using, came up with solutions to secure those, and then offered other suggestions."
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Personal cybersecurity monitoring and scam protection",
+  "provider": {
+    "@type": "Organization",
+    "name": "Cyber Protection Consulting Services",
+    "url": "https://techinpeace.com/"
+  },
+  "areaServed": "US",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Individual — Personal Cybersecurity Audit",
+      "price": "19",
+      "priceCurrency": "USD",
+      "description": "Personal cybersecurity audit, prioritized recommendations, and quarterly re-audits. Plans start at $19/month; a free instant domain security check is included."
+    },
+    {
+      "@type": "Offer",
+      "name": "VIP Families or Solopreneurs Cybersecurity Monitoring",
+      "price": "1500",
+      "priceCurrency": "USD",
+      "description": "Coverage for up to 5 people with a 9–5 support line, suspicious-message checks, and account lockdown help."
+    },
+    {
+      "@type": "Offer",
+      "name": "Executive Cybersecurity Concierge",
+      "price": "10000",
+      "priceCurrency": "USD",
+      "description": "Dedicated named support manager with 24/7 monitoring and immediate incident response for executives and public figures."
+    }
+  ]
+}
+</script>
+
+<script>
+  // The waitlist is now a single Gumroad follow form (posts to Gumroad, which
+  // adds the email to the @crystalpugh audience). Plan pre-selection is no
+  // longer needed; kept as a no-op so any existing CTA onclick calls don't error.
+  function preselect() {}
+</script>
+
+</body>
+</html>

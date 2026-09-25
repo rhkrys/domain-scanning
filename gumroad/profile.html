@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure &amp; Grow — Crystal Pugh</title>
+<meta name="description" content="Practical cybersecurity, scam protection, and privacy tools for individuals, families, and executives. By Crystal Pugh / Cyber Protection Consulting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Cyber Protection / Secure & Grow — light + dark, navy + gold ===== */
+  :root {
+    --navy-900:#101f36; --navy-800:#142534; --navy-600:#203a7b;
+    --gold:#e8ae5c; --gold-soft:#f0c889; --gold-deep:#b9822a;
+    --font-display:"League Gothic","Oswald","Bebas Neue","Arial Narrow",sans-serif;
+    --font-body:"Open Sauce One","Open Sans","Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+
+    /* Light theme (default) */
+    --bg:#f1f8fa; --surface:#ffffff; --ink:#0d1a26; --muted:#6a7886;
+    --border:#d9dee4; --header-bg:#142534; --header-ink:#ffffff;
+    --accent:#203a7b; --accent-ink:#0d1a26; --gold-text:#b9822a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0c1727; --surface:#132135; --ink:#eaf1f8; --muted:#9fb0c2;
+      --border:#26364c; --header-bg:#0a1524; --header-ink:#ffffff;
+      --accent:#e8ae5c; --accent-ink:#0d1a26; --gold-text:#f0c889;
+    }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--font-body); font-weight:600; color:var(--ink); background:var(--bg); line-height:1.6; }
+  a { color:var(--gold-text); }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 22px; }
+  h1,h2,h3 { font-family:var(--font-display); font-weight:400; line-height:1.02; letter-spacing:.01em; text-transform:uppercase; }
+  .btn { display:inline-block; padding:13px 26px; border-radius:2px; font-family:var(--font-display); font-weight:400; font-size:18px; letter-spacing:.04em; text-transform:uppercase; text-decoration:none; cursor:pointer; border:none; transition:transform .15s ease; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#0d1a26; }
+  .btn-outline { background:transparent; color:var(--ink); border:2px solid var(--gold); }
+  .eyebrow { display:inline-block; font-family:var(--font-body); font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; color:var(--gold-text); padding-bottom:6px; border-bottom:2px solid var(--gold); margin-bottom:14px; }
+
+  /* Header */
+  header { background:var(--header-bg); border-bottom:2px solid var(--gold); }
+  .nav { display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:14px; flex-wrap:wrap; }
+  .brand { display:flex; align-items:center; gap:12px; color:var(--header-ink); text-decoration:none; }
+  .brand img { height:42px; width:auto; display:block; }
+  .brand .name { font-family:var(--font-body); font-weight:700; font-size:16px; letter-spacing:.14em; text-transform:uppercase; }
+  .brand .desc { font-family:var(--font-body); font-weight:700; font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-top:5px; }
+  .brand .wm { display:flex; flex-direction:column; line-height:1; }
+  .nav .links { display:flex; gap:18px; align-items:center; }
+  .nav .links a { color:#e2e9f2; text-decoration:none; font-size:14px; font-weight:600; }
+  .nav .links a:hover { color:var(--gold); }
+  @media (max-width:640px){ .nav .links a:not(.btn){ display:none; } }
+
+  /* Hero */
+  .hero { position:relative; overflow:hidden; background:radial-gradient(1100px 460px at 82% -10%, rgba(232,174,92,.16), transparent 60%), linear-gradient(160deg,var(--navy-900),var(--navy-800) 60%,var(--navy-600)); color:#fff; padding:76px 0 66px; text-align:center; }
+  .hero .stripe { position:absolute; top:0; right:0; width:72px; height:72px; background-image:repeating-linear-gradient(45deg,var(--navy-600) 0 6px,var(--gold) 6px 12px); clip-path:polygon(100% 0,0 0,100% 100%); opacity:.9; }
+  .hero .eyebrow { color:var(--gold-soft); border-color:var(--gold); }
+  .hero h1 { font-size:clamp(38px,6vw,64px); max-width:820px; margin:0 auto 18px; }
+  .hero h1 em { font-style:normal; color:var(--gold-soft); }
+  .hero p { font-size:clamp(16px,2vw,20px); color:#dfe8f3; max-width:640px; margin:0 auto 28px; }
+  .hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .hero .btn-outline { color:#fff; }
+
+  /* Sections */
+  section.block { padding:66px 0; }
+  .center { text-align:center; }
+  .center .eyebrow { display:inline-block; }
+  h2.title { font-size:clamp(28px,4vw,40px); margin-bottom:10px; }
+  .lead { color:var(--muted); max-width:620px; margin:0 auto 40px; font-weight:600; }
+
+  /* Product cards (link out to product pages — no checkout here) */
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media (max-width:860px){ .grid { grid-template-columns:1fr; } }
+  .card { display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--gold); border-radius:2px; padding:28px 24px; text-decoration:none; color:var(--ink); transition:transform .15s ease, box-shadow .15s ease; }
+  .card:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(0,0,0,.18); }
+  .card .ico { font-size:30px; margin-bottom:14px; }
+  .card h3 { font-size:24px; margin-bottom:8px; color:var(--ink); }
+  .card p { color:var(--muted); font-size:15px; flex:1; }
+  .card .go { margin-top:16px; font-family:var(--font-body); font-weight:800; color:var(--gold-text); font-size:14px; }
+
+  /* Follow / email signup */
+  .follow { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .follow-inner { max-width:600px; margin:0 auto; text-align:center; padding:64px 0; }
+  form[data-gumroad-follow] { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:22px; }
+  form[data-gumroad-follow] input[type=email] { flex:1; min-width:240px; padding:13px 15px; font-size:16px; font-family:var(--font-body); font-weight:600; border:1px solid var(--border); border-radius:2px; background:var(--bg); color:var(--ink); }
+  form[data-gumroad-follow] input:focus { outline:2px solid var(--gold); border-color:transparent; }
+  [data-gumroad-follow-message] { display:block; margin-top:14px; font-size:14px; color:var(--gold-text); font-weight:700; }
+
+  footer { background:var(--navy-900); color:rgba(232,239,247,.72); padding:30px 0; font-size:14px; border-top:2px solid var(--gold); }
+  footer .wrap { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer .fb { display:flex; align-items:center; gap:12px; }
+  footer .fb img { height:32px; }
+  footer .fb .name { color:#fff; font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:13px; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <img src="https://www.techinpeace.com/logo-gold.png" alt="Cyber Protection">
+      <span class="wm">
+        <span class="name">Secure &amp; Grow</span>
+        <span class="desc">Crystal Pugh · Cyber Protection Consulting</span>
+      </span>
+    </a>
+    <nav class="links">
+      <a href="#products">Products</a>
+      <a href="#follow">Newsletter</a>
+      <a class="btn btn-gold" href="#products">Browse Products</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <span class="stripe" aria-hidden="true"></span>
+  <div class="wrap">
+    <span class="eyebrow">Cybersecurity · Scam Protection · Privacy</span>
+    <h1>Security that actually <em>fits your life</em>.</h1>
+    <p>I'm Crystal Pugh. I help individuals, families, and executives lock down their digital lives — with plain-English guides, tools, and audits you can actually use. Browse the collection below.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-gold" href="#products">Browse Products</a>
+      <a class="btn btn-outline" href="#follow">Get Free Security Tips</a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="products">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">The Collection</span>
+      <h2 class="title">Guides &amp; tools to secure and grow</h2>
+      <p class="lead">Each one links straight to its product page. Pick what fits where you are right now.</p>
+    </div>
+    <!-- Link each card to a real Gumroad product page, e.g.
+         https://store.techinpeace.com/l/<product-slug>.
+         Replace the PLACEHOLDER links below with your actual product URLs. -->
+    <div class="grid">
+      <a class="card" href="https://store.techinpeace.com/l/PRODUCT-SLUG-1">
+        <div class="ico">🛡️</div>
+        <h3>Personal Security Audit Kit</h3>
+        <p>A step-by-step checklist to find where you're exposed — accounts, devices, and your public footprint — and fix it fast.</p>
+        <span class="go">View product →</span>
+      </a>
+      <a class="card" href="https://store.techinpeace.com/l/PRODUCT-SLUG-2">
+        <div class="ico">👨‍👩‍👧‍👦</div>
+        <h3>Family Scam-Proofing Guide</h3>
+        <p>Protect parents, kids, and staff from the scams that actually work — with scripts, settings, and a "is this real?" playbook.</p>
+        <span class="go">View product →</span>
+      </a>
+      <a class="card" href="https://store.techinpeace.com/l/PRODUCT-SLUG-3">
+        <div class="ico">🏛️</div>
+        <h3>Executive Digital Defense</h3>
+        <p>For founders and public figures: reduce your attack surface, monitor for impersonation, and respond when it counts.</p>
+        <span class="go">View product →</span>
+      </a>
+    </div>
+    <div class="center" style="margin-top:34px">
+      <a class="btn btn-outline" href="https://store.techinpeace.com">See all products →</a>
+    </div>
+  </div>
+</section>
+
+<section class="follow" id="follow">
+  <div class="wrap follow-inner">
+    <span class="eyebrow">Free Newsletter</span>
+    <h2 class="title">One useful security tip at a time</h2>
+    <p class="lead" style="margin-bottom:0">Join the list for plain-English tips on scams, privacy, and protecting what matters. No spam, unsubscribe anytime.</p>
+    <!-- Gumroad wires this form to your email audience automatically once your
+         account is reviewed and marked compliant. Until then, Gumroad sends
+         visitors to your subscribe page. -->
+    <form data-gumroad-follow>
+      <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" required>
+      <button type="submit" class="btn btn-gold">Subscribe</button>
+      <span data-gumroad-follow-message>Thanks — check your inbox to confirm your subscription.</span>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">
+      <img src="https://www.techinpeace.com/logo-gold.png" alt="" aria-hidden="true">
+      <span class="name">Secure &amp; Grow · Crystal Pugh</span>
+    </div>
+    <span>&copy; 2026 Cyber Protection Consulting · <a href="https://store.techinpeace.com">Gumroad</a> · <a href="https://www.techinpeace.com">techinpeace.com</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
