@@ -339,10 +339,10 @@
     <div class="persona-grid">
       <div class="persona-card">
         <div class="icon">👤</div>
-        <div class="who">Free</div>
+        <div class="who">From $19 / month</div>
         <h3>The Careful Individual</h3>
         <p>You manage your own accounts and just want to know where you're exposed, and how to fix it. A professional audit, clear recommendations, and a fresh check every quarter.</p>
-        <a href="#individuals">See the free plan →</a>
+        <a href="#individuals">See the plan →</a>
       </div>
       <div class="persona-card">
         <div class="icon">👨‍👩‍👧‍👦</div>
@@ -365,7 +365,7 @@
 <section class="persona-section" id="individuals">
   <div class="wrap split">
     <div>
-      <span class="eyebrow">Personal Cybersecurity Audit · Free</span>
+      <span class="eyebrow">Personal Cybersecurity Audit · From $19/mo</span>
       <h2>A Personal Cybersecurity Audit That Shows You Exactly Where You're Exposed</h2>
       <p class="lead">Most people have no idea how exposed they are online: reused passwords, forgotten accounts, oversharing that scammers rely on. Our personal cybersecurity audit shows you exactly where the gaps are, then shows you how to close them.</p>
       <ul class="feature-list">
@@ -373,9 +373,9 @@
         <li>Plain-English recommendations, prioritized by risk</li>
         <li>Quarterly re-audits so improvements stick and new gaps get caught</li>
       </ul>
-      <div class="price-tag"><span class="amount">Free</span> <span class="per">· no monitoring, no card, no catch</span></div>
+      <div class="price-tag"><span class="amount">From $19</span> <span class="per">/ month · cancel anytime</span></div>
       <a class="btn btn-gold" href="/scan">Run a Free Domain Scan Now →</a>
-      <a class="btn btn-navy" href="#waitlist" onclick="preselect('free')" style="margin-left:10px">Join the Free Waitlist</a>
+      <a class="btn btn-navy" href="#waitlist" style="margin-left:10px">Join the Waitlist</a>
       <p style="margin-top:14px;font-size:14.5px;color:var(--muted);font-weight:600">Instant, no sign-up: check your website's DNS, email, and TLS security at <a href="/scan" style="font-weight:700">techinpeace.com/scan</a>.</p>
     </div>
     <div class="persona-visual">
@@ -383,7 +383,7 @@
       <div class="stat-row"><span class="label">Recommendations report</span><span class="value gold">Included</span></div>
       <div class="stat-row"><span class="label">Free domain security check</span><span class="value gold">Included</span></div>
       <div class="stat-row"><span class="label">Re-audit cadence</span><span class="value">Quarterly</span></div>
-      <div class="stat-row"><span class="label">Price</span><span class="value gold">$0</span></div>
+      <div class="stat-row"><span class="label">Price</span><span class="value gold">From $19/mo</span></div>
     </div>
   </div>
 </section>
@@ -446,7 +446,7 @@
       <div class="tier">
         <h3>Individual</h3>
         <div class="for">For people protecting themselves</div>
-        <div class="price">Free</div>
+        <div class="price">From $19<span> / month</span></div>
         <ul>
           <li>Personal security audit</li>
           <li>Prioritized recommendations</li>
@@ -456,7 +456,7 @@
           <li class="no">No support line</li>
         </ul>
         <a class="btn btn-gold" href="/scan">Check My Domain →</a>
-        <a class="btn btn-navy" href="#waitlist" onclick="preselect('free')">Join Free Waitlist</a>
+        <a class="btn btn-navy" href="#waitlist">Join the Waitlist</a>
       </div>
       <div class="tier featured">
         <div class="badge">Most Popular</div>
@@ -547,36 +547,23 @@
   <div class="wrap waitlist-inner">
     <span class="eyebrow">Launching Soon</span>
     <h2>Get in line. Get <em>protected first</em>.</h2>
-    <p class="sub">Join the waitlist and we'll reach out as soon as your tier opens. Free members get their first audit at launch; paid tiers are onboarded in order of signup.</p>
+    <p class="sub">Join the waitlist and we'll reach out as soon as your tier opens. Members get their first audit at launch; tiers are onboarded in order of signup.</p>
 
     <!-- ======================================================================
-         WAITLIST FORM / Formspree setup (2 minutes):
-         1. Go to https://formspree.io and create a free account.
-         2. Create a new form; you'll get an ID like "xqkrgyzw".
-         3. Replace YOUR_FORM_ID in the action attribute below with that ID.
-         Signups then arrive in your email / Formspree dashboard.
+         WAITLIST → GUMROAD FOLLOW
+         Emails submitted here are added to the @crystalpugh Gumroad audience.
+         Replace YOUR_GUMROAD_SELLER_ID with your Gumroad seller ID:
+         Gumroad → Settings, or copy the value of the hidden `seller_id` input
+         from your Gumroad "Follow form" embed code.
          ====================================================================== -->
-    <form class="signup" id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-      <div class="field">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Your full name" required>
-      </div>
+    <form class="signup" id="waitlist-form" action="https://app.gumroad.com/follow_from_embed_form" method="post">
+      <input type="hidden" name="seller_id" value="YOUR_GUMROAD_SELLER_ID">
       <div class="field">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="you@example.com" required>
       </div>
-      <div class="field">
-        <label for="tier">Which plan are you interested in?</label>
-        <select id="tier" name="tier" required>
-          <option value="" disabled selected>Select a plan…</option>
-          <option value="free">Individual: Free (audit + quarterly re-audits)</option>
-          <option value="team">VIP Families or Solopreneurs: $1,500/mo (up to 5 people, 9-5 support)</option>
-          <option value="concierge">Executive Concierge: $10,000/mo (dedicated manager, 24/7 monitoring)</option>
-        </select>
-      </div>
       <button type="submit" class="btn btn-gold">Join the Waitlist</button>
-      <div id="form-status" role="status"></div>
-      <p class="form-note">No spam. One email when your tier opens, that's it.</p>
+      <p class="form-note">No spam — you'll get one email when your tier opens. Powered by Gumroad.</p>
     </form>
   </div>
 </section>
@@ -686,9 +673,9 @@
     {
       "@type": "Offer",
       "name": "Individual — Personal Cybersecurity Audit",
-      "price": "0",
+      "price": "19",
       "priceCurrency": "USD",
-      "description": "Free personal security audit, prioritized recommendations, quarterly re-audits, and a free domain security check."
+      "description": "Personal cybersecurity audit, prioritized recommendations, and quarterly re-audits. Plans start at $19/month; a free instant domain security check is included."
     },
     {
       "@type": "Offer",
@@ -709,43 +696,10 @@
 </script>
 
 <script>
-  // Pre-select the tier in the waitlist form when a plan CTA is clicked.
-  function preselect(tier) {
-    var sel = document.getElementById('tier');
-    if (sel) sel.value = tier;
-  }
-
-  // Submit to Formspree via fetch so the visitor stays on the page.
-  document.getElementById('waitlist-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    var form = e.target;
-    var status = document.getElementById('form-status');
-    var action = form.getAttribute('action');
-
-    if (action.indexOf('YOUR_FORM_ID') !== -1) {
-      status.className = 'err';
-      status.textContent = 'Waitlist not connected yet. The site owner needs to add their Formspree form ID.';
-      return;
-    }
-    try {
-      var res = await fetch(action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      });
-      if (res.ok) {
-        status.className = 'ok';
-        status.textContent = "You're on the list! We'll email you when your tier opens.";
-        form.reset();
-      } else {
-        status.className = 'err';
-        status.textContent = 'Something went wrong. Please try again in a moment.';
-      }
-    } catch (err) {
-      status.className = 'err';
-      status.textContent = 'Network error. Please check your connection and try again.';
-    }
-  });
+  // The waitlist is now a single Gumroad follow form (posts to Gumroad, which
+  // adds the email to the @crystalpugh audience). Plan pre-selection is no
+  // longer needed; kept as a no-op so any existing CTA onclick calls don't error.
+  function preselect() {}
 </script>
 
 </body>
