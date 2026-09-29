@@ -149,6 +149,19 @@ button {
 button:hover { background: #1a3068; }
 button:disabled { opacity: 0.6; cursor: progress; }
 
+/* Consent checkbox (overrides the uppercase label style used for text fields) */
+.form label.check {
+  display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+  text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600;
+  color: var(--ink); line-height: 1.5; margin-bottom: 0;
+}
+.form label.check input[type="checkbox"] {
+  width: 20px; height: 20px; flex: none; margin-top: 2px; padding: 0;
+  accent-color: var(--navy); cursor: pointer;
+}
+.form label.check a { color: var(--navy); text-decoration: underline; font-weight: 700; }
+.form label.check .req { color: var(--fail); font-weight: 800; }
+
 .error { color: var(--fail); font-size: 14px; margin: 12px 0 0; font-weight: 700; }
 .field-error { margin: 7px 0 0; }
 .hint { color: var(--muted); font-size: 13px; margin: 7px 0 0; font-weight: 600; }

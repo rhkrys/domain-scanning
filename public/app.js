@@ -2,6 +2,8 @@ const form = document.getElementById('scan-form');
 const errorEl = document.getElementById('form-error');
 const domainErrorEl = document.getElementById('domain-error');
 const emailErrorEl = document.getElementById('email-error');
+const authorizeEl = document.getElementById('authorize');
+const authorizeErrorEl = document.getElementById('authorize-error');
 const progressEl = document.getElementById('progress');
 const submitBtn = document.getElementById('submit');
 const resultEl = document.getElementById('result');
@@ -16,14 +18,17 @@ const comingSoonEl = document.getElementById('coming-soon');
 if (!API_ENABLED && comingSoonEl) comingSoonEl.hidden = false;
 
 function clearErrors() {
-  for (const el of [errorEl, domainErrorEl, emailErrorEl]) {
+  for (const el of [errorEl, domainErrorEl, emailErrorEl, authorizeErrorEl]) {
     el.hidden = true;
     el.textContent = '';
   }
 }
 
 function showError(message, field) {
-  const el = field === 'domain' ? domainErrorEl : field === 'email' ? emailErrorEl : errorEl;
+  const el = field === 'domain' ? domainErrorEl
+    : field === 'email' ? emailErrorEl
+    : field === 'authorize' ? authorizeErrorEl
+    : errorEl;
   el.textContent = message;
   el.hidden = false;
   if (field) document.getElementById(field).focus();
@@ -37,6 +42,10 @@ form.addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim();
   if (!domain) {
     showError('Please enter your website address, e.g. example.com.', 'domain');
+    return;
+  }
+  if (!authorizeEl.checked) {
+    showError('Please confirm you own this domain or have permission to audit it, and agree to the Terms.', 'authorize');
     return;
   }
 
