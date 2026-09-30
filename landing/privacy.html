@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy &amp; Terms of Use | Chlamys Piste Inc. (CPI) · techinpeace.com</title>
+<meta name="description" content="Privacy Policy and Terms of Use for Chlamys Piste Inc. (CPI), operator of techinpeace.com — what we collect, how we use it, your choices, and the rules for using our website, domain scanner, and services.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/logo-gold.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-900: #101f36; --navy-800: #142534; --navy-600: #203a7b; --navy-100: #e8eff7;
+    --gold-500: #b9822a; --gold-400: #e8ae5c; --gold-100: #faf3dd;
+    --ink: #0d1a26; --muted: #6a7886; --border: #d9dee4; --white: #ffffff;
+    --font-display: "League Gothic","Oswald","Bebas Neue","Arial Narrow",sans-serif;
+    --font-body: "Lato", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); color: var(--ink); background: #f6f9fb; font-weight: 400; line-height: 1.65; }
+  a { color: var(--navy-600); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--navy-800); border-bottom: 2px solid var(--gold-400); position: sticky; top: 0; z-index: 20; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; color: var(--white); text-decoration: none; }
+  .logo img { height: 40px; width: auto; display: block; }
+  .logo .name { font-family: var(--font-body); font-weight: 700; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; }
+  .logo .descriptor { font-family: var(--font-body); font-weight: 700; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-400); margin-top: 5px; }
+  .logo .wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .backlink { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .backlink:hover { color: var(--gold-400); }
+
+  .doc { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); margin: 34px auto; padding: 44px 48px; }
+  @media (max-width: 620px) { .doc { padding: 30px 22px; } }
+  .eyebrow { display: inline-block; font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: var(--navy-600); padding-bottom: 7px; border-bottom: 2px solid var(--gold-400); margin-bottom: 14px; }
+  h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(38px, 6vw, 54px); text-transform: uppercase; color: var(--navy-800); line-height: 1; margin-bottom: 12px; }
+  .who { font-size: 16px; color: var(--ink); font-weight: 700; }
+  .dates { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .rule { height: 1px; background: var(--border); margin: 26px 0; }
+
+  h2 { font-family: var(--font-display); font-weight: 400; font-size: 27px; text-transform: uppercase; color: var(--navy-800); margin: 34px 0 6px; padding-top: 6px; }
+  h2 .num { color: var(--gold-500); margin-right: 8px; }
+  h2 + .lead, h3 { margin-top: 10px; }
+  h3 { font-family: var(--font-body); font-weight: 700; font-size: 16px; color: var(--navy-800); margin: 20px 0 8px; letter-spacing: .01em; }
+  p { margin: 10px 0; font-size: 15.5px; color: var(--ink); }
+  .muted { color: var(--muted); }
+  ul { margin: 10px 0 10px 4px; padding-left: 22px; }
+  li { margin: 6px 0; font-size: 15.5px; }
+  strong { color: var(--navy-800); }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14.5px; }
+  th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; vertical-align: top; }
+  th { background: #f1f8fa; font-family: var(--font-body); font-weight: 700; color: var(--navy-800); text-transform: uppercase; letter-spacing: .04em; font-size: 12.5px; }
+  td { color: var(--ink); }
+  tr:nth-child(even) td { background: #fafcfe; }
+
+  .callout { background: var(--gold-100); border-left: 3px solid var(--gold-400); padding: 14px 18px; margin: 16px 0; font-size: 15px; }
+  .consent { background: #f1f8fa; border: 1px solid var(--border); border-radius: 2px; padding: 16px 18px; margin: 14px 0; font-style: italic; color: var(--navy-800); font-size: 15px; }
+  .ph { background: var(--gold-100); color: #8a5a12; padding: 0 5px; border-radius: 2px; font-weight: 700; font-style: normal; }
+  .contact { background: #f1f8fa; border: 1px solid var(--border); padding: 18px 20px; margin-top: 16px; font-size: 15.5px; line-height: 1.8; }
+  a.mail { font-weight: 700; }
+
+
+  .jump { display: flex; gap: 10px; flex-wrap: wrap; margin: 26px 0 0; }
+  .jump a { display: inline-block; padding: 9px 18px; border: 1px solid var(--border); border-top: 3px solid var(--gold-400); background: var(--white); color: var(--navy-800); text-decoration: none; font-family: var(--font-display); font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
+  .jump a:hover { color: var(--gold-500); }
+  #privacy, #terms { scroll-margin-top: 90px; }
+
+  footer { background: var(--navy-900); color: rgba(232,239,247,.72); padding: 28px 0; font-size: 14px; border-top: 2px solid var(--gold-400); margin-top: 30px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  footer .fb { display: flex; align-items: center; gap: 12px; }
+  footer .fb img { height: 32px; }
+  footer .fb .name { color: #fff; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+  footer a { color: var(--gold-400); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/">
+      <img src="/logo-gold.png" alt="Chlamys Piste Inc.">
+      <span class="wordmark">
+        <span class="name">Chlamys Piste Inc.</span>
+        <span class="descriptor">techinpeace.com</span>
+      </span>
+    </a>
+    <a class="backlink" href="/">&larr; Back to site</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="jump" aria-label="On this page"><a href="#privacy">Privacy Policy</a><a href="#terms">Terms of Use</a></nav>
+  <article class="doc" id="privacy">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p class="who">Chlamys Piste Inc. (CPI) &nbsp;|&nbsp; techinpeace.com</p>
+    <p class="dates">Effective date: September 24, 2026 &nbsp;&nbsp; Last updated: September 24, 2026</p>
+    <div class="rule"></div>
+
+    <h2><span class="num">1.</span>Our privacy promise</h2>
+    <p>We help people protect their data. We hold ourselves to the same standard.</p>
+    <p>We collect the least information we need to run our domain scanner, send our newsletter, and follow up with you by phone or text when you ask us to. We do not sell your personal information. We do not rent it. We do not use it for cross-site behavioral advertising. We do not share your phone number with anyone for their own marketing.</p>
+    <p>This policy explains what we collect, why, how long we keep it, who we share it with, and the choices you have.</p>
+
+    <h2><span class="num">2.</span>Who we are</h2>
+    <p>Chlamys Piste Inc. ("CPI," "we," "us") is a Delaware corporation and a security and AI consulting firm based in New York, New York. We operate techinpeace.com and related pages, forms, and tools (together, the "Services").</p>
+    <p>This policy covers three Services:</p>
+    <ul>
+      <li><strong>The Domain Scanner:</strong> a free tool that checks the public security setup of a website or email domain.</li>
+      <li><strong>The Newsletter:</strong> our email updates on security, privacy, and trust.</li>
+      <li><strong>Phone and SMS follow-up:</strong> calls and text messages we send only after you give us permission.</li>
+    </ul>
+    <p>It does not cover paid client engagements. Those are governed by your service agreement and any data processing terms signed with it.</p>
+
+    <h2><span class="num">3.</span>Information we collect</h2>
+
+    <h3>3.1 Domain Scanner</h3>
+    <p>The scanner reads public records that anyone on the internet can see. It does not log in to your systems, test passwords, or try to break anything.</p>
+    <table>
+      <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td>Domain name you enter</td><td>To run the scan</td><td>Yes</td></tr>
+        <tr><td>Public DNS, email authentication (SPF, DKIM, DMARC), SSL/TLS, and HTTP security header results for that domain</td><td>To produce your report</td><td>Yes (created by the scan)</td></tr>
+        <tr><td>Email address</td><td>To send you the full report</td><td>Only if you want the report emailed</td></tr>
+        <tr><td>Name, organization, role</td><td>To tailor the report and any follow-up</td><td>Optional</td></tr>
+        <tr><td>IP address, browser type, time of request</td><td>To stop abuse, rate-limit automated scans, and keep the tool running</td><td>Yes (collected automatically)</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">Only scan domains you own or have permission to assess. By using the scanner, you confirm you have that authority. We may block scans we believe are abusive.</div>
+
+    <h3>3.2 Newsletter</h3>
+    <table>
+      <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td>Email address</td><td>To deliver the newsletter</td><td>Yes</td></tr>
+        <tr><td>First name</td><td>To personalize the greeting</td><td>Optional</td></tr>
+        <tr><td>Topics or industry you pick</td><td>To send content that fits you</td><td>Optional</td></tr>
+        <tr><td>Sign-up date, source, and consent record</td><td>To prove you opted in</td><td>Yes (collected automatically)</td></tr>
+        <tr><td>Opens and link clicks</td><td>To see which topics are useful</td><td>See Section 8 to limit this</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.3 Phone and SMS follow-up</h3>
+    <table>
+      <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td>Mobile or phone number</td><td>To call or text you as you asked</td><td>Only if you opt in</td></tr>
+        <tr><td>Consent record: date, time, form, and exact wording you agreed to</td><td>To prove consent and honor your choices</td><td>Yes, if you opt in</td></tr>
+        <tr><td>Message history and replies, including STOP and HELP</td><td>To support you and honor opt-outs</td><td>Yes, if you opt in</td></tr>
+        <tr><td>Notes from a call you schedule with us</td><td>To follow up on what you asked about</td><td>Only if a call happens</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">Giving us your phone number is never a condition of using the scanner, reading the newsletter, or buying our services.</div>
+
+    <h2><span class="num">4.</span>How we use information</h2>
+    <p>We use your information only to:</p>
+    <ul>
+      <li>Run scans and deliver reports you request.</li>
+      <li>Send the newsletter you signed up for.</li>
+      <li>Call or text you when you have agreed to it.</li>
+      <li>Answer your questions and schedule consultations you ask for.</li>
+      <li>Protect the Services from spam, fraud, and abuse.</li>
+      <li>Fix errors and improve the Services, using aggregated or de-identified data where we can.</li>
+      <li>Meet legal obligations and enforce our terms.</li>
+    </ul>
+    <p>We may use combined, de-identified scan statistics (for example, "40% of scanned domains lack DMARC") in articles and reports. These statistics never name you, your organization, or your domain.</p>
+
+    <h2><span class="num">5.</span>What we do not do</h2>
+    <ul>
+      <li>We do not sell or rent your personal information.</li>
+      <li>We do not use your data for cross-context behavioral advertising.</li>
+      <li>We do not publish or share your individual scan results.</li>
+      <li>We do not share your phone number or SMS consent with third parties or affiliates for their marketing.</li>
+      <li>We do not add you to the newsletter just because you ran a scan, unless you check the box to subscribe.</li>
+      <li>We do not use your personal information or scan results to train AI models without your separate, clear permission.</li>
+      <li>We do not collect sensitive data such as health, financial account, or government ID information through these Services.</li>
+    </ul>
+
+    <h2><span class="num">6.</span>Text messages and calls</h2>
+    <h3>6.1 Consent</h3>
+    <p>We send marketing texts and make marketing calls only after you give prior express written consent, for example by checking an unchecked box and submitting a form with your number. Consent is not required to buy anything from us.</p>
+    <p class="muted">Sample consent language on our forms:</p>
+    <div class="consent">"By checking this box, I agree to receive calls and text messages from Chlamys Piste Inc. (CPI) at the number provided about my scan results, services, and security updates. Messages may be sent using automated technology. Consent is not a condition of purchase. Msg frequency varies, up to 6 msgs/month. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help."</div>
+    <h3>6.2 Your controls</h3>
+    <ul>
+      <li><strong>Stop texts:</strong> reply STOP, CANCEL, END, QUIT, or UNSUBSCRIBE. You will get one confirmation text and nothing after that.</li>
+      <li><strong>Get help:</strong> reply HELP or email <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a>.</li>
+      <li><strong>Stop calls:</strong> tell us on any call, or email us. We will add you to our internal do-not-call list.</li>
+    </ul>
+    <p class="muted">Carriers are not liable for delayed or undelivered messages.</p>
+    <h3>6.3 Timing</h3>
+    <p>We only call or text between 8 a.m. and 8 p.m. in your local time, unless you ask us to reach you at another time.</p>
+    <h3>6.4 Mobile information</h3>
+    <p>No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Text messaging opt-in data and consent will not be shared with any third parties, except service providers that deliver messages on our behalf.</p>
+
+    <h2><span class="num">7.</span>When we share information</h2>
+    <p>We share personal information only with the service providers listed below, only as much as each one needs, and only to run the Services. Each provider is bound by contract or terms to protect it and use it only for us.</p>
+    <table>
+      <thead><tr><th>Provider type</th><th>Purpose</th><th>Provider</th></tr></thead>
+      <tbody>
+        <tr><td>Cloud hosting</td><td>Runs the scanner and website</td><td>Amazon Web Services</td></tr>
+        <tr><td>Email delivery</td><td>Sends your scan report and transactional email</td><td>Google Workspace</td></tr>
+        <tr><td>Newsletter</td><td>Sends our email newsletter</td><td>Substack</td></tr>
+        <tr><td>Payments</td><td>Processes payments and invoices for paid services</td><td>Stripe</td></tr>
+        <tr><td>SMS and voice</td><td>Sends texts and places calls</td><td>Zoom</td></tr>
+        <tr><td>Video meetings</td><td>Hosts video consultations you schedule</td><td>Zoom</td></tr>
+        <tr><td>Scheduling</td><td>Books consultations you request</td><td>HoneyBook, Calendly</td></tr>
+        <tr><td>CRM</td><td>Keeps track of your requests and preferences</td><td>HoneyBook</td></tr>
+        <tr><td>Workshop registration</td><td>Handles ticketing and sign-ups for workshops and events</td><td>Eventbrite</td></tr>
+        <tr><td>Online store and waitlist</td><td>Sells digital products and manages our follow and waitlist email list</td><td>Gumroad</td></tr>
+        <tr><td>DNS, security, and bot protection</td><td>Protects the site from attacks</td><td>Amazon Web Services (Route&nbsp;53, CloudFront)</td></tr>
+      </tbody>
+    </table>
+    <p>We may also disclose information when:</p>
+    <ul>
+      <li>You direct us to, such as forwarding your report to your IT provider.</li>
+      <li>The law requires it, such as a valid subpoena or court order. Where allowed, we will tell you first.</li>
+      <li>Safety requires it, to prevent fraud, abuse, or harm.</li>
+      <li>The business changes, such as a merger or sale. We will notify you before your information falls under a materially different policy.</li>
+    </ul>
+
+    <h2><span class="num">8.</span>Cookies and tracking</h2>
+    <p>We use only the cookies needed to run the site, keep forms working, and block bots. We do not use advertising cookies or third-party ad pixels.</p>
+    <p>If we use analytics, we choose privacy-friendly tools that do not build personal profiles, and we ask first where the law requires. Our newsletter may track opens and clicks. You can block this by turning off image loading in your email app, or by asking us to disable tracking for your address.</p>
+
+    <h2><span class="num">9.</span>How long we keep information</h2>
+    <table>
+      <thead><tr><th>Information</th><th>How long we keep it</th></tr></thead>
+      <tbody>
+        <tr><td>Scan results linked to your email</td><td>12 months, then deleted or de-identified</td></tr>
+        <tr><td>Anonymous scans (no email given)</td><td>90 days</td></tr>
+        <tr><td>Newsletter subscriber data</td><td>Until you unsubscribe, then deleted within 30 days (we keep a minimal suppression record so we never email you again)</td></tr>
+        <tr><td>Newsletter inactive for 24 months</td><td>Removed from the list</td></tr>
+        <tr><td>SMS and call consent records</td><td>5 years after consent ends, as legal proof of consent</td></tr>
+        <tr><td>SMS opt-out (STOP) records</td><td>Kept so we never text you again</td></tr>
+        <tr><td>Server and security logs</td><td>90 days, unless needed to investigate an incident</td></tr>
+        <tr><td>Support emails and call notes</td><td>24 months after last contact</td></tr>
+      </tbody>
+    </table>
+
+    <h2><span class="num">10.</span>Your rights and choices</h2>
+    <p>Wherever you live, you can ask us to:</p>
+    <ul>
+      <li>Tell you what personal information we hold about you and send you a copy.</li>
+      <li>Correct information that is wrong.</li>
+      <li>Delete your information.</li>
+      <li>Stop using your information for marketing.</li>
+      <li>Stop analytics tracking tied to you.</li>
+    </ul>
+    <p>Residents of California, Colorado, Connecticut, Virginia, and other states with privacy laws may have additional rights. We honor them. We do not sell or share personal information for cross-context behavioral advertising, so there is nothing to opt out of on that front. We will honor Global Privacy Control browser signals as an opt-out request.</p>
+    <p>To make a request, email <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a> with the subject "Privacy Request." We will confirm your identity using only what we already have, usually your email or phone number. We will respond within 30 days, or sooner if the law requires. You may use an authorized agent. We will not treat you differently for using your rights. If we deny your request, you may appeal by replying to our decision.</p>
+
+    <h2><span class="num">11.</span>Security</h2>
+    <p>We protect your information with encryption in transit, access limited to people who need it, multi-factor authentication on our accounts, vendor review, and a written incident response plan. We follow the New York SHIELD Act.</p>
+    <p>No system is perfectly secure. If a breach puts your personal information at risk, we will notify you and the authorities as the law requires, without unreasonable delay.</p>
+
+    <h2><span class="num">12.</span>Children</h2>
+    <p>Our Services are for businesses and adults. We do not knowingly collect personal information from anyone under 16. If you believe a child gave us information, email us and we will delete it.</p>
+
+    <h2><span class="num">13.</span>Where we process data</h2>
+    <p>We store and process data in the United States. If you contact us from outside the U.S., your information will be transferred here. Where required, we use appropriate safeguards and will share details on request.</p>
+
+    <h2><span class="num">14.</span>Changes to this policy</h2>
+    <p>If we make a material change, we will post the new version here and email subscribers at least 30 days before it takes effect. We will not use information collected under an earlier version for a materially different purpose without telling you and, where required, getting your consent.</p>
+
+    <h2><span class="num">15.</span>Contact us</h2>
+    <div class="contact">
+      <strong>Chlamys Piste Inc. (CPI)</strong><br>
+      Attn: Privacy<br>
+      99 Wall Street, Suite 4734<br>
+      New York, NY 10005, United States<br>
+      Email: <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a><br>
+      Phone: <a class="mail" href="tel:+13479734629">(347) 973-4629</a>
+    </div>
+  </article>
+
+  <article class="doc" id="terms">
+    <span class="eyebrow">Legal</span>
+    <h1>Terms of Use</h1>
+    <p class="who">Chlamys Piste Inc. (CPI) &nbsp;|&nbsp; techinpeace.com</p>
+    <p class="dates">Effective date: September 29, 2026 &nbsp;&nbsp; Last updated: September 29, 2026</p>
+    <div class="rule"></div>
+
+    <div class="callout"><strong>Plain-language summary:</strong> These Terms are the rules for using techinpeace.com and our tools. By using the site, you agree to follow them. They cover what you can and cannot do, what our free domain scanner is (and is not), who owns what, and what happens if something goes wrong.</div>
+
+    <h2><span class="num">1.</span>Acceptance of these Terms</h2>
+    <p>These Terms of Use ("Terms") are a legal agreement between you and Chlamys Piste Inc., a Delaware corporation ("CPI," "we," "us," or "our"). By accessing or using techinpeace.com and any related pages, forms, and tools (together, the "Site" and the "Services"), you agree to these Terms and to our Privacy Policy above. If you do not agree, do not use the Site or the Services.</p>
+    <p>If you use the Services for a business, you confirm that you have authority to accept these Terms for that business.</p>
+
+    <h2><span class="num">2.</span>Who may use the Services</h2>
+    <p>The Services are for businesses and adults. You may use them only if you are at least 18 years old. By using the Services, you confirm that you meet this requirement and that the information you give us is true and complete.</p>
+
+    <h2><span class="num">3.</span>The Domain Scanner</h2>
+    <p>The Domain Scanner reads public records about a website or email domain, such as DNS, email authentication (SPF, DKIM, DMARC), SSL/TLS, and HTTP security headers, and turns them into a grade and a list of suggested next steps.</p>
+    <ul>
+      <li><strong>Authorization.</strong> Only scan domains you own or have permission to assess. By running a scan, you confirm you have that authority.</li>
+      <li><strong>A starting point, not an audit.</strong> A scan is a point-in-time check of public information. It is not a full security audit, penetration test, or compliance assessment, and it can miss problems.</li>
+      <li><strong>No guarantee.</strong> A good grade does not mean a domain is secure, and a poor grade does not mean it has been compromised. Decisions you make based on a report are your responsibility.</li>
+      <li><strong>Fair use.</strong> We may rate-limit or block scans that we believe are abusive, automated, or aimed at domains you do not control.</li>
+    </ul>
+
+    <h2><span class="num">4.</span>Acceptable use</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Break any law or regulation, or violate the rights of others.</li>
+      <li>Scan or probe a domain you do not own or have permission to assess, or use scan results to attack, harass, or extort anyone.</li>
+      <li>Try to gain unauthorized access to the Site, other people's accounts, or our systems.</li>
+      <li>Submit content that is illegal, harmful, harassing, hateful, defamatory, or that infringes intellectual property or privacy rights.</li>
+      <li>Use the Services to send spam, phishing messages, or chain letters.</li>
+      <li>Introduce viruses, ransomware, or any other malicious code.</li>
+      <li>Scrape, copy, or republish large parts of the Site without our written permission.</li>
+      <li>Use bots, automated tools, or AI agents to overwhelm, abuse, or reverse-engineer the Services, including bulk or high-volume scanning.</li>
+      <li>Misrepresent your identity or affiliation, including impersonating CPI or its team.</li>
+      <li>Interfere with security features, rate limits, CAPTCHA, or access controls.</li>
+      <li>Use the Services in a way that violates U.S. or international export, sanctions, or anti-corruption laws.</li>
+    </ul>
+
+    <h2><span class="num">5.</span>Intellectual property</h2>
+    <p>The Site and its content, including software, designs, text, graphics, logos, videos, and workshop materials, are owned by CPI or its licensors and are protected by copyright, trademark, and other laws. We grant you a limited, personal, non-exclusive, non-transferable, revocable license to access and use the Site and Services for their intended purpose. You get no other rights.</p>
+    <p>The names "Cyber Protection Consulting," "Secure &amp; Grow," and "techinpeace," and our logos, belong to CPI. You may not use them without our written permission.</p>
+
+    <h2><span class="num">6.</span>Your information and content</h2>
+    <p>You keep ownership of what you give us, such as the domain you enter, your form answers, and anything you send by email or text ("Your Content"). You grant CPI a non-exclusive, royalty-free license to use Your Content only as needed to run the Services for you, provide the reports and follow-up you ask for, protect the Services from abuse, and comply with the law.</p>
+    <p>How we handle personal information, including that we do not publish your individual scan results and do not use your information to train AI models without your separate permission, is described in our Privacy Policy above. If these Terms and the Privacy Policy differ on how personal information is used, the Privacy Policy controls. You confirm that you have the right to give us Your Content.</p>
+
+    <h2><span class="num">7.</span>Feedback</h2>
+    <p>If you send us ideas or suggestions, you agree that we may use them without any obligation or payment to you.</p>
+
+    <h2><span class="num">8.</span>Newsletter, calls, and text messages</h2>
+    <p>We send the newsletter only to people who sign up. We make marketing calls and send marketing texts only after you give prior express written consent. Consent is not a condition of using the Services or buying anything from us. You can opt out at any time, for example by replying STOP to a text or using the unsubscribe link in an email. Full details are in Sections 3.2, 3.3, and 6 of the Privacy Policy above.</p>
+
+    <h2><span class="num">9.</span>Paid services, payments, and workshops</h2>
+    <ul>
+      <li><strong>Client engagements.</strong> Paid consulting and audit engagements are governed by a separate written agreement or proposal. If it conflicts with these Terms, that agreement controls for that engagement.</li>
+      <li><strong>Payments.</strong> Payments are processed by third-party payment providers such as Stripe. We do not store your full card details. Prices, what is included, and refund terms are stated at the time of purchase or in your agreement.</li>
+      <li><strong>Workshops and events.</strong> Workshop registration may be handled through a third-party platform such as Eventbrite, and its terms also apply. We may change the schedule, format, or presenter of a workshop, or cancel it, and will tell registered attendees if we do.</li>
+    </ul>
+
+    <h2><span class="num">10.</span>Third-party services and links</h2>
+    <p>The Site may link to or use third-party services, such as Google, Substack, Stripe, Zoom, HoneyBook, Calendly, Eventbrite, Gumroad, and Amazon Web Services. We are not responsible for those services. Your use of them is governed by their own terms and privacy policies.</p>
+
+    <h2><span class="num">11.</span>AI-assisted content and informational use</h2>
+    <p>Some parts of the Services, and some of our content and workshops, use or discuss AI and automated tools. Automated outputs, including scan reports, may be inaccurate or incomplete. The Site and its content are for general information and education. They are not legal, financial, medical, insurance, or other professional advice, and they do not create a consulting relationship unless we have signed an agreement with you.</p>
+
+    <h2><span class="num">12.</span>Service changes and availability</h2>
+    <p>We may add, change, suspend, or remove parts of the Site and Services at any time, with or without notice. We aim for high availability but do not promise that the Services will always be available, on time, secure, or error-free.</p>
+
+    <h2><span class="num">13.</span>Termination</h2>
+    <p>You may stop using the Services at any time. We may suspend or end your access, or block requests from you, if you break these Terms, if the law requires it, or if continued access creates a risk to others or to our systems. Sections that by their nature should survive termination, such as Intellectual Property, Disclaimers, Limitation of Liability, Indemnification, and Governing Law, will continue to apply.</p>
+
+    <h2><span class="num">14.</span>Disclaimers</h2>
+    <p>THE SITE AND SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE. TO THE FULLEST EXTENT PERMITTED BY LAW, CPI DISCLAIMS ALL WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, AND QUIET ENJOYMENT. CPI DOES NOT WARRANT THAT ANY SCAN OR REPORT WILL IDENTIFY ALL SECURITY ISSUES OR THAT FOLLOWING A RECOMMENDATION WILL PREVENT AN INCIDENT. SOME STATES AND COUNTRIES DO NOT ALLOW THE EXCLUSION OF CERTAIN WARRANTIES, SO SOME OF THESE EXCLUSIONS MAY NOT APPLY TO YOU.</p>
+
+    <h2><span class="num">15.</span>Limitation of liability</h2>
+    <p>TO THE FULLEST EXTENT PERMITTED BY LAW, CPI AND ITS DIRECTORS, OFFICERS, EMPLOYEES, CONTRACTORS, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR RELATING TO YOUR USE OF THE SITE OR SERVICES. OUR TOTAL LIABILITY FOR ALL CLAIMS RELATING TO THE SITE AND SERVICES IS LIMITED TO THE GREATER OF (A) THE AMOUNT YOU PAID US FOR THE SERVICE THAT GAVE RISE TO THE CLAIM IN THE 12 MONTHS BEFORE THE CLAIM AND (B) ONE HUNDRED U.S. DOLLARS (USD $100). NOTHING IN THESE TERMS LIMITS LIABILITY THAT CANNOT BE LIMITED BY LAW, INCLUDING LIABILITY FOR FRAUD, GROSS NEGLIGENCE, OR WILLFUL MISCONDUCT.</p>
+
+    <h2><span class="num">16.</span>Indemnification</h2>
+    <p>To the extent permitted by law, you agree to defend, indemnify, and hold harmless CPI and its team from any claims, losses, liabilities, damages, costs, and expenses (including reasonable legal fees) arising from your use of the Site or Services, Your Content, a scan of a domain you were not authorized to assess, or your violation of these Terms or the law.</p>
+
+    <h2><span class="num">17.</span>Governing law and disputes</h2>
+    <p>These Terms are governed by the laws of the State of New York, USA, without regard to conflict-of-laws rules. Any dispute arising from or relating to these Terms or the Services will be brought exclusively in the state or federal courts located in New York County, New York, and you and CPI consent to the personal jurisdiction of those courts.</p>
+    <p>If you live in a country or state with mandatory consumer protections, nothing in this section removes your right to bring a case in your local courts or to benefit from those mandatory rights.</p>
+
+    <h2><span class="num">18.</span>Accessibility</h2>
+    <p>We want the Site to be usable by everyone. If you have trouble using it because of a disability, contact us using the details in Section 23 and we will do our best to help.</p>
+
+    <h2><span class="num">19.</span>Export controls and sanctions</h2>
+    <p>You may not use the Services if you are located in a country, or are a person, subject to U.S. or other applicable embargoes or sanctions, or if you appear on a U.S. or international restricted-party list. You agree to follow all applicable export control and sanctions laws.</p>
+
+    <h2><span class="num">20.</span>Notices and electronic communications</h2>
+    <p>We may send notices to you by email, by posting on the Site, or by any other reasonable method. You agree to receive electronic communications from us and that they meet any legal requirement for written notice.</p>
+
+    <h2><span class="num">21.</span>Changes to these Terms</h2>
+    <p>We may change these Terms from time to time. If we make a material change, we will post the new version here, update the effective date, and email subscribers at least 30 days before it takes effect. If the law requires, we will also ask for your consent. Your continued use of the Services after a change takes effect means you accept the new Terms.</p>
+
+    <h2><span class="num">22.</span>General</h2>
+    <p>These Terms, together with the Privacy Policy and any written agreement we sign with you, are the entire agreement between you and CPI about the Site and Services. If any part of these Terms is found unenforceable, the rest stays in effect. Our failure to enforce a right is not a waiver of that right. You may not assign these Terms without our written consent; we may assign them as part of a merger, acquisition, or reorganization.</p>
+
+    <h2><span class="num">23.</span>Contact us</h2>
+    <div class="contact">
+      <strong>Chlamys Piste Inc. (CPI)</strong><br>
+      99 Wall Street, Suite 4734<br>
+      New York, NY 10005, United States<br>
+      Email: <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a><br>
+      Phone: <a class="mail" href="tel:+13479734629">(347) 973-4629</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">
+      <img src="/logo-gold.png" alt="" aria-hidden="true">
+      <span class="name">Chlamys Piste Inc. · techinpeace.com</span>
+    </div>
+    <span>&copy; 2026 Chlamys Piste Inc. (CPI). All rights reserved. · <a href="/">Home</a> · <a href="#privacy">Privacy Policy</a> · <a href="#terms">Terms of Use</a> · <a href="/scan">Domain Scanner</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

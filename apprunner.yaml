@@ -1,0 +1,19 @@
+# AWS App Runner configuration for deploying straight from this GitHub repo
+# (no Docker required). App Runner builds and runs the app on its managed
+# Node.js runtime and injects PORT, which server.js already respects.
+#
+# Set SMTP_* and MAIL_FROM as runtime environment variables (or secrets) in
+# the App Runner console — see deploy/aws/DEPLOY.md.
+
+version: 1.0
+runtime: nodejs22
+
+build:
+  commands:
+    build:
+      - npm ci --omit=dev
+
+run:
+  command: node server.js
+  network:
+    port: 8080
