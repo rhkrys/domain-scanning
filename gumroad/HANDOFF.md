@@ -22,7 +22,7 @@ Paste this into the chat that has Gumroad access, and attach `gumroad/profile.ht
 
 ## Design reference (so the page stays on-brand if regenerated)
 - Palette: navy `#142534` / `#203a7b`, gold `#e8ae5c` / `#b9822a`, paper `#f1f8fa`, ink `#0d1a26`.
-- Fonts: **League Gothic** (display, uppercase headings), **Open Sans** (body).
+- Fonts: **League Gothic** (display, uppercase headings), **Lato** (body).
 - Logo: `https://www.techinpeace.com/logo-gold.png`
 - Brand: "Secure & Grow" by Crystal Pugh / Cyber Protection Consulting.
 - Must-haves: fully responsive, light + dark mode, product-page links only (no checkout embeds), `data-gumroad-follow` signup.

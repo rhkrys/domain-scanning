@@ -18,7 +18,7 @@ const CPI = {
   warn: '#c98a2b',
   fail: '#c0392b',
   info: '#6a7886',
-  fontBody: "'Open Sans', Arial, Helvetica, sans-serif",
+  fontBody: "'Lato', Arial, Helvetica, sans-serif",
   fontDisplay: "'Oswald', 'Arial Narrow', Arial, sans-serif",
 };
 
@@ -105,8 +105,8 @@ export function renderHtml(report) {
     .join('');
 
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Open+Sans:wght@600;700&display=swap" rel="stylesheet"></head>
-  <body style="margin:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight:600;color:${CPI.ink}">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet"></head>
+  <body style="margin:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight: 400;color:${CPI.ink}">
   <div style="max-width:640px;margin:0 auto;padding:24px">
     <div style="background:${CPI.surface};border:1px solid ${CPI.border};border-radius:2px;overflow:hidden">
       <!-- Brand header (logo embedded as an inline CID attachment) -->

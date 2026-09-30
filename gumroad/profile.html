@@ -7,14 +7,14 @@
 <meta name="description" content="Practical cybersecurity, scam protection, and privacy tools for individuals, families, and executives. By Crystal Pugh / Cyber Protection Consulting.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 <style>
   /* ===== Cyber Protection / Secure & Grow — light + dark, navy + gold ===== */
   :root {
     --navy-900:#101f36; --navy-800:#142534; --navy-600:#203a7b;
     --gold:#e8ae5c; --gold-soft:#f0c889; --gold-deep:#b9822a;
     --font-display:"League Gothic","Oswald","Bebas Neue","Arial Narrow",sans-serif;
-    --font-body:"Open Sauce One","Open Sans","Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-body:"Lato", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
 
     /* Light theme (default) */
     --bg:#f1f8fa; --surface:#ffffff; --ink:#0d1a26; --muted:#6a7886;
@@ -30,7 +30,7 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior:smooth; }
-  body { font-family:var(--font-body); font-weight:600; color:var(--ink); background:var(--bg); line-height:1.6; }
+  body { font-family:var(--font-body); font-weight: 400; color:var(--ink); background:var(--bg); line-height:1.6; }
   a { color:var(--gold-text); }
   .wrap { max-width:1040px; margin:0 auto; padding:0 22px; }
   h1,h2,h3 { font-family:var(--font-display); font-weight:400; line-height:1.02; letter-spacing:.01em; text-transform:uppercase; }
@@ -49,7 +49,7 @@
   .brand .desc { font-family:var(--font-body); font-weight:700; font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-top:5px; }
   .brand .wm { display:flex; flex-direction:column; line-height:1; }
   .nav .links { display:flex; gap:18px; align-items:center; }
-  .nav .links a { color:#e2e9f2; text-decoration:none; font-size:14px; font-weight:600; }
+  .nav .links a { color:#e2e9f2; text-decoration:none; font-size:14px; font-weight: 700; }
   .nav .links a:hover { color:var(--gold); }
   @media (max-width:640px){ .nav .links a:not(.btn){ display:none; } }
 
@@ -68,7 +68,7 @@
   .center { text-align:center; }
   .center .eyebrow { display:inline-block; }
   h2.title { font-size:clamp(28px,4vw,40px); margin-bottom:10px; }
-  .lead { color:var(--muted); max-width:620px; margin:0 auto 40px; font-weight:600; }
+  .lead { color:var(--muted); max-width:620px; margin:0 auto 40px; font-weight: 400; }
 
   /* Product cards (link out to product pages — no checkout here) */
   .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
@@ -78,13 +78,13 @@
   .card .ico { font-size:30px; margin-bottom:14px; }
   .card h3 { font-size:24px; margin-bottom:8px; color:var(--ink); }
   .card p { color:var(--muted); font-size:15px; flex:1; }
-  .card .go { margin-top:16px; font-family:var(--font-body); font-weight:800; color:var(--gold-text); font-size:14px; }
+  .card .go { margin-top:16px; font-family:var(--font-body); font-weight: 700; color:var(--gold-text); font-size:14px; }
 
   /* Follow / email signup */
   .follow { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
   .follow-inner { max-width:600px; margin:0 auto; text-align:center; padding:64px 0; }
   form[data-gumroad-follow] { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:22px; }
-  form[data-gumroad-follow] input[type=email] { flex:1; min-width:240px; padding:13px 15px; font-size:16px; font-family:var(--font-body); font-weight:600; border:1px solid var(--border); border-radius:2px; background:var(--bg); color:var(--ink); }
+  form[data-gumroad-follow] input[type=email] { flex:1; min-width:240px; padding:13px 15px; font-size:16px; font-family:var(--font-body); font-weight: 400; border:1px solid var(--border); border-radius:2px; background:var(--bg); color:var(--ink); }
   form[data-gumroad-follow] input:focus { outline:2px solid var(--gold); border-color:transparent; }
   [data-gumroad-follow-message] { display:block; margin-top:14px; font-size:14px; color:var(--gold-text); font-weight:700; }
 

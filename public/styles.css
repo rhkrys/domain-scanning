@@ -2,9 +2,8 @@
    Navy + gold, light "paper" ground, condensed display type, sharp 2px corners,
    gold underline rules and 45° navy/gold diagonal-stripe accents.
 
-   Web fonts load from Google Fonts at runtime (see index.html <link>). The one
-   brand face not on Google Fonts — Open Sauce One — is listed first in the body
-   stack so a self-hosted copy is used if present, else Open Sans is loaded. */
+   Web fonts load from Google Fonts at runtime (see index.html <link>). Body text
+   is Lato (regular 400 and bold 700; Lato has no 600 or 800 weight). */
 
 :root {
   /* Brand palette (from the CPI brand system) */
@@ -28,7 +27,7 @@
   --info: #6a7886;
 
   --font-display: "League Gothic", "Oswald", "Bebas Neue", "Arial Narrow", sans-serif;
-  --font-body: "Open Sauce One", "Open Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Lato", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
@@ -39,7 +38,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.55;
   min-height: 100vh;
 }
@@ -59,7 +58,7 @@ body {
 /* Mirrored top nav — links back to the apex landing page sections */
 .brandnav { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: flex-end; }
 .brandnav a {
-  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  font-family: var(--font-body); font-weight: 400; font-size: 14px;
   color: #e2e9f2; text-decoration: none; letter-spacing: 0.01em;
 }
 .brandnav a:hover { color: var(--gold); }
@@ -100,7 +99,7 @@ body {
   font-size: 58px; line-height: 0.92; letter-spacing: 0.01em;
   margin: 0 0 16px;
 }
-.sub { color: var(--muted); margin: 0 0 26px; font-size: 16px; font-weight: 600; max-width: 60ch; }
+.sub { color: var(--muted); margin: 0 0 26px; font-size: 16px; font-weight: 400; max-width: 60ch; }
 
 /* 45° navy/gold diagonal-stripe corner accent (brand signature) */
 .stripe-corner {
@@ -131,10 +130,10 @@ body {
   font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
   color: var(--navy-deep); margin-bottom: 7px;
 }
-.form .muted { color: var(--muted); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.form .muted { color: var(--muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
 .form input {
   width: 100%; padding: 13px 14px; font-size: 15px; font-family: var(--font-body);
-  font-weight: 600; background: var(--surface); color: var(--ink);
+  font-weight: 400; background: var(--surface); color: var(--ink);
   border: 1px solid var(--border); border-radius: 2px;
 }
 .form input::placeholder { font-family: var(--font-mono); color: #9aa6b1; font-weight: 400; }
@@ -152,7 +151,7 @@ button:disabled { opacity: 0.6; cursor: progress; }
 /* Consent checkbox (overrides the uppercase label style used for text fields) */
 .form label.check {
   display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
-  text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600;
+  text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 400;
   color: var(--ink); line-height: 1.5; margin-bottom: 0;
 }
 .form label.check input[type="checkbox"] {
@@ -160,11 +159,11 @@ button:disabled { opacity: 0.6; cursor: progress; }
   accent-color: var(--navy); cursor: pointer;
 }
 .form label.check a { color: var(--navy); text-decoration: underline; font-weight: 700; }
-.form label.check .req { color: var(--fail); font-weight: 800; }
+.form label.check .req { color: var(--fail); font-weight: 700; }
 
 .error { color: var(--fail); font-size: 14px; margin: 12px 0 0; font-weight: 700; }
 .field-error { margin: 7px 0 0; }
-.hint { color: var(--muted); font-size: 13px; margin: 7px 0 0; font-weight: 600; }
+.hint { color: var(--muted); font-size: 13px; margin: 7px 0 0; font-weight: 400; }
 .progress {
   color: var(--navy); font-size: 14px; margin: 14px 0 0; text-align: center;
   font-weight: 700; letter-spacing: 0.02em;
@@ -243,13 +242,13 @@ h3 {
 
 /* ---- Post-report CTA (email + book a Zoom review) ---------------------- */
 .cta .eyebrow { margin-bottom: 10px; }
-.cta-lead { color: var(--muted); font-weight: 600; margin: 0 0 18px; font-size: 15px; }
+.cta-lead { color: var(--muted); font-weight: 400; margin: 0 0 18px; font-size: 15px; }
 .cta-email { margin-bottom: 8px; }
 .cta-email-lead { font-weight: 700; color: var(--navy-deep); margin: 0 0 10px; font-size: 14px; }
 #capture-form { display: flex; gap: 10px; flex-wrap: wrap; }
 #capture-form input {
   flex: 1 1 220px; padding: 12px 14px; font-size: 15px; font-family: var(--font-body);
-  font-weight: 600; background: var(--surface); color: var(--ink);
+  font-weight: 400; background: var(--surface); color: var(--ink);
   border: 1px solid var(--border); border-radius: 2px;
 }
 #capture-form input:focus { outline: 2px solid var(--navy); border-color: var(--navy); }
@@ -289,7 +288,7 @@ h3 {
 .brandfoot img { height: 36px; width: auto; }
 .brandfoot .name { font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 14px; }
 .brandfoot .descriptor { color: var(--gold); font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; margin-top: 4px; }
-.brandfoot .note { color: #9fb0bf; font-size: 12px; margin-left: auto; font-weight: 600; }
+.brandfoot .note { color: #9fb0bf; font-size: 12px; margin-left: auto; font-weight: 400; }
 
 @media (max-width: 560px) {
   .hero h1 { font-size: 44px; }
