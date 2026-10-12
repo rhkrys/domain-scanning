@@ -113,7 +113,8 @@
   .scanstrip { background: var(--gold-100); border-bottom: 1px solid var(--border); padding: 24px 0; }
   .scanstrip .wrap { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
   .scanstrip .txt { display: flex; align-items: center; gap: 14px; }
-  .scanstrip .ico { font-size: 30px; }
+  .scanstrip .ico { width: 46px; height: 46px; display: grid; place-items: center; background: var(--navy-800); border-radius: var(--radius); padding: 7px; flex: none; }
+  .scanstrip .ico img { width: 100%; height: auto; display: block; }
   .scanstrip strong { font-size: 17px; }
   .scanstrip .sm { color: var(--muted); font-size: 14.5px; font-weight: 400; }
 
@@ -130,9 +131,13 @@
   }
   .persona-card:hover { box-shadow: var(--shadow); }
   .persona-card .icon {
-    width: 48px; height: 48px; border-radius: var(--radius); display: grid; place-items: center;
-    font-size: 24px; margin-bottom: 16px; background: var(--navy-100); color: var(--navy-800);
+    width: 64px; height: 48px; border-radius: var(--radius); display: grid; place-items: center;
+    margin-bottom: 16px; background: var(--navy-800); padding: 8px;
   }
+  .persona-card .icon img { display: block; width: auto; height: 100%; max-width: 100%; object-fit: contain; }
+  .persona-card .icon.k1 img { height: 55%; }
+  .persona-card .icon.k2 img { height: 75%; }
+  .persona-card .icon.k3 img { height: 100%; }
   .persona-card h3 { font-size: 26px; margin-bottom: 6px; }
   .persona-card .who { font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--gold-500); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
   .persona-card p { color: var(--muted); font-size: 15.5px; flex: 1; font-weight: 400; }
@@ -327,7 +332,7 @@
 <section class="scanstrip">
   <div class="wrap">
     <div class="txt">
-      <span class="ico">🛡️</span>
+      <span class="ico"><img src="/key-solid.png" alt=""></span>
       <div>
         <strong>Free website domain security check</strong>
         <div class="sm">Get an instant A–F grade for your DNS, email authentication (SPF/DMARC/DKIM), and TLS — no sign-up.</div>
@@ -344,21 +349,21 @@
     <p>Pick the description that sounds like you, and we'll show you exactly what you get.</p>
     <div class="persona-grid">
       <div class="persona-card">
-        <div class="icon">👤</div>
+        <div class="icon k1"><img src="/key-solid.png" alt=""></div>
         <div class="who">From $19 / month</div>
         <h3>The Careful Individual</h3>
         <p>You manage your own accounts and just want to know where you're exposed, and how to fix it. A professional audit, clear recommendations, and a fresh check every quarter.</p>
         <a href="#individuals">See the plan →</a>
       </div>
       <div class="persona-card">
-        <div class="icon">👨‍👩‍👧‍👦</div>
+        <div class="icon k2"><img src="/key-solid.png" alt=""></div>
         <div class="who">$1,500 / month</div>
         <h3>VIP Families &amp; Solopreneurs</h3>
         <p>You're responsible for more than just yourself: staff, parents, kids, or your solo venture. Cover up to 5 people with a real support line to call, 9 to 5, whenever something looks off.</p>
         <a href="#teams">See the VIP plan →</a>
       </div>
       <div class="persona-card">
-        <div class="icon">🏛</div>
+        <div class="icon k3"><img src="/logo-gold.png" alt=""></div>
         <div class="who">$10,000 / month</div>
         <h3>The High-Profile Principal</h3>
         <p>Executives, founders, public figures. A dedicated support manager who knows your setup by name, and 24/7 monitoring that never clocks out.</p>
@@ -563,7 +568,7 @@
          from your Gumroad "Follow form" embed code.
          ====================================================================== -->
     <form class="signup" id="waitlist-form" action="https://app.gumroad.com/follow_from_embed_form" method="post">
-      <input type="hidden" name="seller_id" value="YOUR_GUMROAD_SELLER_ID">
+      <input type="hidden" name="seller_id" value="7651189178692">
       <div class="field">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="you@example.com" required>
