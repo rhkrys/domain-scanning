@@ -242,7 +242,6 @@
   <section class="hero on-dark" id="top">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="eyebrow">Apple and Jamf certified. Based in Brooklyn.</span>
         <h1><span class="line"><span>Mac tech support in Brooklyn.</span></span><span class="line"><span><em class="shine">Onsite or remote.</em></span></span></h1>
         <p class="sub">Hands-on help for your Mac, iPhone and iPad. We come to your home or office in Brooklyn, or connect by screen share. First-time clients pay a flat $250 for the initial visit.</p>
         <div class="hero-ctas">
@@ -575,8 +574,7 @@
 
     // Hero: lines rise into place, then the gold line shines once.
     var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.from(".hero .eyebrow", { y: 12, opacity: 0, duration: .5 })
-      .from(".hero h1 .line > span", { yPercent: 110, duration: .9, stagger: .14 }, "-=.2")
+    tl.from(".hero h1 .line > span", { yPercent: 110, duration: .9, stagger: .14 })
       .from(".hero .sub, .hero .hero-ctas, .facts", { y: 18, opacity: 0, duration: .6, stagger: .1 }, "-=.45")
       .to(".shine", { backgroundPosition: "0% 0", duration: 1.4, ease: "power2.inOut" }, "-=.3");
 
