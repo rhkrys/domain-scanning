@@ -69,9 +69,45 @@ body {
   padding: 8px 16px; border-radius: 2px;
 }
 .brandnav .brandnav-cta:hover { color: var(--navy-deep); filter: brightness(1.05); }
-@media (max-width: 780px) {
-  .brandnav a:not(.brandnav-cta) { display: none; }
+/* Mobile menu: links fold into a panel under the bar; the gold button stays visible. */
+.brandbar { position: relative; }
+.brandnav-menu { display: flex; align-items: center; gap: 18px; }
+.menu-toggle {
+  display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent;
+  border: 2px solid var(--gold); border-radius: 2px; cursor: pointer;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
 }
+.menu-toggle span { display: block; width: 20px; height: 2px; background: var(--gold); transition: transform .2s ease, opacity .2s ease; }
+.menu-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.brandbar.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.brandbar.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
+.brandbar.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (max-width: 860px) {
+  .menu-toggle { display: inline-flex; }
+  .brandnav { margin-left: auto; flex-wrap: nowrap; }
+  .brandnav-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 40;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--navy-deep); border-top: 1px solid rgba(232,174,92,.35); border-bottom: 2px solid var(--gold);
+    padding: 6px 20px 14px; box-shadow: 0 14px 24px rgba(16,31,54,.35);
+  }
+  .brandbar.menu-open .brandnav-menu { display: flex; }
+  .brandnav-menu a { padding: 14px 0; font-size: 16px; font-weight: 700; border-bottom: 1px solid rgba(232,239,247,.14); }
+  .brandnav-menu a:last-child { border-bottom: none; }
+}
+@media (max-width: 480px) {
+  .brandbar-inner { gap: 10px; }
+  .brand-link { gap: 9px; }
+  .brandbar img { height: 36px; }
+  .brandnav .brandnav-cta { padding: 8px 11px; font-size: 15px; white-space: nowrap; }
+  .brandbar .wordmark .name { font-size: 14px; letter-spacing: .1em; }
+  .brandbar .wordmark .descriptor { letter-spacing: .2em; }
+}
+@media (max-width: 370px) {
+  .brandbar .wordmark .name { font-size: 12px; letter-spacing: .06em; }
+  .brandnav .brandnav-cta { padding: 8px 8px; font-size: 14px; letter-spacing: .02em; }
+}
+@media (prefers-reduced-motion: reduce) { .menu-toggle span { transition: none; } }
 .wordmark { display: flex; flex-direction: column; line-height: 1; }
 .wordmark .name {
   font-family: var(--font-body); font-weight: 700; color: #fff;

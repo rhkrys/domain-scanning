@@ -15,20 +15,22 @@
   <header class="brandbar">
     <div class="brandbar-inner">
       <a class="brand-link" href="/">
-        <img src="/logo-gold.png" alt="Cyber Protection" />
+        <img src="/logo-gold.png" alt="Tech in Peace by CPI" />
         <div class="wordmark">
-          <span class="name">Cyber Protection</span>
-          <span class="descriptor">Consulting Services</span>
+          <span class="name">Tech in Peace</span>
+          <span class="descriptor">by CPI</span>
         </div>
       </a>
       <nav class="brandnav" aria-label="Main">
-        <a href="/#individuals">For Individuals</a>
-        <a href="/#teams">For VIP Solopreneurs</a>
-        <a href="/#concierge">Executive Concierge</a>
-        <a href="/#faq">FAQ</a>
-        <a href="/#pricing">Pricing</a>
+        <span class="brandnav-menu" id="site-menu">
+          <a href="/mac-support">Mac Support</a>
+          <a href="/workshops">Workshops</a>
+          <a href="/scan">Domain Scan</a>
+          <a href="/#pricing">Pricing</a>
+        </span>
         <a class="brandnav-cta" href="/#waitlist">Join the Waitlist</a>
       </nav>
+      <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
     </div>
   </header>
 
@@ -135,8 +137,8 @@
     <div class="brandfoot-inner">
       <img src="/logo-gold.png" alt="" aria-hidden="true" />
       <div class="wordmark">
-        <span class="name">Cyber Protection</span>
-        <span class="descriptor">Consulting Services</span>
+        <span class="name">Tech in Peace</span>
+        <span class="descriptor">by CPI</span>
       </div>
       <span class="note">Automated domain audit — a starting point, not a full security audit. · <a href="/privacy#privacy" style="color:var(--gold)">Privacy Policy</a> · <a href="/privacy#terms" style="color:var(--gold)">Terms of Use</a></span>
     </div>
@@ -144,6 +146,17 @@
 
   <!-- Calendly inline widget script -->
   <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script>
+    (function () {
+      var btn = document.querySelector(".menu-toggle");
+      if (!btn) return;
+      var header = btn.closest("header");
+      function set(open) { header.classList.toggle("menu-open", open); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+      btn.addEventListener("click", function () { set(!header.classList.contains("menu-open")); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+      document.addEventListener("click", function (e) { if (!header.contains(e.target)) set(false); });
+    })();
+  </script>
   <script src="/config.js"></script>
   <script src="/app.js"></script>
 </body>
