@@ -85,6 +85,7 @@
   .nav-links { display: flex; gap: 20px; align-items: center; }
   .nav-links a { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 700; }
   .nav-links a:hover { color: var(--gold-300); }
+  .nav-links a.tel { color: var(--gold-300); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .nav .btn { padding: 9px 18px; font-size: 16px; color: var(--navy-900); white-space: nowrap; }
   /* Mobile menu: links fold into a panel under the header; the gold button stays visible. */
   .nav-menu { display: flex; gap: 20px; align-items: center; }
@@ -94,7 +95,8 @@
   header.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   header.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
   header.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-  @media (max-width: 860px) {
+  .nav-menu a { white-space: nowrap; }
+  @media (max-width: 1000px) {
     .menu-toggle { display: inline-flex; }
     .nav-links { margin-left: auto; }
     .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--navy-800); border-top: 1px solid rgba(232,174,92,.35); border-bottom: 2px solid var(--gold-400); padding: 6px 24px 14px; box-shadow: 0 14px 24px rgba(16,31,54,.35); }
@@ -228,6 +230,7 @@
         <a href="/workshops">Workshops</a>
         <a href="/scan">Domain Scan</a>
         <a href="/#pricing">Pricing</a>
+        <a class="tel" href="tel:+13479734629">(347) 973-4629</a>
       </span>
       <a class="btn btn-gold" href="https://calendly.com/cpconsulting/brooklyn-onsite-support-hour" target="_blank" rel="noopener">Book a visit</a>
     </nav>
