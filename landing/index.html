@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tech in Peace by CPI | Cybersecurity Monitoring for Mission-Driven Organizations</title>
 <meta name="description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off. Join the waitlist.">
-<link rel="canonical" href="https://techinpeace.com/">
+<link rel="canonical" href="https://www.techinpeace.com/">
 
 <!-- Open Graph / social preview -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://techinpeace.com/">
+<meta property="og:url" content="https://www.techinpeace.com/">
 <meta property="og:title" content="Tech in Peace by CPI | Cybersecurity Monitoring for Mission-Driven Organizations">
 <meta property="og:description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off.">
-<meta property="og:image" content="https://techinpeace.com/logo-gold.png">
+<meta property="og:image" content="https://www.techinpeace.com/logo-gold.png">
 <meta property="og:site_name" content="Tech in Peace by CPI">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tech in Peace by CPI | Cybersecurity Monitoring for Mission-Driven Organizations">
 <meta name="twitter:description" content="24/7 scam and fraud protection for individuals, families, and executives. Get a personal cybersecurity audit, ongoing monitoring, and a real person to call when something looks off.">
-<meta name="twitter:image" content="https://techinpeace.com/logo-gold.png">
+<meta name="twitter:image" content="https://www.techinpeace.com/logo-gold.png">
 
 <link rel="icon" href="/logo-gold.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +87,25 @@
   .nav-links a { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 700; }
   .nav-links a:hover { color: var(--gold-300); }
   .nav .btn { padding: 9px 18px; font-size: 15px; }
-  @media (max-width: 860px) { .nav-links a:not(.btn) { display: none; } }
+  /* Mobile menu: links fold into a panel under the header; the gold button stays visible. */
+  .nav-menu { display: flex; gap: 20px; align-items: center; }
+  .menu-toggle { display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent; border: 2px solid var(--gold-400); border-radius: var(--radius); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .menu-toggle span { display: block; width: 20px; height: 2px; background: var(--gold-300); transition: transform .2s ease, opacity .2s ease; }
+  .menu-toggle:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
+  header.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  header.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
+  header.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 860px) {
+    .menu-toggle { display: inline-flex; }
+    .nav-links { margin-left: auto; }
+    .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--navy-800); border-top: 1px solid rgba(232,174,92,.35); border-bottom: 2px solid var(--gold-400); padding: 6px 24px 14px; box-shadow: 0 14px 24px rgba(16,31,54,.35); }
+    header.menu-open .nav-menu { display: flex; }
+    .nav-menu a { padding: 14px 0; font-size: 16px; border-bottom: 1px solid rgba(232,239,247,.14); }
+    .nav-menu a:last-child { border-bottom: none; }
+  }
+  @media (max-width: 480px) { .nav-menu { padding-inline: 16px; } .nav { gap: 10px; } .nav .btn { padding: 8px 11px; font-size: 15px; white-space: nowrap; } .logo { gap: 9px; } .logo img { height: 36px; } .wordmark .name, .logo .name { white-space: normal; font-size: 14px; letter-spacing: .1em; } }
+  @media (max-width: 400px) { .wordmark .name, .logo .name { font-size: 13px; letter-spacing: .08em; } }
+  @media (prefers-reduced-motion: reduce) { .menu-toggle span { transition: none; } }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -295,23 +313,23 @@
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="#top">
+    <a class="logo" href="/">
       <img src="/logo-gold.png" alt="Tech in Peace by CPI">
       <span class="wordmark">
         <span class="name">Tech in Peace</span>
         <span class="descriptor">by CPI</span>
       </span>
     </a>
-    <nav class="nav-links">
-      <a href="#individuals">For Individuals</a>
-      <a href="#teams">For VIP Solopreneurs</a>
-      <a href="#concierge">Executive Concierge</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/workshops">Workshops</a>
-      <a href="#faq">FAQ</a>
-      <a class="btn btn-outline" href="/scan">Check My Domain</a>
+    <nav class="nav-links" aria-label="Main">
+      <span class="nav-menu" id="site-menu">
+        <a href="/mac-support">Mac Support</a>
+        <a href="/workshops">Workshops</a>
+        <a href="/scan">Domain Scan</a>
+        <a href="/#pricing">Pricing</a>
+      </span>
       <a class="btn btn-gold" href="#waitlist">Join the Waitlist</a>
     </nav>
+    <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
   </div>
 </header>
 
@@ -585,7 +603,7 @@
       <img src="/logo-gold.png" alt="" aria-hidden="true">
       <span class="name">Tech in Peace by CPI</span>
     </div>
-    <span>© 2026 Tech in Peace by CPI · Cyber Protection Consulting Services Inc. All rights reserved. · <a href="/workshops">Workshops</a> · <a href="/scan">Check my domain security</a> · <a href="#faq">FAQ</a> · <a href="/privacy#privacy">Privacy Policy</a> · <a href="/privacy#terms">Terms of Use</a> · <a href="#waitlist">Join the waitlist</a></span>
+    <span>© 2026 Tech in Peace by CPI · Cyber Protection Consulting Services Inc. All rights reserved. · <a href="/mac-support">Mac Support</a> · <a href="/workshops">Workshops</a> · <a href="/scan">Check my domain security</a> · <a href="#faq">FAQ</a> · <a href="/privacy#privacy">Privacy Policy</a> · <a href="/privacy#terms">Terms of Use</a> · <a href="#waitlist">Join the waitlist</a></span>
   </div>
 </footer>
 
@@ -652,8 +670,8 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Cyber Protection Consulting Services",
-  "url": "https://techinpeace.com/",
-  "logo": "https://techinpeace.com/logo-gold.png",
+  "url": "https://www.techinpeace.com/",
+  "logo": "https://www.techinpeace.com/logo-gold.png",
   "description": "Personal cybersecurity monitoring, scam protection, and audits for individuals, families, and executives.",
   "review": [
     {
@@ -677,7 +695,7 @@
   "provider": {
     "@type": "Organization",
     "name": "Cyber Protection Consulting Services",
-    "url": "https://techinpeace.com/"
+    "url": "https://www.techinpeace.com/"
   },
   "areaServed": "US",
   "offers": [
@@ -769,5 +787,18 @@
   })();
 </script>
 
+<script>
+  // Mobile menu toggle. Links stay in the page for crawlers and no-JS visitors (footer repeats them).
+  (function () {
+    var btn = document.querySelector(".menu-toggle");
+    if (!btn) return;
+    var header = btn.closest("header");
+    function set(open) { header.classList.toggle("menu-open", open); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+    btn.addEventListener("click", function () { set(!header.classList.contains("menu-open")); });
+    header.querySelectorAll("#site-menu a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+    document.addEventListener("click", function (e) { if (!header.contains(e.target)) set(false); });
+  })();
+</script>
 </body>
 </html>
