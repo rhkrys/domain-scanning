@@ -179,6 +179,55 @@
         <p>The list runs from most to least important, so your first hour of work goes where it helps most. Some fixes also build on others. For example, DMARC only passes when SPF or DKIM is working.</p>
         <p>The suggested fix tells you what to change. Choosing the right settings for your setup, and changing them without interrupting your email, is where a person helps. You can <a href="#book">book a call</a> after you see your results.</p>
       </section>
+
+      <article class="block" id="free-dmarc-checkers" aria-labelledby="free-dmarc-checkers-title">
+        <h2 id="free-dmarc-checkers-title">The Best Free DMARC Checkers (and When You Need More Than a Tool)</h2>
+        <p>The right free DMARC checker depends on what you need. For a plain-language report and a person to help fix it, use the Tech in Peace scan. To see how many DNS lookups your SPF record needs, use dmarcian’s SPF Surveyor. For quick DNS and mail diagnostics, use MxToolbox. To have each part of your DMARC record explained, use EasyDMARC.</p>
+
+        <h3><a href="#scan-form">Tech in Peace scan</a></h3>
+        <p>Best for a plain-language report plus a person to help fix it. It checks SPF, DKIM and DMARC along with your DNS and website settings. Run it at the top of this page.</p>
+
+        <h3><a href="https://dmarcian.com/domain-checker/" target="_blank" rel="noopener">dmarcian Domain Checker</a></h3>
+        <p>Best for checking SPF, DKIM and DMARC in one place. dmarcian was founded by a co-author of the DMARC specification. Its separate <a href="https://dmarcian.com/spf-survey/" target="_blank" rel="noopener">SPF Surveyor</a> shows how many DNS lookups an SPF record needs.</p>
+
+        <h3><a href="https://mxtoolbox.com/dmarc.aspx" target="_blank" rel="noopener">MxToolbox DMARC lookup</a></h3>
+        <p>Best for quick DNS and mail diagnostics. It looks up your DMARC record, and its SuperTool covers a wide range of DNS and mail checks, including SPF and DKIM.</p>
+
+        <h3><a href="https://easydmarc.com/tools/dmarc-lookup" target="_blank" rel="noopener">EasyDMARC DMARC lookup</a></h3>
+        <p>Best for understanding each part of a DMARC record. It explains every tag it finds. Its separate Domain Scanner checks SPF, DKIM, DMARC and BIMI.</p>
+
+        <h3>How they compare</h3>
+        <div class="table-wrap" role="region" aria-label="Comparison of free DMARC checkers, scrollable" tabindex="0">
+          <table class="compare">
+            <thead>
+              <tr><th scope="col">Tool</th><th scope="col">Free</th><th scope="col">Signup needed</th><th scope="col">Checks SPF/DKIM/DMARC</th><th scope="col">Plain-language results</th><th scope="col">Human help</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Tech in Peace scan</th><td>Yes</td><td>No</td><td>Yes (DKIM checks common selectors)</td><td>Yes</td><td>Yes, book a call</td></tr>
+              <tr><th scope="row">dmarcian Domain Checker</th><td>Yes</td><td>No registration, per dmarcian</td><td>Yes, all three</td><td class="unchecked">Not checked</td><td>DMARC services offered</td></tr>
+              <tr><th scope="row">MxToolbox DMARC lookup</th><td>Yes</td><td class="unchecked">Not checked</td><td>DMARC lookup. SPF and DKIM are separate tools.</td><td class="unchecked">Not checked</td><td>Managed services offered</td></tr>
+              <tr><th scope="row">EasyDMARC DMARC lookup</th><td>Yes</td><td>No account for its free tools, per EasyDMARC</td><td>DMARC lookup. SPF, DKIM, DMARC and BIMI in its Domain Scanner.</td><td>Explains each tag</td><td>Support and managed setup offered</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Based on each company’s public pages, checked October 16, 2026. Tools and terms change, so confirm on their sites. Free tools can have usage limits. “Not checked” means we did not verify that detail.</p>
+
+        <h3>What a good checker should show you</h3>
+        <p>Whichever tool you use, look for these six things in the results.</p>
+        <ul class="check-list">
+          <li><strong>Record found.</strong> A DMARC record exists on your domain.</li>
+          <li><strong>One record only.</strong> Two DMARC records at the same name cause DMARC to be ignored.</li>
+          <li><strong>Valid syntax.</strong> The record is written correctly, so receivers can read it.</li>
+          <li><strong>Policy level.</strong> Whether the policy is none, quarantine or reject.</li>
+          <li><strong>Reporting set up.</strong> A reporting address (rua) so you receive reports about who sends as your domain.</li>
+          <li><strong>SPF and DKIM alignment.</strong> A pass only counts when the checked domain matches your From domain.</li>
+        </ul>
+        <p>The Tech in Peace scan reads your DMARC record, its policy level and its reporting address. Checking for duplicate records, syntax and alignment, and fixing them, is hands-on work we do with you on a call.</p>
+
+        <h3>When a tool is not enough</h3>
+        <p>A scan finds the problem. Someone still has to change your DNS without breaking your email. That takes the right policy for your mail, set in the right order. On a call we review your setup, make the changes with you, and check that your email keeps flowing.</p>
+        <p><a href="#book">Book a discovery call</a>. Prefer hands-on help with your devices? See our <a href="/mac-support">Mac support</a>. Want to learn it yourself? See our <a href="/workshops">workshops</a>.</p>
+      </article>
     </div><!-- /content -->
   </main>
 

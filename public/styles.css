@@ -382,3 +382,21 @@ h3 {
   .label-list li { flex-direction: column; gap: 4px; }
   .chip { align-self: flex-start; }
 }
+
+/* ---- Article: comparison table ---------------------------------------- */
+.table-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border); background: var(--surface); margin: 8px 0 14px;
+}
+.table-wrap:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+table.compare { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14px; }
+table.compare th, table.compare td {
+  text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--border);
+}
+table.compare thead th {
+  background: var(--paper-alt); color: var(--navy-deep); font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--gold);
+}
+table.compare tbody th { color: var(--navy-deep); font-weight: 700; }
+table.compare tbody tr:last-child th, table.compare tbody tr:last-child td { border-bottom: 0; }
+table.compare .unchecked { color: var(--muted); font-style: italic; }
