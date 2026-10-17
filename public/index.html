@@ -132,6 +132,54 @@
         This automated scan is a starting point, not a full security audit.
       </p>
     </section>
+
+    <div class="content">
+      <section class="block" id="what-we-check" aria-labelledby="what-we-check-title">
+        <h2 id="what-we-check-title">What we check</h2>
+        <p>The scan runs 12 checks in three groups. It only reads public information about your domain, so nothing on your domain changes.</p>
+
+        <p class="group-label">Domain setup</p>
+        <ul class="check-list">
+          <li><strong>Mail servers (MX).</strong> Shows where your email is delivered, so messages reach the right inbox.</li>
+          <li><strong>Website address (A and AAAA).</strong> Confirms your domain points to your website, including the newer IPv6 format.</li>
+          <li><strong>Nameservers.</strong> Checks you have at least two, so one failure does not take your domain offline.</li>
+          <li><strong>DNSSEC.</strong> Checks whether your DNS answers are digitally signed, so visitors reach your real site.</li>
+          <li><strong>CAA.</strong> Checks whether you have limited which companies can issue certificates for your domain.</li>
+        </ul>
+
+        <p class="group-label">Email protection</p>
+        <ul class="check-list">
+          <li><strong>SPF.</strong> Lists which servers may send email as your domain, and how strict that list is.</li>
+          <li><strong>DMARC.</strong> Tells inboxes what to do with mail that fails checks, and where to send reports.</li>
+          <li><strong>DKIM.</strong> Adds a signature to your outgoing mail so receivers can see it really came from you.</li>
+          <li><strong>MTA-STS.</strong> Looks for a policy that asks other mail servers to send to you over an encrypted connection.</li>
+          <li><strong>BIMI.</strong> An optional record that can show your logo next to your email in supporting inboxes.</li>
+        </ul>
+
+        <p class="group-label">Website encryption</p>
+        <ul class="check-list">
+          <li><strong>TLS certificate.</strong> Checks your site’s certificate is valid and not close to expiring, so browsers connect without warnings.</li>
+          <li><strong>HTTP security headers.</strong> Looks for five settings that tell browsers how to protect your visitors, such as HSTS and Content-Security-Policy.</li>
+        </ul>
+
+        <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
+      </section>
+
+      <section class="block" id="your-report" aria-labelledby="your-report-title">
+        <h2 id="your-report-title">What your report looks like</h2>
+        <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 12 checks, passed or not. Add your email and we send the same report to your inbox.</p>
+        <p>Each item in the list shows a priority label, what we found, and the suggested fix. Here is what the labels mean:</p>
+        <ul class="label-list">
+          <li><span class="chip critical">Critical</span><span>Fix this first. It has the biggest effect on your email or your site.</span></li>
+          <li><span class="chip high">High</span><span>Fix this soon. It leaves a real gap.</span></li>
+          <li><span class="chip medium">Medium</span><span>Schedule it. Worth doing after the items above.</span></li>
+          <li><span class="chip low">Low</span><span>A small improvement. Do it when it is convenient.</span></li>
+        </ul>
+        <h3>Why the order matters</h3>
+        <p>The list runs from most to least important, so your first hour of work goes where it helps most. Some fixes also build on others. For example, DMARC only passes when SPF or DKIM is working.</p>
+        <p>The suggested fix tells you what to change. Choosing the right settings for your setup, and changing them without interrupting your email, is where a person helps. You can <a href="#book">book a call</a> after you see your results.</p>
+      </section>
+    </div><!-- /content -->
   </main>
 
   <footer class="brandfoot">
