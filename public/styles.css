@@ -400,3 +400,7 @@ table.compare thead th {
 table.compare tbody th { color: var(--navy-deep); font-weight: 700; }
 table.compare tbody tr:last-child th, table.compare tbody tr:last-child td { border-bottom: 0; }
 table.compare .unchecked { color: var(--muted); font-style: italic; }
+
+/* ---- FAQ ---- */
+.faq h3 { font-size: 22px; margin: 24px 0 6px; }
+.faq h3 + p { margin-bottom: 4px; }

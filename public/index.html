@@ -15,6 +15,97 @@
   <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
   <link rel="icon" href="/logo-gold.png" type="image/png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is the scan free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need SPF and DKIM before DMARC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is DMARC failing when SPF passes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does p=none mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I scan my domain?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens after I scan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does DMARC alignment mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Best Free DMARC Checkers (and When You Need More Than a Tool)",
+  "description": "A fair look at four free DMARC checkers, what each does best, and when you need a person to fix what a tool finds.",
+  "author": {
+    "@type": "Person",
+    "name": "Crystal Pugh"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CPI",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.techinpeace.com/logo-gold.png"
+    }
+  },
+  "datePublished": "2026-10-17",
+  "dateModified": "2026-10-17",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.techinpeace.com/scan"
+  },
+  "image": "https://www.techinpeace.com/logo-gold.png"
+}
+  </script>
 </head>
 <body>
   <header class="brandbar">
@@ -228,6 +319,24 @@
         <p>A scan finds the problem. Someone still has to change your DNS without breaking your email. That takes the right policy for your mail, set in the right order. On a call we review your setup, make the changes with you, and check that your email keeps flowing.</p>
         <p><a href="#book">Book a discovery call</a>. Prefer hands-on help with your devices? See our <a href="/mac-support">Mac support</a>. Want to learn it yourself? See our <a href="/workshops">workshops</a>.</p>
       </article>
+
+      <section class="block faq" id="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <h3>Is the scan free?</h3>
+        <p>Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account.</p>
+        <h3>Do I need SPF and DKIM before DMARC?</h3>
+        <p>You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy.</p>
+        <h3>Why is DMARC failing when SPF passes?</h3>
+        <p>DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass.</p>
+        <h3>What does p=none mean?</h3>
+        <p>p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean.</p>
+        <h3>How often should I scan my domain?</h3>
+        <p>Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching.</p>
+        <h3>What happens after I scan?</h3>
+        <p>You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes.</p>
+        <h3>What does DMARC alignment mean?</h3>
+        <p>Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain.</p>
+      </section>
     </div><!-- /content -->
   </main>
 
