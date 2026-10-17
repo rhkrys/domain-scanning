@@ -419,6 +419,16 @@ table.compare .unchecked { color: var(--muted); font-style: italic; }
 .block a.btn-navy:hover { color: #fff; filter: brightness(1.15); }
 .block a.btn:focus-visible { outline: 2px solid var(--navy-deep); outline-offset: 3px; }
 .brandline { margin: 22px 0 0 !important; font-family: var(--font-display); font-size: 26px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy-deep); }
-.brandline .bl-by { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: lowercase; color: var(--gold-deep); }
+.brandline .bl-by { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: none; white-space: nowrap; color: var(--gold-deep); }
 .tagline { margin: 2px 0 0 !important; color: var(--muted); font-size: 14px; }
 @media (max-width: 560px) { .btn-row a.btn { flex: 1 1 100%; } }
+
+/* ---- Polish ---- */
+.block h3 a { text-decoration: none; }
+.block h3 a:hover { text-decoration: underline; }
+.table-hint { display: none; font-size: 13px; color: var(--muted); margin: 0 0 6px !important; }
+@media (max-width: 760px) { .table-hint { display: block; } }
+@media (max-width: 560px) {
+  #free-dmarc-checkers-title { font-size: 29px; }
+  .brandline { font-size: 22px; }
+}
