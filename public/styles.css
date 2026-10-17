@@ -404,3 +404,21 @@ table.compare .unchecked { color: var(--muted); font-style: italic; }
 /* ---- FAQ ---- */
 .faq h3 { font-size: 22px; margin: 24px 0 6px; }
 .faq h3 + p { margin-bottom: 4px; }
+
+/* ---- Closing call to action ---- */
+.book h2 { border-bottom: 0; padding-bottom: 0; }
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0 8px; }
+.block a.btn {
+  display: inline-block; padding: 13px 24px; border-radius: 2px; text-decoration: none;
+  font-family: var(--font-display); font-weight: 400; font-size: 19px; line-height: 1.1;
+  letter-spacing: 0.05em; text-transform: uppercase; text-align: center;
+}
+.block a.btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: var(--navy-deep); }
+.block a.btn-navy { background: var(--navy); color: #fff; }
+.block a.btn-gold:hover { color: var(--navy-deep); filter: brightness(1.06); }
+.block a.btn-navy:hover { color: #fff; filter: brightness(1.15); }
+.block a.btn:focus-visible { outline: 2px solid var(--navy-deep); outline-offset: 3px; }
+.brandline { margin: 22px 0 0 !important; font-family: var(--font-display); font-size: 26px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy-deep); }
+.brandline .bl-by { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: lowercase; color: var(--gold-deep); }
+.tagline { margin: 2px 0 0 !important; color: var(--muted); font-size: 14px; }
+@media (max-width: 560px) { .btn-row a.btn { flex: 1 1 100%; } }
