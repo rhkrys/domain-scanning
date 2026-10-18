@@ -277,7 +277,12 @@ h3 {
 .finding .desc { color: var(--muted); font-size: 14px; }
 
 /* ---- Post-report CTA (email + book a Zoom review) ---------------------- */
-.cta .eyebrow { margin-bottom: 10px; }
+.cta .eyebrow {
+  /* Match the "Want a hand with this?" h3 so the two read as one heading */
+  font-family: var(--font-display); font-weight: 400; font-size: 24px;
+  letter-spacing: 0.01em; padding-bottom: 8px;
+  margin: 0 10px 14px 0; vertical-align: bottom;
+}
 .cta-lead { color: var(--muted); font-weight: 400; margin: 0 0 18px; font-size: 15px; }
 .cta-email { margin-bottom: 8px; }
 .cta-email-lead { font-weight: 700; color: var(--navy-deep); margin: 0 0 10px; font-size: 14px; }
