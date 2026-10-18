@@ -81,6 +81,10 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+const DELIVERABILITY_TAG = '<span class="tag-deliv">Important for email deliverability</span>';
+const DELIVERABILITY_NOTE =
+  'Gmail, Yahoo, and Outlook check SPF, DKIM, and DMARC before they deliver your mail. Missing or weak records can send your email to spam.';
+
 function render({ report, mail }, typedDomain) {
   document.getElementById('result-domain').textContent = report.domain;
   document.getElementById('result-score').textContent = `${report.score}/100`;
@@ -136,6 +140,7 @@ function render({ report, mail }, typedDomain) {
       li.innerHTML =
         `<strong>${escapeHtml(f.title)}</strong>` +
         `<span class="sev ${f.severity}">${f.severity.toUpperCase()}</span>` +
+        (f.deliverability ? DELIVERABILITY_TAG : '') +
         `<span class="what"> — ${escapeHtml(f.summary)}.</span>` +
         `<span class="fix">${escapeHtml(f.recommendation)}</span>`;
       steps.appendChild(li);
@@ -150,13 +155,15 @@ function render({ report, mail }, typedDomain) {
   for (const [category, items] of Object.entries(byCategory)) {
     const group = document.createElement('div');
     group.className = 'finding-group';
-    group.innerHTML = `<h4>${escapeHtml(category)}</h4>`;
+    group.innerHTML =
+      `<h4>${escapeHtml(category)}</h4>` +
+      (category === 'Email Deliverability' ? `<p class="group-note">${DELIVERABILITY_NOTE}</p>` : '');
     for (const f of items) {
       const row = document.createElement('div');
       row.className = 'finding';
       row.innerHTML =
         `<span class="dot ${f.status}"></span>` +
-        `<span class="title">${escapeHtml(f.title)}</span>` +
+        `<span class="title">${escapeHtml(f.title)}${f.deliverability ? DELIVERABILITY_TAG : ''}</span>` +
         `<span class="desc">${escapeHtml(STATUS_LABEL[f.status])} — ${escapeHtml(f.summary)}</span>`;
       group.appendChild(row);
     }

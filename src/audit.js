@@ -70,6 +70,8 @@ async function safe(id, title, category, fn) {
   }
 }
 
+export const DELIVERABILITY_IDS = new Set(['spf', 'dkim', 'dmarc']);
+
 export async function runAudit(rawDomain, { resolver = new Resolver() } = {}) {
   const domain = normaliseDomain(rawDomain);
   if (!domain) {
@@ -84,20 +86,26 @@ export async function runAudit(rawDomain, { resolver = new Resolver() } = {}) {
   const sendsMail = mx.evidence?.sendsMail !== false;
   const opts = { sendsMail };
 
+  // Email deliverability checks come first so they lead the report.
   const findings = await Promise.all([
+    safe('spf', 'SPF', 'Email Deliverability', () => checkSpf(resolver, domain, opts)),
+    safe('dmarc', 'DMARC', 'Email Deliverability', () => checkDmarc(resolver, domain, opts)),
+    safe('dkim', 'DKIM', 'Email Deliverability', () => checkDkim(resolver, domain, opts)),
+    safe('mta-sts', 'MTA-STS', 'Email Deliverability', () => checkMtaSts(resolver, domain, opts)),
+    safe('bimi', 'BIMI', 'Email Deliverability', () => checkBimi(resolver, domain)),
     Promise.resolve(mx),
     safe('addressing', 'A / AAAA records', 'DNS Foundation', () => checkAddressing(resolver, domain)),
     safe('nameservers', 'Nameservers', 'DNS Foundation', () => checkNameservers(resolver, domain)),
     safe('dnssec', 'DNSSEC', 'DNS Foundation', () => checkDnssec(resolver, domain)),
     safe('caa', 'CAA record', 'DNS Foundation', () => checkCaa(resolver, domain)),
-    safe('spf', 'SPF', 'Email Authentication', () => checkSpf(resolver, domain, opts)),
-    safe('dmarc', 'DMARC', 'Email Authentication', () => checkDmarc(resolver, domain, opts)),
-    safe('dkim', 'DKIM', 'Email Authentication', () => checkDkim(resolver, domain, opts)),
-    safe('mta-sts', 'MTA-STS', 'Email Authentication', () => checkMtaSts(resolver, domain, opts)),
-    safe('bimi', 'BIMI', 'Email Authentication', () => checkBimi(resolver, domain)),
     safe('tls', 'TLS certificate', 'Transport Security', () => checkTls(domain)),
     safe('headers', 'HTTP security headers', 'Transport Security', () => checkHeaders(domain)),
   ]);
+
+  // SPF, DKIM and DMARC decide whether mail reaches the inbox; flag them.
+  for (const f of findings) {
+    if (DELIVERABILITY_IDS.has(f.id)) f.deliverability = true;
+  }
 
   const scored = scoreFindings(findings);
 

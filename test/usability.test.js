@@ -26,7 +26,7 @@ function fixtureReport(domain) {
     ],
     findings: [
       { id: 'mx', category: 'DNS Foundation', title: 'MX records', status: 'pass', severity: 'info', summary: '2 mail servers configured' },
-      { id: 'dmarc', category: 'Email Authentication', title: 'DMARC', status: 'warn', severity: 'high', summary: 'DMARC in monitor-only mode (p=none)' },
+      { id: 'dmarc', category: 'Email Deliverability', title: 'DMARC', status: 'warn', severity: 'high', summary: 'DMARC in monitor-only mode (p=none)' },
     ],
   };
 }

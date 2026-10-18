@@ -39,7 +39,12 @@ export function scoreFindings(findings) {
   const order = { critical: 0, high: 1, medium: 2, low: 3, info: 4 };
   const priorities = findings
     .filter((f) => (f.status === 'fail' || f.status === 'warn') && f.recommendation)
-    .sort((a, b) => (order[a.severity] ?? 9) - (order[b.severity] ?? 9));
+    .sort(
+      (a, b) =>
+        (order[a.severity] ?? 9) - (order[b.severity] ?? 9) ||
+        // At equal severity, email deliverability fixes come first.
+        Number(Boolean(b.deliverability)) - Number(Boolean(a.deliverability)),
+    );
 
   return {
     score,

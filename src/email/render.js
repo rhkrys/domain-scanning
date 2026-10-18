@@ -56,7 +56,8 @@ export function renderText(report) {
   } else {
     lines.push('Your next steps (most important first):');
     report.priorities.forEach((f, i) => {
-      lines.push(`  ${i + 1}. [${f.severity.toUpperCase()}] ${f.title}: ${f.summary}`);
+      const tag = f.deliverability ? ' (important for email deliverability)' : '';
+      lines.push(`  ${i + 1}. [${f.severity.toUpperCase()}] ${f.title}${tag}: ${f.summary}`);
       lines.push(`     ${f.recommendation}`);
     });
   }
@@ -83,7 +84,7 @@ export function renderHtml(report) {
             <strong style="color:${CPI.navyDeep}">${esc(f.title)}</strong>
             <span style="color:#fff;background:${severityColour(f.severity)};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em">${esc(
               f.severity.toUpperCase(),
-            )}</span><br>
+            )}</span>${f.deliverability ? deliverabilityTag() : ''}<br>
             <span style="color:${CPI.muted}">${esc(f.summary)}.</span><br>
             <span style="color:${CPI.ink}">${esc(f.recommendation)}</span>
           </li>`,
@@ -95,7 +96,7 @@ export function renderHtml(report) {
     .map((f) => {
       const badge = { pass: CPI.pass, warn: CPI.warn, fail: CPI.fail, info: CPI.info }[f.status];
       return `<tr>
-        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.navyDeep};font-weight:700">${esc(f.title)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.navyDeep};font-weight:700">${esc(f.title)}${f.deliverability ? deliverabilityTag() : ''}</td>
         <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${badge};font-weight:700">${esc(
           STATUS_LABEL[f.status],
         )}</td>
@@ -138,6 +139,7 @@ export function renderHtml(report) {
       <div style="padding:0 24px 10px"><h2 style="${headingStyle}">What to do next</h2>${steps}</div>
       <div style="padding:14px 24px 24px">
         <h2 style="${headingStyle}">All ${report.findings.length} checks</h2>
+        <p style="margin:0 0 12px;font-size:13px;color:${CPI.navyDeep};background:${CPI.paperAlt};border-left:3px solid ${CPI.gold};padding:8px 12px">${esc(DELIVERABILITY_NOTE)}</p>
         <table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table>
       </div>
       <div style="padding:16px 24px;background:${CPI.paperAlt};color:${CPI.muted};font-size:12px">
@@ -147,6 +149,13 @@ export function renderHtml(report) {
     <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection · Consulting Services</div>
   </div>
 </body></html>`;
+}
+
+const DELIVERABILITY_NOTE =
+  'Gmail, Yahoo, and Outlook check SPF, DKIM, and DMARC before they deliver your mail. Missing or weak records can send your email to spam.';
+
+function deliverabilityTag() {
+  return `<span style="color:${CPI.navyDeep};background:${CPI.goldSoft ?? '#f0c889'};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Important for email deliverability</span>`;
 }
 
 function severityColour(severity) {

@@ -12,7 +12,7 @@ export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
   if (!spf) {
     return {
       id: 'spf',
-      category: 'Email Authentication',
+      category: 'Email Deliverability',
       title: 'SPF',
       status: 'fail',
       severity: sendsMail ? 'high' : 'medium',
@@ -58,7 +58,7 @@ export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
 
   return {
     id: 'spf',
-    category: 'Email Authentication',
+    category: 'Email Deliverability',
     title: 'SPF',
     status,
     severity,
@@ -87,7 +87,7 @@ export async function checkDmarc(resolver, domain, { sendsMail = true } = {}) {
   if (!parsed) {
     return {
       id: 'dmarc',
-      category: 'Email Authentication',
+      category: 'Email Deliverability',
       title: 'DMARC',
       status: 'fail',
       severity: sendsMail ? 'critical' : 'high',
@@ -128,7 +128,7 @@ export async function checkDmarc(resolver, domain, { sendsMail = true } = {}) {
 
   return {
     id: 'dmarc',
-    category: 'Email Authentication',
+    category: 'Email Deliverability',
     title: 'DMARC',
     status,
     severity,
@@ -159,7 +159,7 @@ export async function checkDkim(resolver, domain, { sendsMail = true } = {}) {
   if (found.length > 0) {
     return {
       id: 'dkim',
-      category: 'Email Authentication',
+      category: 'Email Deliverability',
       title: 'DKIM',
       status: 'pass',
       severity: 'info',
@@ -171,7 +171,7 @@ export async function checkDkim(resolver, domain, { sendsMail = true } = {}) {
 
   return {
     id: 'dkim',
-    category: 'Email Authentication',
+    category: 'Email Deliverability',
     title: 'DKIM',
     status: sendsMail ? 'warn' : 'info',
     severity: sendsMail ? 'medium' : 'info',
@@ -189,7 +189,7 @@ export async function checkMtaSts(resolver, domain, { sendsMail = true } = {}) {
   if (!sendsMail) {
     return {
       id: 'mta-sts',
-      category: 'Email Authentication',
+      category: 'Email Deliverability',
       title: 'MTA-STS',
       status: 'info',
       severity: 'info',
@@ -199,7 +199,7 @@ export async function checkMtaSts(resolver, domain, { sendsMail = true } = {}) {
   }
   return {
     id: 'mta-sts',
-    category: 'Email Authentication',
+    category: 'Email Deliverability',
     title: 'MTA-STS',
     status: has ? 'pass' : 'warn',
     severity: has ? 'info' : 'low',
@@ -218,7 +218,7 @@ export async function checkBimi(resolver, domain) {
   const has = txt.some((r) => /^v=bimi1\b/i.test(r.trim()));
   return {
     id: 'bimi',
-    category: 'Email Authentication',
+    category: 'Email Deliverability',
     title: 'BIMI',
     status: has ? 'pass' : 'info',
     severity: 'info',
