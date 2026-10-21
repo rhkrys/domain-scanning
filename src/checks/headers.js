@@ -216,8 +216,10 @@ export function evaluateHeaders(headers, { signals = [], context = null } = {}) 
   };
 }
 
-export async function checkHeaders(domain, { timeoutMs = 6000, requestImpl } = {}) {
-  const page = await fetchPage(domain, timeoutMs, requestImpl);
+// loadPage lets the audit fetch the home page once and share it with the
+// website software check. Without it we fetch the page ourselves.
+export async function checkHeaders(domain, { timeoutMs = 6000, requestImpl, loadPage } = {}) {
+  const page = loadPage ? await loadPage() : await fetchPage(domain, timeoutMs, requestImpl);
   if (!page) {
     return {
       id: 'headers',
@@ -266,7 +268,7 @@ function nextHop(current, location, domain) {
 // Starts at https://domain/ and follows same-site redirects. Resolves the page
 // we ended on (headers, html, url) plus the redirects followed, or null when
 // nothing answered. If a later step fails we keep the last response we had.
-async function fetchPage(domain, timeoutMs, requestImpl = https.request) {
+export async function fetchPage(domain, timeoutMs, requestImpl = https.request) {
   const deadline = Date.now() + timeoutMs * 2;
   let host = domain;
   let path = '/';

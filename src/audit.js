@@ -16,7 +16,8 @@ import {
 } from './checks/email.js';
 import { checkDnssec } from './checks/dnssec.js';
 import { checkTls } from './checks/tls.js';
-import { checkHeaders } from './checks/headers.js';
+import { checkHeaders, fetchPage } from './checks/headers.js';
+import { checkSoftware } from './checks/software.js';
 import { scoreFindings } from './scoring.js';
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i;
@@ -72,7 +73,7 @@ async function safe(id, title, category, fn) {
 
 export const DELIVERABILITY_IDS = new Set(['spf', 'dkim', 'dmarc']);
 
-export async function runAudit(rawDomain, { resolver = new Resolver() } = {}) {
+export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage } = {}) {
   const domain = normaliseDomain(rawDomain);
   if (!domain) {
     const error = new Error('Invalid domain');
@@ -85,6 +86,10 @@ export async function runAudit(rawDomain, { resolver = new Resolver() } = {}) {
   const mx = await safe('mx', 'MX records', 'DNS Foundation', () => checkMx(resolver, domain));
   const sendsMail = mx.evidence?.sendsMail !== false;
   const opts = { sendsMail };
+
+  // Fetch the home page once; the headers and website software checks share it.
+  let homePage;
+  const sharedPage = () => (homePage ??= (loadPage ?? (() => fetchPage(domain, 6000)))().catch(() => null));
 
   // Email deliverability checks come first so they lead the report.
   const findings = await Promise.all([
@@ -99,7 +104,8 @@ export async function runAudit(rawDomain, { resolver = new Resolver() } = {}) {
     safe('dnssec', 'DNSSEC', 'DNS Foundation', () => checkDnssec(resolver, domain)),
     safe('caa', 'CAA record', 'DNS Foundation', () => checkCaa(resolver, domain)),
     safe('tls', 'TLS certificate', 'Transport Security', () => checkTls(domain)),
-    safe('headers', 'HTTP security headers', 'Transport Security', () => checkHeaders(domain)),
+    safe('headers', 'HTTP security headers', 'Transport Security', () => checkHeaders(domain, { loadPage: sharedPage })),
+    safe('php', 'PHP (website software)', 'Website Software', () => checkSoftware(domain, { loadPage: sharedPage })),
   ]);
 
   // SPF, DKIM and DMARC decide whether mail reaches the inbox; flag them.
