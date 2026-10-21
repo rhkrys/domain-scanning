@@ -38,7 +38,7 @@ test('runAudit produces a full scored report (network checks degrade gracefully)
 
   assert.equal(report.domain, 'good.com');
   assert.equal(report.sendsMail, true);
-  assert.equal(report.findings.length, 12);
+  assert.equal(report.findings.length, 13);
   assert.ok(report.score >= 0 && report.score <= 100);
   assert.ok(['A', 'B', 'C', 'D', 'E', 'F'].includes(report.grade));
 
