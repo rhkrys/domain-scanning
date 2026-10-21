@@ -129,3 +129,13 @@ test('runAudit fetches the home page once for both checks', async () => {
   assert.equal(byId.headers.status, 'fail');
   assert.equal(report.priorities[0].id, 'php');
 });
+
+test('report email shows the PHP alert only when PHP needs attention', async () => {
+  const { renderEmail } = await import('../src/email/render.js');
+  const resolver = new FakeResolver({ 'example.com|A': ['1.2.3.4'] });
+  const bad = await runAudit('example.com', { resolver, loadPage: async () => page({ 'x-powered-by': 'PHP/8.3.1' }) });
+  const good = await runAudit('example.com', { resolver, loadPage: async () => page({ server: 'nginx' }, '<p>hi</p>') });
+  assert.match(renderEmail(bad).text, /CRITICAL PHP FLAWS/);
+  assert.match(renderEmail(bad).html, /two critical PHP flaws/);
+  assert.doesNotMatch(renderEmail(good).text, /CRITICAL PHP FLAWS/);
+});

@@ -40,6 +40,19 @@ export function subjectFor(report) {
   return `Security scan for ${report.domain}: grade ${report.grade} (${report.score}/100)`;
 }
 
+// Shown only when the scan found PHP that is unpatched or could not be confirmed.
+function phpAlert(report) {
+  const php = report.findings?.find((f) => f.id === 'php');
+  if (!php || (php.status !== 'fail' && php.status !== 'warn') || php.severity === 'low') return null;
+  return {
+    title: 'Security alert: two critical PHP flaws are being exploited now',
+    body:
+      'Your site shows signs of PHP. Update PHP today to 8.5.12, 8.4.27, 8.3.36, or 8.2.35 or newer. ' +
+      'If you cannot update today, take the site offline until you can. ' +
+      'After updating, check for a break-in going back to at least June 2026.',
+  };
+}
+
 export function renderText(report) {
   const lines = [];
   lines.push('CYBER PROTECTION — Consulting Services');
@@ -50,6 +63,13 @@ export function renderText(report) {
     `Checks: ${report.counts.pass} passed, ${report.counts.warn} to review, ${report.counts.fail} need action.`,
   );
   lines.push('');
+
+  const alert = phpAlert(report);
+  if (alert) {
+    lines.push(alert.title.toUpperCase());
+    lines.push(alert.body);
+    lines.push('');
+  }
 
   if (report.priorities.length === 0) {
     lines.push('No action items — every check passed. Nicely done.');
@@ -136,6 +156,7 @@ export function renderHtml(report) {
           </td>
         </tr></table>
       </div>
+      ${alertHtml(phpAlert(report))}
       <div style="padding:0 24px 10px"><h2 style="${headingStyle}">What to do next</h2>${steps}</div>
       <div style="padding:14px 24px 24px">
         <h2 style="${headingStyle}">All ${report.findings.length} checks</h2>
@@ -153,6 +174,14 @@ export function renderHtml(report) {
 
 const DELIVERABILITY_NOTE =
   'Gmail, Yahoo, and Outlook check SPF, DKIM, and DMARC before they deliver your mail. Missing or weak records can send your email to spam.';
+
+function alertHtml(alert) {
+  if (!alert) return '';
+  return `<div style="margin:0 24px 18px;padding:12px 14px;background:${CPI.paperAlt};border-left:4px solid ${CPI.fail};border-radius:2px">
+        <p style="margin:0 0 6px;color:${CPI.fail};font-weight:700;font-size:14px">${esc(alert.title)}</p>
+        <p style="margin:0;color:${CPI.ink};font-size:14px">${esc(alert.body)}</p>
+      </div>`;
+}
 
 function deliverabilityTag() {
   return `<span style="color:${CPI.navyDeep};background:${CPI.goldSoft ?? '#f0c889'};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Important for email deliverability</span>`;
