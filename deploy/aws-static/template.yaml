@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  Cyber Protection domain and website security scanner — static site on S3 + CloudFront with a Lambda
+  Cyber Protection domain and website security scanner: static site on S3 + CloudFront with a Lambda
   Function URL backend for /api/*, an ACM certificate (DNS-validated via Route 53)
   and the apex + www alias records. Deploy in us-east-1 (CloudFront needs the
   certificate there).

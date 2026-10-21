@@ -104,7 +104,7 @@ test('copy has no em dashes', () => {
     evaluateSoftware(page()),
   ];
   for (const r of samples) {
-    for (const v of [r.summary, r.detail, r.recommendation ?? '']) assert.ok(!v.includes('—'), v);
+    for (const v of [r.summary, r.detail, r.recommendation ?? '']) assert.ok(!v.includes('\u2014'), v);
   }
 });
 
