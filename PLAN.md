@@ -1,9 +1,9 @@
-# Domain Security Scanner — Plan & Architecture
+# Domain and Website Security Scanner: Plan and Architecture
 
 A web-app that collects a domain (and an optional email), runs an automated
 security audit, shows an instant graded summary, and emails the user a
 plain-English list of next steps. Modelled on the BlackVeil scanner
-(`blackveil.co.nz/scanner`): enter a domain → ~12 checks → one score → clear
+(`blackveil.co.nz/scanner`): enter a domain → ~13 checks → one score → clear
 fixes, in plain language.
 
 ## 1. What we reviewed (the reference)
@@ -29,7 +29,7 @@ Browser (public/)                Server (Express)              Audit engine (src
 ─────────────────                ───────────────               ──────────────────
 form: domain + email   ── POST ▶ /api/scan
                                  ├─ validate + rate-limit
-                                 ├─ runAudit(domain) ────────▶  resolver + 12 checks
+                                 ├─ runAudit(domain) ────────▶  resolver + 13 checks
                                  │                              └─ scoreFindings()
                                  ├─ sendReport(email, report) ─▶ render + SMTP/preview
         summary  ◀── JSON ───────┘
@@ -42,6 +42,7 @@ form: domain + email   ── POST ▶ /api/scan
 | DNS Foundation        | A/AAAA addressing, MX (incl. RFC 7505 null MX), nameserver diversity, DNSSEC, CAA |
 | Email Authentication  | SPF (syntax, policy, 10-lookup limit), DMARC (policy strength + reporting), DKIM (common-selector probe), MTA-STS, BIMI |
 | Transport Security    | TLS certificate (validity, expiry window, protocol), HTTP security headers (HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy) |
+| Website Software      | PHP detection (X-Powered-By, Server, PHPSESSID, .php URL, WordPress/Drupal/Joomla/Magento fingerprints) and patch status for CVE-2026-109618/109619. Reuses the headers check's home page request. Passive only: never sends exploit payloads. |
 
 Each check returns a normalised **finding**: `{ id, category, title, status
 (pass/warn/fail/info), severity (critical→info), summary, detail,
@@ -68,7 +69,8 @@ src/
     email.js           SPF, DMARC, DKIM, MTA-STS, BIMI
     dnssec.js          DNSSEC presence
     tls.js             Certificate validity / expiry / protocol
-    headers.js         HTTP security headers
+    headers.js         HTTP security headers (also fetches the shared home page)
+    software.js        PHP detection and patch status
   email/
     render.js          Pure HTML + text email rendering
     mailer.js          Nodemailer SMTP, with on-disk preview fallback

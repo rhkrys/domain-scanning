@@ -55,9 +55,9 @@ function phpAlert(report) {
 
 export function renderText(report) {
   const lines = [];
-  lines.push('CYBER PROTECTION — Consulting Services');
+  lines.push('CYBER PROTECTION | Consulting Services');
   lines.push('');
-  lines.push(`Website security scan — ${report.domain}`);
+  lines.push(`Domain and website security scan: ${report.domain}`);
   lines.push(`Overall grade: ${report.grade}  (${report.score}/100)`);
   lines.push(
     `Checks: ${report.counts.pass} passed, ${report.counts.warn} to review, ${report.counts.fail} need action.`,
@@ -72,7 +72,7 @@ export function renderText(report) {
   }
 
   if (report.priorities.length === 0) {
-    lines.push('No action items — every check passed. Nicely done.');
+    lines.push('No action items. Every check passed. Nicely done.');
   } else {
     lines.push('Your next steps (most important first):');
     report.priorities.forEach((f, i) => {
@@ -110,7 +110,7 @@ export function renderHtml(report) {
           </li>`,
         )
         .join('')}</ol>`
-    : `<p style="color:${CPI.pass}"><strong>No action items — every check passed.</strong></p>`;
+    : `<p style="color:${CPI.pass}"><strong>No action items. Every check passed.</strong></p>`;
 
   const rows = report.findings
     .map((f) => {
@@ -141,7 +141,7 @@ export function renderHtml(report) {
         </tr></table>
       </div>
       <div style="padding:22px 24px 6px;border-bottom:1px solid ${CPI.border}">
-        <p style="margin:0 0 4px;color:${CPI.navy};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em">Website security scan</p>
+        <p style="margin:0 0 4px;color:${CPI.navy};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em">Domain and website security scan</p>
         <h1 style="margin:0 0 16px;font-family:${CPI.fontDisplay};font-weight:400;font-size:30px;text-transform:uppercase;color:${CPI.navyDeep};letter-spacing:0.01em">${esc(report.domain)}</h1>
       </div>
       <!-- Grade -->

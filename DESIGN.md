@@ -1,6 +1,6 @@
 # Design guide: techinpeace.com / Secure & Grow / Cyber Protection
 
-The visual system used by the landing page, the privacy and Terms page, the domain scanner, the report email, and the Gumroad profile page. It is the Cyber Protection (CPI) brand: navy and gold, condensed capital headings, sharp corners.
+The visual system used by the landing page, the privacy and Terms page, the domain and website security scanner, the report email, and the Gumroad profile page. It is the Cyber Protection (CPI) brand: navy and gold, condensed capital headings, sharp corners.
 
 Source of truth in code: `landing/index.html` (`:root` and `<style>`), `landing/privacy.html`, `public/styles.css` (scanner), `src/email/render.js` (email), `gumroad/profile.html`.
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Free Domain Scan and DMARC Checker | Tech in Peace by CPI</title>
-  <meta name="description" content="Free domain scan and DMARC checker for small business. Get a plain-language report on your email, DNS and website cybersecurity, plus help fixing it." />
+  <title>Free Domain and Website Security Scanner | Tech in Peace by CPI</title>
+  <meta name="description" content="Free domain and website security scanner for small business. Checks your email (DMARC, SPF, DKIM), DNS, SSL, and website software like PHP, with plain-language fixes." />
   <link rel="canonical" href="https://www.techinpeace.com/scan" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.techinpeace.com/scan" />
-  <meta property="og:title" content="Free Domain Scan and DMARC Checker | Tech in Peace by CPI" />
-  <meta property="og:description" content="Free domain scan and DMARC checker for small business. Get a plain-language report on your email, DNS and website settings, plus help fixing it." />
+  <meta property="og:title" content="Free Domain and Website Security Scanner | Tech in Peace by CPI" />
+  <meta property="og:description" content="Free domain and website security scanner for small business. Checks your email, DNS, SSL, and website software, with plain-language fixes." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
@@ -121,7 +121,7 @@
         <span class="brandnav-menu" id="site-menu">
           <a href="/mac-support">Mac Support</a>
           <a href="/workshops">Workshops</a>
-          <a href="/scan">Domain Scan</a>
+          <a href="/scan">Security Scan</a>
           <a href="/#pricing">Pricing</a>
         </span>
         <a class="brandnav-cta" href="#scan-form">Check your site</a>
@@ -145,9 +145,9 @@
     </aside>
     <section class="hero">
       <span class="stripe-corner" aria-hidden="true"></span>
-      <p class="eyebrow">Free domain scan and DMARC checker</p>
+      <p class="eyebrow">Free domain and website security scanner</p>
       <h1>You paid for a website. Make sure it’s locked down.</h1>
-      <p class="sub">Run a free scan of your domain and get plain-language results you can act on today.</p>
+      <p class="sub">Run a free scan of your domain and website and get plain-language results you can act on today.</p>
 
       <form id="scan-form" class="card accent form" autocomplete="off" novalidate>
         <div class="field">
@@ -239,7 +239,7 @@
     <div class="content">
       <section class="block" id="what-we-check" aria-labelledby="what-we-check-title">
         <h2 id="what-we-check-title">What we check</h2>
-        <p>The scan runs 12 checks in three groups. It only reads public information about your domain, so nothing on your domain changes.</p>
+        <p>The scan runs 13 checks in four groups. It only reads public information about your domain and website, so nothing on your site changes.</p>
 
         <p class="group-label">Domain setup</p>
         <ul class="check-list">
@@ -265,12 +265,17 @@
           <li><strong>HTTP security headers.</strong> Looks for five settings that tell browsers how to protect your visitors, such as HSTS and Content-Security-Policy.</li>
         </ul>
 
+        <p class="group-label">Website software</p>
+        <ul class="check-list">
+          <li><strong>PHP.</strong> Looks for signs your site runs PHP, the software behind WordPress, Drupal, Joomla, and Magento. If your site shows its PHP version, we tell you if it has the October 2026 security fix.</li>
+        </ul>
+
         <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
       </section>
 
       <section class="block" id="your-report" aria-labelledby="your-report-title">
         <h2 id="your-report-title">What your report looks like</h2>
-        <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 12 checks, passed or not. Add your email and we send the same report to your inbox.</p>
+        <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 13 checks, passed or not. Add your email and we send the same report to your inbox.</p>
         <p>Each item in the list shows a priority label, what we found, and the suggested fix. Here is what the labels mean:</p>
         <ul class="label-list">
           <li><span class="chip critical">Critical</span><span>Fix this first. It has the biggest effect on your email or your site.</span></li>
@@ -373,7 +378,7 @@
         <span class="name">Tech in Peace</span>
         <span class="descriptor">by CPI</span>
       </div>
-      <span class="note">Automated domain audit — a starting point, not a full security audit. · <a href="/about" style="color:var(--gold)">About</a> · <a href="/privacy#privacy" style="color:var(--gold)">Privacy Policy</a> · <a href="/privacy#terms" style="color:var(--gold)">Terms of Use</a></span>
+      <span class="note">Automated domain and website security scan. A starting point, not a full security audit. · <a href="/about" style="color:var(--gold)">About</a> · <a href="/privacy#privacy" style="color:var(--gold)">Privacy Policy</a> · <a href="/privacy#terms" style="color:var(--gold)">Terms of Use</a></span>
     </div>
   </footer>
 

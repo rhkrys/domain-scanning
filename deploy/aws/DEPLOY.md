@@ -31,7 +31,7 @@ service. Needs the AWS CLI (authenticated) and Docker locally.
 # optional email config — see SES section
 export SMTP_HOST=email-smtp.ap-southeast-2.amazonaws.com
 export SMTP_PORT=587 SMTP_USER=... SMTP_PASS=...
-export MAIL_FROM="Domain Scanner <scanner@yourdomain.com>"
+export MAIL_FROM="Security Scanner <scanner@yourdomain.com>"
 
 AWS_REGION=ap-southeast-2 ./deploy/aws/deploy.sh
 ```
@@ -53,7 +53,7 @@ The app sends the report email over SMTP, which maps directly onto SES:
    | `SMTP_HOST` | `email-smtp.<region>.amazonaws.com` |
    | `SMTP_PORT` | `587` |
    | `SMTP_USER` / `SMTP_PASS` | the SMTP credentials from step 2 |
-   | `MAIL_FROM` | a verified address, e.g. `Domain Scanner <scanner@yourdomain.com>` |
+   | `MAIL_FROM` | a verified address, e.g. `Security Scanner <scanner@yourdomain.com>` |
 
 4. New SES accounts start in **sandbox mode** (can only email verified
    addresses). Request production access in the SES console before opening

@@ -1,15 +1,16 @@
-# Domain Security Scanner
+# Domain and Website Security Scanner
 
 A small web-app that audits a domain's security posture, shows an instant graded
 summary, and emails the user a plain-English list of next steps. Inspired by the
 [BlackVeil scanner](https://blackveil.co.nz/scanner): enter a domain, get one
 score and clear fixes.
 
-It runs **12 checks** across three areas:
+It runs **13 checks** across four areas:
 
 - **DNS foundation** — A/AAAA, MX (incl. RFC 7505 null MX), nameserver diversity, DNSSEC, CAA
 - **Email authentication** — SPF, DMARC, DKIM, MTA-STS, BIMI
 - **Transport security** — TLS certificate validity/expiry, HTTP security headers
+- **Website software**: signs of PHP from the home page response, and whether a shown PHP version has the October 2026 fix (CVE-2026-109618, CVE-2026-109619). Passive only.
 
 Each result is scored, rolled up into a letter grade (A–F), and turned into a
 prioritised to-do list shown on the page and emailed to the user.

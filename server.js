@@ -119,7 +119,7 @@ const app = createApp();
 // Only listen when run directly, so tests can import the app.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   app.listen(PORT, () => {
-    console.log(`Domain scanner listening on http://localhost:${PORT}`);
+    console.log(`Domain and website security scanner listening on http://localhost:${PORT}`);
   });
 }
 
