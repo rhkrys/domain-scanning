@@ -127,8 +127,30 @@ function siteTypeNote(signals) {
   );
 }
 
-export function evaluateHeaders(headers, { signals = [] } = {}) {
+// Says which page we actually graded, so the owner is never left guessing.
+function describeContext(context) {
+  if (!context?.checkedUrl) return '';
+  const { checkedUrl, redirects = [], stopped, stoppedAt } = context;
+  if (stopped) {
+    const where = stoppedAt ? ` to ${stoppedAt}` : '';
+    const why = {
+      'other-site': 'a different site, which we do not follow',
+      http: 'an unencrypted address, which we do not follow',
+      unreachable: 'an address we could not reach',
+      'too-many': 'too many times in a row',
+      loop: 'itself in a circle',
+    }[stopped] ?? 'an address we do not follow';
+    return ` Your home page (${checkedUrl}) redirects${where} (${why}), so we graded the redirect response itself.`;
+  }
+  if (redirects.length > 0) {
+    return ` We checked ${checkedUrl} because ${redirects[0]} redirects there.`;
+  }
+  return '';
+}
+
+export function evaluateHeaders(headers, { signals = [], context = null } = {}) {
   const sensitive = signals.length > 0;
+  const contextNote = describeContext(context);
   const present = [];
   const missing = [];
   for (const item of EXPECTED) {
@@ -144,7 +166,7 @@ export function evaluateHeaders(headers, { signals = [] } = {}) {
       status: 'pass',
       severity: 'info',
       summary: 'All key security headers present',
-      detail: `Present: ${present.join(', ')}.`,
+      detail: `Present: ${present.join(', ')}.${contextNote}`,
     };
   }
 
@@ -180,7 +202,7 @@ export function evaluateHeaders(headers, { signals = [] } = {}) {
     status: worst === 'low' ? 'warn' : 'fail',
     severity: worst,
     summary,
-    detail: `Present: ${present.join(', ') || 'none'}. Missing: ${missing.map((m) => m.name).join(', ')}.`,
+    detail: `Present: ${present.join(', ') || 'none'}. Missing: ${missing.map((m) => m.name).join(', ')}.${contextNote}`,
     recommendation: parts.join(' '),
     evidence: {
       present,
@@ -188,6 +210,8 @@ export function evaluateHeaders(headers, { signals = [] } = {}) {
       siteType: sensitive ? 'sensitive' : 'basic',
       signals,
       items: missing.map((m) => ({ name: m.name, severity: m.rated, effort: m.effort })),
+      checkedUrl: context?.checkedUrl ?? null,
+      redirects: context?.redirects ?? [],
     },
   };
 }
@@ -206,15 +230,96 @@ export async function checkHeaders(domain, { timeoutMs = 6000, requestImpl } = {
       recommendation: 'Confirm the site is reachable over HTTPS so security headers can be evaluated.',
     };
   }
-  return evaluateHeaders(page.headers, { signals: detectSensitiveSite(page.html) });
+  return evaluateHeaders(page.headers, {
+    signals: detectSensitiveSite(page.html),
+    context: { checkedUrl: page.url, redirects: page.redirects, stopped: page.stopped, stoppedAt: page.stoppedAt },
+  });
 }
 
-// Resolves { headers, html } (html is '' unless the home page answered 200 with
-// HTML) or null when no response arrived. The body is capped, and a slow body
-// never costs us the headers we already have.
-function fetchPage(domain, timeoutMs, requestImpl = https.request) {
+const MAX_REDIRECTS = 3;
+const REDIRECT_CODES = new Set([301, 302, 303, 307, 308]);
+
+// A redirect is only followed when it stays on the scanned domain (or one of
+// its subdomains, which includes www), uses HTTPS on the normal port, and
+// carries no credentials. Anything else could point the scanner somewhere the
+// owner did not ask us to look.
+function isSameSite(hostname, domain) {
+  const h = hostname.toLowerCase();
+  const d = domain.toLowerCase();
+  return h === d || h.endsWith(`.${d}`);
+}
+
+function nextHop(current, location, domain) {
+  let url;
+  try {
+    url = new URL(location, `https://${current.host}${current.path}`);
+  } catch {
+    return { stop: 'unreadable' };
+  }
+  if (url.protocol !== 'https:') return { stop: 'http', at: url.href };
+  if (url.port && url.port !== '443') return { stop: 'port', at: url.href };
+  if (url.username || url.password) return { stop: 'credentials' };
+  if (!isSameSite(url.hostname, domain)) return { stop: 'other-site', at: url.origin + '/' };
+  return { host: url.hostname, path: `${url.pathname}${url.search}` };
+}
+
+// Starts at https://domain/ and follows same-site redirects. Resolves the page
+// we ended on (headers, html, url) plus the redirects followed, or null when
+// nothing answered. If a later step fails we keep the last response we had.
+async function fetchPage(domain, timeoutMs, requestImpl = https.request) {
+  const deadline = Date.now() + timeoutMs * 2;
+  let host = domain;
+  let path = '/';
+  let from = null;
+  let last = null;
+  const redirects = [];
+  let stopped = null;
+  let stoppedAt = null;
+
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
+    const budget = Math.min(timeoutMs, deadline - Date.now());
+    if (budget <= 0) break;
+    const res = await fetchOnce(host, path, budget, requestImpl);
+    if (!res) {
+      if (last) {
+        stopped = 'unreachable';
+        stoppedAt = `https://${host}${path}`;
+      }
+      break;
+    }
+    if (from) redirects.push(from);
+    last = { ...res, url: `https://${host}${path}` };
+
+    const location = res.headers?.location;
+    if (!REDIRECT_CODES.has(res.statusCode) || !location) break;
+    if (hop === MAX_REDIRECTS) {
+      stopped = 'too-many';
+      break;
+    }
+    const next = nextHop({ host, path }, String(location), domain);
+    if (next.stop) {
+      stopped = next.stop;
+      stoppedAt = next.at ?? null;
+      break;
+    }
+    if (next.host === host && next.path === path) {
+      stopped = 'loop';
+      break;
+    }
+    from = last.url;
+    host = next.host;
+    path = next.path;
+  }
+  return last ? { ...last, redirects, stopped, stoppedAt } : null;
+}
+
+// One request. Resolves { headers, statusCode, html } (html is '' unless the
+// page answered 200 with HTML, and is capped) or null when no response arrived.
+// A slow body never costs us the headers we already have.
+function fetchOnce(host, path, timeoutMs, requestImpl) {
   return new Promise((resolve) => {
     let headers = null;
+    let statusCode = 0;
     let html = '';
     let settled = false;
     let timer;
@@ -224,13 +329,14 @@ function fetchPage(domain, timeoutMs, requestImpl = https.request) {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      resolve(headers ? { headers, html } : null);
+      resolve(headers ? { headers, statusCode, html } : null);
     };
 
     req = requestImpl(
-      { host: domain, port: 443, path: '/', method: 'GET', timeout: timeoutMs, rejectUnauthorized: false },
+      { host, port: 443, path, method: 'GET', timeout: timeoutMs, rejectUnauthorized: false },
       (res) => {
         headers = res.headers;
+        statusCode = res.statusCode;
         const isHtml = res.statusCode === 200 && /text\/html/i.test(String(res.headers?.['content-type'] ?? ''));
         if (!isHtml || typeof res.on !== 'function') {
           res.resume?.();

@@ -215,3 +215,146 @@ test('checkHeaders: no response still warns instead of crashing', async () => {
   assert.equal(r.status, 'warn');
   assert.match(r.summary, /Could not retrieve/);
 });
+
+// ---- redirects: the scan follows same-site HTTPS redirects and nothing else ----
+
+const ALL_HEADERS = {
+  'strict-transport-security': 'max-age=31536000',
+  'content-security-policy': "default-src 'self'",
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'strict-origin',
+  'content-type': 'text/html',
+};
+
+// Answers by "host+path" and records every request that was made.
+function routedRequest(routes, log = []) {
+  return (opts, onResponse) => {
+    const req = new EventEmitter();
+    req.destroy = () => {};
+    req.end = () => {
+      setImmediate(() => {
+        const key = `${opts.host}${opts.path}`;
+        log.push(key);
+        const route = routes[key];
+        if (!route) return req.emit('error', new Error('no route'));
+        const res = new EventEmitter();
+        res.statusCode = route.statusCode ?? 200;
+        res.headers = route.headers ?? {};
+        res.setEncoding = () => {};
+        res.resume = () => {};
+        res.destroy = () => {};
+        onResponse(res);
+        setImmediate(() => {
+          if (route.body) res.emit('data', route.body);
+          res.emit('end');
+        });
+      });
+    };
+    return req;
+  };
+}
+
+const redirect = (location, statusCode = 301) => ({ statusCode, headers: { location } });
+
+test('checkHeaders: follows apex -> www and grades the page visitors actually see', async () => {
+  const log = [];
+  const requestImpl = routedRequest(
+    {
+      'example.com/': redirect('https://www.example.com/'),
+      'www.example.com/': { headers: ALL_HEADERS, body: '<p>hi</p>' },
+    },
+    log,
+  );
+  const r = await checkHeaders('example.com', { requestImpl });
+  assert.equal(r.status, 'pass');
+  assert.deepEqual(log, ['example.com/', 'www.example.com/']);
+  assert.match(r.detail, /We checked https:\/\/www\.example\.com\/ because https:\/\/example\.com\/ redirects there\./);
+});
+
+test('checkHeaders: the redirect target decides the headers, not the redirect response', async () => {
+  const requestImpl = routedRequest({
+    'example.com/': redirect('https://www.example.com/'),
+    'www.example.com/': { headers: { 'content-type': 'text/html' }, body: '<p>hi</p>' },
+  });
+  const r = await checkHeaders('example.com', { requestImpl });
+  assert.equal(r.evidence.checkedUrl, 'https://www.example.com/');
+  assert.deepEqual(r.evidence.redirects, ['https://example.com/']);
+  assert.equal(r.evidence.missing.length, 5);
+});
+
+test('checkHeaders: sensitive signals come from the page we land on', async () => {
+  const requestImpl = routedRequest({
+    'example.com/': redirect('https://www.example.com/'),
+    'www.example.com/': { headers: { 'content-type': 'text/html' }, body: '<a href="/login">Log in</a>' },
+  });
+  const r = await checkHeaders('example.com', { requestImpl });
+  assert.equal(r.evidence.siteType, 'sensitive');
+  assert.equal(r.severity, 'high');
+});
+
+test('checkHeaders: follows a relative redirect and a subdomain redirect', async () => {
+  const rel = routedRequest({
+    'example.com/': redirect('/home', 302),
+    'example.com/home': { headers: ALL_HEADERS, body: '<p>hi</p>' },
+  });
+  assert.equal((await checkHeaders('example.com', { requestImpl: rel })).status, 'pass');
+  const sub = routedRequest({
+    'example.com/': redirect('https://app.example.com/start', 307),
+    'app.example.com/start': { headers: ALL_HEADERS, body: '<p>hi</p>' },
+  });
+  assert.match((await checkHeaders('example.com', { requestImpl: sub })).detail, /We checked https:\/\/app\.example\.com\/start because/);
+});
+
+test('checkHeaders: never follows a redirect to another site, a lookalike, plain HTTP, or an odd port', async () => {
+  const targets = [
+    ['https://evil.net/', /different site/],
+    ['https://badexample.com/', /different site/],
+    ['https://example.com.evil.net/', /different site/],
+    ['http://www.example.com/', /unencrypted/],
+    ['https://www.example.com:8443/', /do not follow/],
+    ['https://user:pw@www.example.com/', /do not follow/],
+  ];
+  for (const [location, note] of targets) {
+    const log = [];
+    const requestImpl = routedRequest({ 'example.com/': redirect(location) }, log);
+    const r = await checkHeaders('example.com', { requestImpl });
+    assert.deepEqual(log, ['example.com/'], `only the scanned domain was requested for ${location}`);
+    assert.equal(r.evidence.redirects.length, 0, location);
+    assert.match(r.detail, note, location);
+    assert.match(r.detail, /graded the redirect response itself/, location);
+  }
+});
+
+test('checkHeaders: gives up on redirect loops and long chains', async () => {
+  const self = routedRequest({ 'example.com/': redirect('https://example.com/') });
+  const a = await checkHeaders('example.com', { requestImpl: self });
+  assert.match(a.detail, /in a circle/);
+
+  const log = [];
+  const pingPong = routedRequest(
+    { 'example.com/': redirect('https://www.example.com/'), 'www.example.com/': redirect('https://example.com/') },
+    log,
+  );
+  const b = await checkHeaders('example.com', { requestImpl: pingPong });
+  assert.match(b.detail, /too many times/);
+  assert.equal(log.length, 4, 'one request plus three redirects, then stop');
+});
+
+test('checkHeaders: if the redirect target cannot be reached, keeps what it had', async () => {
+  const requestImpl = routedRequest({ 'example.com/': redirect('https://www.example.com/') });
+  const r = await checkHeaders('example.com', { requestImpl });
+  assert.match(r.detail, /could not reach/);
+  assert.equal(r.status, 'fail');
+});
+
+test('checkHeaders: a normal site with no redirect adds no extra note', async () => {
+  const requestImpl = routedRequest({ 'example.com/': { headers: ALL_HEADERS, body: '<p>hi</p>' } });
+  const r = await checkHeaders('example.com', { requestImpl });
+  assert.equal(r.detail, 'Present: HSTS, X-Content-Type-Options, X-Frame-Options, Content-Security-Policy, Referrer-Policy.');
+});
+
+test('checkHeaders: redirect notes have no em dashes', async () => {
+  const requestImpl = routedRequest({ 'example.com/': redirect('https://evil.net/') });
+  assert.ok(!(await checkHeaders('example.com', { requestImpl })).detail.includes('—'));
+});
