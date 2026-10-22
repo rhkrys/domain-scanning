@@ -74,7 +74,7 @@ function getSmtpTransport() {
 
 export async function sendReport(to, report) {
   const email = renderEmail(report);
-  const from = process.env.MAIL_FROM ?? 'Cyber Protection <scanner@localhost>';
+  const from = process.env.MAIL_FROM ?? 'CPI <scanner@localhost>';
   const logo = await getLogo();
 
   if (sesConfigured()) {

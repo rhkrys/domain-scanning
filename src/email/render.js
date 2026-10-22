@@ -2,7 +2,7 @@
 // summary, the grade, and a prioritised list of next steps. Pure functions so
 // they can be unit-tested without a mail server.
 
-// Cyber Protection (CPI) brand tokens. Email clients rarely load web fonts, so
+// CPI brand tokens. Email clients rarely load web fonts, so
 // the display face falls back through Oswald → Arial Narrow → Arial.
 const CPI = {
   navy: '#203a7b',
@@ -58,7 +58,7 @@ function phpAlert(report) {
 
 export function renderText(report) {
   const lines = [];
-  lines.push('CYBER PROTECTION | Consulting Services');
+  lines.push('CPI | Consulting Services');
   lines.push('');
   lines.push(`Domain and website security scan: ${report.domain}`);
   lines.push(`Overall grade: ${report.grade}  (${report.score}/100)`);
@@ -154,9 +154,9 @@ export function renderHtml(report) {
       <!-- Brand header (logo embedded as an inline CID attachment) -->
       <div style="padding:18px 24px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
         <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-          <td style="padding-right:14px;vertical-align:middle"><img src="cid:${LOGO_CID}" width="44" height="44" alt="Cyber Protection" style="display:block;border:0"></td>
+          <td style="padding-right:14px;vertical-align:middle"><img src="cid:${LOGO_CID}" width="44" height="44" alt="CPI" style="display:block;border:0"></td>
           <td style="vertical-align:middle">
-            <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection</div>
+            <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">CPI</div>
             <div style="font-family:${CPI.fontBody};font-weight:700;color:${CPI.gold};font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-top:5px">Consulting Services</div>
           </td>
         </tr></table>
@@ -190,7 +190,7 @@ export function renderHtml(report) {
         <p style="margin:10px 0 0;color:${CPI.ink};font-size:13px">After making changes to your DNS or website, be sure to <a href="${RESCAN_URL}" style="color:${CPI.navy};font-weight:700">check your score again</a>.</p>
       </div>
     </div>
-    <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection · Consulting Services</div>
+    <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">CPI · Consulting Services</div>
   </div>
 </body></html>`;
 }

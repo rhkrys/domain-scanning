@@ -69,3 +69,13 @@ test('the email footer links back to the scan page to check the score again', as
   assert.match(email.text, /After making changes to your DNS or website, be sure to check your score again: https:\/\/www\.techinpeace\.com\/scan$/);
   assert.match(email.html, /<a href="https:\/\/www\.techinpeace\.com\/scan"[^>]*>check your score again<\/a>/);
 });
+
+test('the report email is branded CPI, not Cyber Protection', async () => {
+  const resolver = new FakeResolver({ 'x.com|A': ['1.2.3.4'] });
+  const report = await runAudit('x.com', { resolver, loadPage: async () => null });
+  const email = renderEmail(report);
+  assert.match(email.text, /^CPI \| Consulting Services/);
+  assert.match(email.html, />CPI</);
+  assert.match(email.html, /CPI · Consulting Services/);
+  assert.doesNotMatch(email.text + email.html, /cyber protection/i);
+});
