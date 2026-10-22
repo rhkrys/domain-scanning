@@ -61,3 +61,11 @@ test('renderEmail produces subject, text and html that mention the grade', async
   assert.match(email.html, /<html/);
   assert.match(email.html, new RegExp(`${report.score}/100`));
 });
+
+test('the email footer links back to the scan page to check the score again', async () => {
+  const resolver = new FakeResolver({ 'x.com|A': ['1.2.3.4'] });
+  const report = await runAudit('x.com', { resolver, loadPage: async () => null });
+  const email = renderEmail(report);
+  assert.match(email.text, /After making changes to your DNS or website, be sure to check your score again: https:\/\/www\.techinpeace\.com\/scan$/);
+  assert.match(email.html, /<a href="https:\/\/www\.techinpeace\.com\/scan"[^>]*>check your score again<\/a>/);
+});

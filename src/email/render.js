@@ -29,6 +29,9 @@ const GRADE_COLOUR = {
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Review', fail: 'Action needed', info: 'Info' };
 
+// Where the footer sends people to scan again after they fix something.
+const RESCAN_URL = 'https://www.techinpeace.com/scan';
+
 // Content-ID the mailer uses when attaching the logo inline.
 export const LOGO_CID = 'cpi-logo';
 
@@ -107,6 +110,7 @@ export function renderText(report) {
   lines.push('');
   lines.push(`Scanned at ${report.scannedAt}.`);
   lines.push('This automated scan is a starting point, not a full security audit.');
+  lines.push(`After making changes to your DNS or website, be sure to check your score again: ${RESCAN_URL}`);
   return lines.join('\n');
 }
 
@@ -183,6 +187,7 @@ export function renderHtml(report) {
       </div>
       <div style="padding:16px 24px;background:${CPI.paperAlt};color:${CPI.muted};font-size:12px">
         Scanned at ${esc(report.scannedAt)}. This automated scan is a starting point, not a full security audit.
+        <p style="margin:10px 0 0;color:${CPI.ink};font-size:13px">After making changes to your DNS or website, be sure to <a href="${RESCAN_URL}" style="color:${CPI.navy};font-weight:700">check your score again</a>.</p>
       </div>
     </div>
     <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">Cyber Protection · Consulting Services</div>
