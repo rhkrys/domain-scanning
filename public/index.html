@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free Domain and Website Security Scanner | Tech in Peace by CPI</title>
+  <meta name="description" content="Free domain and website security scanner for small business. Checks your email (DMARC, SPF, DKIM), DNS, SSL, and website software like PHP, with plain-language fixes." />
+  <link rel="canonical" href="https://www.techinpeace.com/scan" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.techinpeace.com/scan" />
+  <meta property="og:title" content="Free Domain and Website Security Scanner | Tech in Peace by CPI" />
+  <meta property="og:description" content="Free domain and website security scanner for small business. Checks your email, DNS, SSL, and website software, with plain-language fixes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/logo-gold.png" type="image/png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is the scan free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need SPF and DKIM before DMARC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is DMARC failing when SPF passes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does p=none mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I scan my domain?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens after I scan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does DMARC alignment mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Best Free DMARC Checkers (and When You Need More Than a Tool)",
+  "description": "A fair look at four free DMARC checkers, what each does best, and when you need a person to fix what a tool finds.",
+  "author": {
+    "@type": "Person",
+    "name": "Crystal Pugh"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CPI",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.techinpeace.com/logo-gold.png"
+    }
+  },
+  "datePublished": "2026-10-17",
+  "dateModified": "2026-10-17",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.techinpeace.com/scan"
+  },
+  "image": "https://www.techinpeace.com/logo-gold.png"
+}
+  </script>
+</head>
+<body>
+  <header class="brandbar">
+    <div class="brandbar-inner">
+      <a class="brand-link" href="/">
+        <img src="/logo-gold.png" alt="Tech in Peace by CPI" />
+        <div class="wordmark">
+          <span class="name">Tech in Peace</span>
+          <span class="descriptor">by CPI</span>
+        </div>
+      </a>
+      <nav class="brandnav" aria-label="Main">
+        <span class="brandnav-menu" id="site-menu">
+          <a href="/mac-support">Mac Support</a>
+          <a href="/workshops">Workshops</a>
+          <a href="/scan">Security Scan</a>
+          <a href="/#pricing">Pricing</a>
+        </span>
+        <a class="brandnav-cta" href="#scan-form">Check your site</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <aside class="alert" role="note" aria-labelledby="php-alert-title">
+      <p class="alert-tag">Security alert · Oct 21, 2026</p>
+      <h2 id="php-alert-title">Two critical PHP flaws are being exploited right now</h2>
+      <p>They let attackers take over a website&rsquo;s server. Many WordPress, Drupal, Joomla, and Magento sites are affected.</p>
+      <p class="alert-sub">What to do now:</p>
+      <ol>
+        <li>If your site runs PHP, update it today to 8.5.12, 8.4.27, 8.3.36, or 8.2.35 or newer. Older versions need an upgrade.</li>
+        <li>If you can&rsquo;t update today, take the site offline until you can. Firewall rules help but are not a full fix.</li>
+        <li>After updating, check for a break-in going back to at least June 2026. Look for unknown files, new admin users, web shells, and odd outbound connections.</li>
+      </ol>
+      <p class="alert-foot"><a href="#scan-form">Run the scan below</a> to see if your site shows signs of PHP. Source: <a href="https://krebsonsecurity.com/2026/10/widespread-php-flaw-may-cause-many-site-outages-today/" target="_blank" rel="noopener">KrebsOnSecurity</a>.</p>
+    </aside>
+    <section class="hero">
+      <span class="stripe-corner" aria-hidden="true"></span>
+      <p class="eyebrow">Free domain and website security scanner</p>
+      <h1>You paid for a website. Make sure it’s locked down.</h1>
+      <p class="sub">Run a free scan of your domain and website and get plain-language results you can act on today.</p>
+
+      <form id="scan-form" class="card accent form" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="domain">Your website address</label>
+          <input id="domain" name="domain" type="text" inputmode="url"
+                 placeholder="example.com" required
+                 aria-describedby="domain-hint" />
+          <p id="domain-hint" class="hint">It’s fine to paste your full website link — we’ll tidy it up.</p>
+          <p id="domain-error" class="error field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="email">Your email <span class="muted">(optional)</span></label>
+          <input id="email" name="email" type="email" placeholder="you@example.com"
+                 aria-describedby="email-hint" />
+          <p id="email-hint" class="hint">We’ll send your results and what to do next. Nothing else — no spam.</p>
+          <p id="email-error" class="error field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label class="check" for="authorize">
+            <input id="authorize" name="authorize" type="checkbox" required />
+            <span><span class="req" aria-hidden="true">*</span> I confirm I own this domain or have permission to audit it, and I agree to the
+              <a href="/privacy#terms" target="_blank" rel="noopener">Terms of Use</a> and
+              <a href="/privacy#privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+          </label>
+          <p id="authorize-error" class="error field-error" hidden></p>
+        </div>
+        <button id="submit" type="submit">Check my website</button>
+        <p id="coming-soon" class="notice" hidden>⏳ Live scanning is being connected — coming soon. Check back shortly.</p>
+        <p id="progress" class="progress" hidden>Checking your website… this usually takes under a minute.</p>
+        <p id="form-error" class="error" hidden></p>
+      </form>
+    </section>
+
+    <section id="result" class="result" hidden>
+      <div class="card accent summary">
+        <div id="grade" class="grade">–</div>
+        <div class="summary-meta">
+          <h2 id="result-domain"></h2>
+          <p id="cleaned-note" class="muted small" hidden></p>
+          <p id="result-score" class="score"></p>
+          <p id="result-counts" class="muted"></p>
+          <p id="mail-status" class="mail-status" hidden></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>What to do next</h3>
+        <p class="muted small" style="margin-top:-8px">If these look unfamiliar, forward them to whoever manages your website or IT — they’ll know what to do.</p>
+        <ol id="next-steps" class="steps"></ol>
+        <p id="no-steps" class="all-clear" hidden>Every check passed — nothing to fix right now.</p>
+      </div>
+
+      <div class="card">
+        <h3>All checks</h3>
+        <div id="findings" class="findings"></div>
+      </div>
+
+      <div class="card accent cta">
+        <p class="eyebrow">Next step</p>
+        <h3>Want a hand with this?</h3>
+        <p class="cta-lead">
+          Book a free 15-minute review of your results over Zoom — we’ll walk you
+          through what to fix first and what it means for your business.
+        </p>
+
+        <div id="cta-email" class="cta-email">
+          <p class="cta-email-lead" id="cta-email-lead">Prefer it in writing? We’ll email you this report and your next steps.</p>
+          <form id="capture-form" autocomplete="off">
+            <input id="capture-email" type="email" placeholder="you@example.com" aria-label="Email address" />
+            <button type="submit" id="capture-submit">Email me the report</button>
+          </form>
+          <p id="capture-status" class="capture-status" hidden></p>
+        </div>
+
+        <div class="cta-divider"><span>or book a call</span></div>
+
+        <!-- Calendly inline widget (initialised by app.js once the results are
+             visible, so it doesn't render blank inside a hidden container) -->
+        <div id="calendly-embed" class="calendly-inline-widget"
+             data-url="https://calendly.com/cpconsulting/15min"
+             style="min-width:320px;height:700px;"></div>
+      </div>
+
+      <p class="disclaimer">
+        This automated scan is a starting point, not a full security audit.
+      </p>
+    </section>
+
+    <div class="content">
+      <section class="block" id="what-we-check" aria-labelledby="what-we-check-title">
+        <h2 id="what-we-check-title">What we check</h2>
+        <p>The scan runs 13 checks in four groups. It only reads public information about your domain and website, so nothing on your site changes.</p>
+
+        <p class="group-label">Domain setup</p>
+        <ul class="check-list">
+          <li><strong>Mail servers (MX).</strong> Shows where your email is delivered, so messages reach the right inbox.</li>
+          <li><strong>Website address (A and AAAA).</strong> Confirms your domain points to your website, including the newer IPv6 format.</li>
+          <li><strong>Nameservers.</strong> Checks you have at least two, so one failure does not take your domain offline.</li>
+          <li><strong>DNSSEC.</strong> Checks whether your DNS answers are digitally signed, so visitors reach your real site.</li>
+          <li><strong>CAA.</strong> Checks whether you have limited which companies can issue certificates for your domain.</li>
+        </ul>
+
+        <p class="group-label">Email protection</p>
+        <ul class="check-list">
+          <li><strong>SPF.</strong> Lists which servers may send email as your domain, and how strict that list is.</li>
+          <li><strong>DMARC.</strong> Tells inboxes what to do with mail that fails checks, and where to send reports.</li>
+          <li><strong>DKIM.</strong> Adds a signature to your outgoing mail so receivers can see it really came from you.</li>
+          <li><strong>MTA-STS.</strong> Looks for a policy that asks other mail servers to send to you over an encrypted connection.</li>
+          <li><strong>BIMI.</strong> An optional record that can show your logo next to your email in supporting inboxes.</li>
+        </ul>
+
+        <p class="group-label">Website encryption</p>
+        <ul class="check-list">
+          <li><strong>TLS certificate.</strong> Checks your site’s certificate is valid and not close to expiring, so browsers connect without warnings.</li>
+          <li><strong>HTTP security headers.</strong> Looks for five settings that tell browsers how to protect your visitors, such as HSTS and Content-Security-Policy.</li>
+        </ul>
+
+        <p class="group-label">Website software</p>
+        <ul class="check-list">
+          <li><strong>PHP.</strong> Looks for signs your site runs PHP, the software behind WordPress, Drupal, Joomla, and Magento. If your site shows its PHP version, we tell you if it has the October 2026 security fix.</li>
+        </ul>
+
+        <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
+      </section>
+
+      <section class="block" id="your-report" aria-labelledby="your-report-title">
+        <h2 id="your-report-title">What your report looks like</h2>
+        <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 13 checks, passed or not. Add your email and we send the same report to your inbox.</p>
+        <p>Each item in the list shows a priority label, what we found, and the suggested fix. Here is what the labels mean:</p>
+        <ul class="label-list">
+          <li><span class="chip critical">Critical</span><span>Fix this first. It has the biggest effect on your email or your site.</span></li>
+          <li><span class="chip high">High</span><span>Fix this soon. It leaves a real gap.</span></li>
+          <li><span class="chip medium">Medium</span><span>Schedule it. Worth doing after the items above.</span></li>
+          <li><span class="chip low">Low</span><span>An improvement for maximum security. Do it when it is convenient.</span></li>
+        </ul>
+        <h3>Why the order matters</h3>
+        <p>The list runs from most to least important, so your first hour of work goes where it helps most. Some fixes also build on others. For example, DMARC only passes when SPF or DKIM is working.</p>
+        <p>The suggested fix tells you what to change. Choosing the right settings for your setup, and changing them without interrupting your email, is where a person helps. You can <a href="#book">book a call</a> after you see your results.</p>
+      </section>
+
+      <article class="block" id="free-dmarc-checkers" aria-labelledby="free-dmarc-checkers-title">
+        <h2 id="free-dmarc-checkers-title">The Best Free DMARC Checkers (and When You Need More Than a Tool)</h2>
+        <p>The right free DMARC checker depends on what you need. For a plain-language report and a person to help fix it, use the Tech in Peace scan. To see how many DNS lookups your SPF record needs, use dmarcian’s SPF Surveyor. For quick DNS and mail diagnostics, use MxToolbox. To have each part of your DMARC record explained, use EasyDMARC.</p>
+
+        <h3><a href="#scan-form">Tech in Peace scan</a></h3>
+        <p>Best for a plain-language report plus a person to help fix it. It checks SPF, DKIM and DMARC along with your DNS and website settings. Run it at the top of this page.</p>
+
+        <h3><a href="https://dmarcian.com/domain-checker/" target="_blank" rel="noopener">dmarcian Domain Checker</a></h3>
+        <p>Best for checking SPF, DKIM and DMARC in one place. dmarcian was founded by a co-author of the DMARC specification. Its separate <a href="https://dmarcian.com/spf-survey/" target="_blank" rel="noopener">SPF Surveyor</a> shows how many DNS lookups an SPF record needs.</p>
+
+        <h3><a href="https://mxtoolbox.com/dmarc.aspx" target="_blank" rel="noopener">MxToolbox DMARC lookup</a></h3>
+        <p>Best for quick DNS and mail diagnostics. It looks up your DMARC record, and its SuperTool covers a wide range of DNS and mail checks, including SPF and DKIM.</p>
+
+        <h3><a href="https://easydmarc.com/tools/dmarc-lookup" target="_blank" rel="noopener">EasyDMARC DMARC lookup</a></h3>
+        <p>Best for understanding each part of a DMARC record. It explains every tag it finds. Its separate Domain Scanner checks SPF, DKIM, DMARC and BIMI.</p>
+
+        <h3>How they compare</h3>
+        <p class="table-hint">Scroll sideways to see every column.</p>
+        <div class="table-wrap" role="region" aria-label="Comparison of free DMARC checkers, scrollable" tabindex="0">
+          <table class="compare">
+            <thead>
+              <tr><th scope="col">Tool</th><th scope="col">Free</th><th scope="col">Signup needed</th><th scope="col">Checks SPF/DKIM/DMARC</th><th scope="col">Human help</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Tech in Peace scan</th><td>Yes</td><td>No</td><td>Yes (DKIM checks common selectors)</td><td>Yes, book a call</td></tr>
+              <tr><th scope="row">dmarcian Domain Checker</th><td>Yes</td><td>No registration, per dmarcian</td><td>Yes, all three</td><td>DMARC services offered</td></tr>
+              <tr><th scope="row">MxToolbox DMARC lookup</th><td>Yes</td><td class="unchecked">Not checked</td><td>DMARC lookup. SPF and DKIM are separate tools.</td><td>Managed services offered</td></tr>
+              <tr><th scope="row">EasyDMARC DMARC lookup</th><td>Yes</td><td>No account for its free tools, per EasyDMARC</td><td>DMARC lookup. SPF, DKIM, DMARC and BIMI in its Domain Scanner.</td><td>Support and managed setup offered</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Based on each company’s public pages, checked October 16, 2026. Tools and terms change, so confirm on their sites. Free tools can have usage limits. “Not checked” means we did not verify that detail.</p>
+
+        <h3>What a good checker should show you</h3>
+        <p>Whichever tool you use, look for these six things in the results.</p>
+        <ul class="check-list">
+          <li><strong>Record found.</strong> A DMARC record exists on your domain.</li>
+          <li><strong>One record only.</strong> Two DMARC records at the same name cause DMARC to be ignored.</li>
+          <li><strong>Valid syntax.</strong> The record is written correctly, so receivers can read it.</li>
+          <li><strong>Policy level.</strong> Whether the policy is none, quarantine or reject.</li>
+          <li><strong>Reporting set up.</strong> A reporting address (rua) so you receive reports about who sends as your domain.</li>
+          <li><strong>SPF and DKIM alignment.</strong> A pass only counts when the checked domain matches your From domain.</li>
+        </ul>
+        <p>The Tech in Peace scan reads your DMARC record, its policy level and its reporting address. Checking for duplicate records, syntax and alignment, and fixing them, is hands-on work we do with you on a call.</p>
+
+        <h3>When a tool is not enough</h3>
+        <p>A scan finds the problem. Someone still has to change your DNS without breaking your email. That takes the right policy for your mail, set in the right order. On a call we review your setup, make the changes with you, and check that your email keeps flowing.</p>
+        <p><a href="#book">Book a discovery call</a>. Prefer hands-on help with your devices? See our <a href="/mac-support">Mac support</a>. Want to learn it yourself? See our <a href="/workshops">workshops</a>.</p>
+      </article>
+
+      <section class="block faq" id="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <h3>Is the scan free?</h3>
+        <p>Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account.</p>
+        <h3>Do I need SPF and DKIM before DMARC?</h3>
+        <p>You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy.</p>
+        <h3>Why is DMARC failing when SPF passes?</h3>
+        <p>DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass.</p>
+        <h3>What does p=none mean?</h3>
+        <p>p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean.</p>
+        <h3>How often should I scan my domain?</h3>
+        <p>Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching.</p>
+        <h3>What happens after I scan?</h3>
+        <p>You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes.</p>
+        <h3>What does DMARC alignment mean?</h3>
+        <p>Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain.</p>
+      </section>
+
+      <section class="block" id="book" aria-labelledby="book-title">
+        <div class="card accent book">
+          <h2 id="book-title">Talk it through with a person</h2>
+          <p>A scan shows you what to fix. A call gets it fixed. Book a discovery call and we will go through your results together, or get ongoing help with your devices and email.</p>
+          <div class="btn-row">
+            <a class="btn btn-gold" href="https://calendly.com/cpconsulting/intro-call" target="_blank" rel="noopener">Book a discovery call</a>
+            <a class="btn btn-navy" href="/mac-support">Get tech support and monitoring</a>
+          </div>
+          <p class="brandline"><span class="bl-name">Tech in Peace</span> <span class="bl-by">by CPI</span></p>
+          <p class="tagline">Confidence, not jargon.</p>
+        </div>
+      </section>
+    </div><!-- /content -->
+  </main>
+
+  <footer class="brandfoot">
+    <div class="brandfoot-inner">
+      <img src="/logo-gold.png" alt="" aria-hidden="true" />
+      <div class="wordmark">
+        <span class="name">Tech in Peace</span>
+        <span class="descriptor">by CPI</span>
+      </div>
+      <span class="note">Automated domain and website security scan. A starting point, not a full security audit. · <a href="/about" style="color:var(--gold)">About</a> · <a href="/privacy#privacy" style="color:var(--gold)">Privacy Policy</a> · <a href="/privacy#terms" style="color:var(--gold)">Terms of Use</a></span>
+    </div>
+  </footer>
+
+  <!-- Calendly inline widget script -->
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script>
+    (function () {
+      var btn = document.querySelector(".menu-toggle");
+      if (!btn) return;
+      var header = btn.closest("header");
+      function set(open) { header.classList.toggle("menu-open", open); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+      btn.addEventListener("click", function () { set(!header.classList.contains("menu-open")); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+      document.addEventListener("click", function (e) { if (!header.contains(e.target)) set(false); });
+    })();
+  </script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
