@@ -82,6 +82,23 @@ export function renderText(report) {
     });
   }
 
+  const setup = report.emailSetup;
+  if (setup) {
+    lines.push('');
+    lines.push('Where to set up SPF, DKIM, and DMARC:');
+    if (setup.mailbox) {
+      lines.push(`  Your email is hosted by ${setup.mailbox.name}, based on your MX records.`);
+      lines.push(...providerTextLines(setup.mailbox));
+    } else {
+      lines.push(`  ${UNKNOWN_PROVIDER}`);
+    }
+    if (setup.senders.length) {
+      lines.push('  Your SPF record shows these services also send email as you. Set each one up too:');
+      for (const p of setup.senders) lines.push(...providerTextLines(p));
+    }
+    lines.push(`  ${PROVIDER_NOTE}`);
+  }
+
   lines.push('');
   lines.push('Full results:');
   for (const f of report.findings) {
@@ -158,6 +175,7 @@ export function renderHtml(report) {
       </div>
       ${alertHtml(phpAlert(report))}
       <div style="padding:0 24px 10px"><h2 style="${headingStyle}">What to do next</h2>${steps}</div>
+      ${emailSetupHtml(report.emailSetup, headingStyle)}
       <div style="padding:14px 24px 24px">
         <h2 style="${headingStyle}">All ${report.findings.length} checks</h2>
         <p style="margin:0 0 12px;font-size:13px;color:${CPI.navyDeep};background:${CPI.paperAlt};border-left:3px solid ${CPI.gold};padding:8px 12px">${esc(DELIVERABILITY_NOTE)}</p>
@@ -174,6 +192,38 @@ export function renderHtml(report) {
 
 const DELIVERABILITY_NOTE =
   'Gmail, Yahoo, and Outlook check SPF, DKIM, and DMARC before they deliver your mail. Missing or weak records can send your email to spam.';
+
+const UNKNOWN_PROVIDER =
+  'We could not tell who hosts your email from your MX records. Check with your email provider for how to set up SPF, DKIM, and DMARC.';
+const PROVIDER_NOTE =
+  'Your provider gives you the exact records to add. If someone else manages your DNS, send them these links.';
+
+function providerTextLines(p) {
+  return [
+    `  ${p.name}`,
+    `     Set up SPF: ${p.links.spf}`,
+    `     Set up DKIM: ${p.links.dkim}`,
+    `     Set up DMARC: ${p.links.dmarc}`,
+  ];
+}
+
+function emailSetupHtml(setup, headingStyle) {
+  if (!setup) return '';
+  const link = (url, label) => `<a href="${esc(url)}" style="color:${CPI.navy};font-weight:700">${label}</a>`;
+  const item = (p) => `<li style="margin-bottom:8px"><strong style="color:${CPI.navyDeep}">${esc(p.name)}</strong><br>
+            ${link(p.links.spf, 'Set up SPF')} · ${link(p.links.dkim, 'Set up DKIM')} · ${link(p.links.dmarc, 'Set up DMARC')}</li>`;
+  const p = (text) => `<p style="margin:0 0 10px;color:${CPI.ink};font-size:14px">${text}</p>`;
+  let body = setup.mailbox
+    ? p(`Your email is hosted by <strong>${esc(setup.mailbox.name)}</strong>, based on your MX records. Use their guides:`) +
+      `<ul style="padding-left:20px;margin:0 0 12px">${item(setup.mailbox)}</ul>`
+    : p(esc(UNKNOWN_PROVIDER));
+  if (setup.senders.length) {
+    body += p('Your SPF record shows these services also send email as you. Set each one up too:') +
+      `<ul style="padding-left:20px;margin:0 0 12px">${setup.senders.map(item).join('')}</ul>`;
+  }
+  body += `<p style="margin:0;color:${CPI.muted};font-size:13px">${esc(PROVIDER_NOTE)}</p>`;
+  return `<div style="padding:4px 24px 10px"><h2 style="${headingStyle}">Where to set up SPF, DKIM, and DMARC</h2>${body}</div>`;
+}
 
 function alertHtml(alert) {
   if (!alert) return '';

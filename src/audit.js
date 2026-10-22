@@ -19,6 +19,7 @@ import { checkTls } from './checks/tls.js';
 import { checkHeaders, fetchPage } from './checks/headers.js';
 import { checkSoftware } from './checks/software.js';
 import { scoreFindings } from './scoring.js';
+import { detectEmailProviders } from './providers.js';
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i;
 
@@ -115,11 +116,19 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
 
   const scored = scoreFindings(findings);
 
+  // Who to ask for SPF, DKIM and DMARC setup, from the MX and SPF we already have.
+  const spf = findings.find((f) => f.id === 'spf');
+  const emailSetup = detectEmailProviders({
+    mxHosts: mx.evidence?.hosts ?? [],
+    spfRecord: spf?.evidence?.record ?? null,
+  });
+
   return {
     domain,
     scannedAt: new Date().toISOString(),
     sendsMail,
     ...scored,
     findings,
+    emailSetup,
   };
 }

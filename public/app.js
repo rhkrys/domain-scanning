@@ -147,6 +147,8 @@ function render({ report, mail }, typedDomain) {
     }
   }
 
+  renderEmailSetup(report.emailSetup);
+
   // All checks grouped by category
   const container = document.getElementById('findings');
   container.innerHTML = '';
@@ -176,6 +178,38 @@ function render({ report, mail }, typedDomain) {
   resultEl.hidden = false;
   ensureCalendly(); // now that the container is visible, size the widget correctly
   resultEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Links to the email provider's own SPF, DKIM and DMARC guides, found from the
+// domain's MX and SPF records. Unknown providers get a plain pointer instead.
+function providerLinks(p) {
+  const link = (url, label) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${label}</a>`;
+  return `<li><strong>${escapeHtml(p.name)}</strong>` +
+    `<span class="provider-links">${link(p.links.spf, 'Set up SPF')} · ${link(p.links.dkim, 'Set up DKIM')} · ${link(p.links.dmarc, 'Set up DMARC')}</span></li>`;
+}
+
+function renderEmailSetup(setup) {
+  const card = document.getElementById('provider-card');
+  const box = document.getElementById('provider-setup');
+  if (!card || !box) return;
+  if (!setup) {
+    card.hidden = true;
+    return;
+  }
+  let html = '';
+  if (setup.mailbox) {
+    html += `<p>Your email is hosted by <strong>${escapeHtml(setup.mailbox.name)}</strong>, based on your MX records. Use their guides:</p>` +
+      `<ul class="provider-list">${providerLinks(setup.mailbox)}</ul>`;
+  } else {
+    html += '<p>We could not tell who hosts your email from your MX records. Check with your email provider for how to set up SPF, DKIM, and DMARC.</p>';
+  }
+  if (setup.senders.length) {
+    html += '<p>Your SPF record shows these services also send email as you. Set each one up too:</p>' +
+      `<ul class="provider-list">${setup.senders.map(providerLinks).join('')}</ul>`;
+  }
+  html += '<p class="muted small">Your provider gives you the exact records to add. If someone else manages your DNS, send them these links.</p>';
+  box.innerHTML = html;
+  card.hidden = false;
 }
 
 // Calendly's inline widget renders blank if initialised while its container is

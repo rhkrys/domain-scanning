@@ -278,6 +278,10 @@ h3 {
 .steps .what { color: var(--muted); }
 .steps .fix { display: block; margin-top: 3px; color: var(--ink); }
 .all-clear { color: var(--pass); margin: 0; font-weight: 700; }
+.provider-list { margin: 0 0 14px; padding-left: 20px; }
+.provider-list li { margin-bottom: 6px; }
+.provider-links { display: block; margin-top: 2px; font-size: 14px; }
+.provider-links a { color: var(--navy); font-weight: 700; }
 
 /* ---- Findings ---------------------------------------------------------- */
 .finding-group { margin-bottom: 18px; }
