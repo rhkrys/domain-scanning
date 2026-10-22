@@ -5,9 +5,91 @@ export function parseSpf(txtRecords) {
   return txtRecords.find((r) => /^v=spf1\b/i.test(r.trim())) ?? null;
 }
 
+// SPF syntax per RFC 7208. A record with an unknown term or a malformed
+// mechanism is a "permerror": strict receivers ignore the whole record.
+const SPF_DOMAIN = /^(?:%\{[^}]+\}|[a-z0-9_-])(?:%\{[^}]+\}|[a-z0-9_.-])*\.[a-z0-9-]+\.?$/i;
+const SPF_IP4 = /^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\/(?:3[0-2]|[12]?\d))?$/;
+const SPF_IP6 = /^[0-9a-f:.]*:[0-9a-f:.]*(?:\/(?:12[0-8]|1[01]\d|[1-9]?\d))?$/i;
+const SPF_CIDR = /^(?:\/(?:3[0-2]|[12]?\d))?(?:\/\/(?:12[0-8]|1[01]\d|[1-9]?\d))?$/;
+const BARE_DOMAIN = /^[a-z0-9_-]+(?:\.[a-z0-9_-]+)+\.?$/i;
+
+function spfTermOk(term) {
+  const t = term.replace(/^[+\-~?]/, '');
+  let m;
+  if (/^all$/i.test(t)) return true;
+  if ((m = t.match(/^(include|exists):(.+)$/i))) return SPF_DOMAIN.test(m[2]);
+  if ((m = t.match(/^(a|mx)(?::([^/]+))?(\/.*)?$/i))) return (!m[2] || SPF_DOMAIN.test(m[2])) && SPF_CIDR.test(m[3] ?? '');
+  if ((m = t.match(/^ptr(?::(.+))?$/i))) return !m[1] || SPF_DOMAIN.test(m[1]);
+  if ((m = t.match(/^ip4:(.+)$/i))) return SPF_IP4.test(m[1]);
+  if ((m = t.match(/^ip6:(.+)$/i))) return SPF_IP6.test(m[1]);
+  if ((m = term.match(/^(redirect|exp)=(.+)$/i))) return SPF_DOMAIN.test(m[2]);
+  // Other name=value modifiers are allowed and ignored by receivers.
+  return /^[a-z][a-z0-9_.-]*=\S*$/i.test(term);
+}
+
+// Returns { problems: [plain-language strings], fixed: corrected record or null }.
+// "fixed" is only offered when every problem is one we can repair safely
+// (stray commas, a domain missing "include:").
+export function validateSpfSyntax(record) {
+  const problems = [];
+  let fixable = true;
+  const terms = record.trim().split(/\s+/).slice(1);
+  const fixedTerms = [];
+
+  if (!/^v=spf1$/i.test(record.trim().split(/\s+/)[0])) {
+    problems.push('The record must start with exactly "v=spf1" followed by a space.');
+    fixable = false;
+  }
+
+  for (const raw of terms) {
+    let term = raw;
+    if (term.includes(',') && !term.includes('%{')) {
+      problems.push(`"${raw}" has a comma. SPF parts are separated by spaces only.`);
+      term = term.replace(/,/g, '');
+      if (!term) continue;
+    }
+    if (spfTermOk(term)) {
+      fixedTerms.push(term);
+    } else if (BARE_DOMAIN.test(term)) {
+      problems.push(`"${term}" is missing "include:" in front. It should read "include:${term}".`);
+      fixedTerms.push(`include:${term}`);
+    } else {
+      problems.push(`"${term}" is not a valid SPF part.`);
+      fixable = false;
+    }
+  }
+
+  const redirects = terms.filter((t) => /^redirect=/i.test(t)).length;
+  if (redirects > 1) {
+    problems.push('The record has more than one "redirect=". Only one is allowed.');
+    fixable = false;
+  }
+
+  return {
+    problems,
+    fixed: problems.length && fixable ? ['v=spf1', ...fixedTerms].join(' ') : null,
+  };
+}
+
 export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
   const txt = await resolver.txt(domain);
   const spf = parseSpf(txt);
+  const spfCount = txt.filter((r) => /^v=spf1\b/i.test(r.trim())).length;
+
+  if (spfCount > 1) {
+    return {
+      id: 'spf',
+      category: 'Email Deliverability',
+      title: 'SPF',
+      status: 'fail',
+      severity: sendsMail ? 'high' : 'medium',
+      summary: `${spfCount} SPF records found. Only one is allowed`,
+      detail: `${domain} publishes ${spfCount} TXT records starting with "v=spf1". Receivers treat that as an error and SPF stops working.`,
+      recommendation:
+        'Merge them into a single SPF record that lists every service that sends as you, then delete the extra records.',
+      evidence: { records: txt.filter((r) => /^v=spf1\b/i.test(r.trim())) },
+    };
+  }
 
   if (!spf) {
     return {
@@ -20,6 +102,26 @@ export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
       detail: `${domain} publishes no SPF record, so receivers cannot tell which servers are allowed to send as this domain.`,
       recommendation:
         'Publish an SPF TXT record listing your legitimate senders and ending in "-all" (hard fail), e.g. "v=spf1 include:_spf.google.com -all".',
+    };
+  }
+
+  // A broken record outranks every other SPF finding: receivers ignore it.
+  const syntax = validateSpfSyntax(spf);
+  if (syntax.problems.length) {
+    return {
+      id: 'spf',
+      category: 'Email Deliverability',
+      title: 'SPF',
+      status: 'fail',
+      severity: sendsMail ? 'high' : 'medium',
+      summary: 'SPF record has a typo, so it does not work',
+      detail:
+        `Record: ${spf}. ${syntax.problems.join(' ')} ` +
+        'Mail servers that check SPF strictly treat the whole record as broken.',
+      recommendation: syntax.fixed
+        ? `Edit your SPF record (do not add a second one) so it reads exactly: ${syntax.fixed}`
+        : 'Fix the parts listed above in your SPF record. Your email provider’s setup guide shows the correct format.',
+      evidence: { record: spf, problems: syntax.problems, fixed: syntax.fixed },
     };
   }
 

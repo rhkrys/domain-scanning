@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { FakeResolver } from './helpers.js';
 import {
-  parseSpf, parseDmarc, checkSpf, checkDmarc, checkDkim, checkMtaSts, checkBimi,
+  parseSpf, parseDmarc, checkSpf, checkDmarc, checkDkim, checkMtaSts, checkBimi, validateSpfSyntax,
 } from '../src/checks/email.js';
 
 test('parseSpf finds the spf1 record only', () => {
@@ -47,6 +47,61 @@ test('checkSpf: too many lookups warns', async () => {
   const r = await checkSpf(res, 'x.com');
   assert.equal(r.status, 'warn');
   assert.match(r.summary, /10 DNS-lookup/);
+});
+
+test('validateSpfSyntax accepts well-formed records', () => {
+  for (const rec of [
+    'v=spf1 -all',
+    'v=spf1 include:_spf.google.com include:amazonses.com ~all',
+    'v=spf1 ip4:192.0.2.0/24 ip6:2001:db8::/32 a mx a:mail.example.com/28 mx//64 ?all',
+    'v=spf1 include:%{d}._spf.example.com exists:%{i}.bl.example.com -all',
+    'v=spf1 redirect=_spf.example.com',
+    'v=spf1 include:spf.protection.outlook.com exp=explain.example.com -all',
+  ]) {
+    assert.deepEqual(validateSpfSyntax(rec).problems, [], rec);
+  }
+});
+
+test('validateSpfSyntax repairs a stray comma and a missing include (the techinpeace.com case)', () => {
+  const r = validateSpfSyntax('v=spf1 include:_spf.google.com, amazonses.com ~all');
+  assert.equal(r.problems.length, 2);
+  assert.match(r.problems[0], /comma/);
+  assert.match(r.problems[1], /missing "include:"/);
+  assert.equal(r.fixed, 'v=spf1 include:_spf.google.com include:amazonses.com ~all');
+});
+
+test('validateSpfSyntax flags parts it cannot repair and offers no fix', () => {
+  for (const rec of [
+    'v=spf1 includes:_spf.google.com -all',
+    'v=spf1 ip4:300.1.1.1 -all',
+    'v=spf1 include: -all',
+    'v=spf1 redirect=a.example.com redirect=b.example.com',
+    'v=spf1, include:_spf.google.com -all',
+  ]) {
+    const r = validateSpfSyntax(rec);
+    assert.ok(r.problems.length > 0, rec);
+    assert.equal(r.fixed, null, rec);
+  }
+});
+
+test('checkSpf: a malformed record fails and gives the exact corrected record', async () => {
+  const res = new FakeResolver({ 'x.com|TXT': ['v=spf1 include:_spf.google.com, amazonses.com ~all'] });
+  const r = await checkSpf(res, 'x.com');
+  assert.equal(r.status, 'fail');
+  assert.equal(r.severity, 'high');
+  assert.match(r.summary, /typo/);
+  assert.match(r.recommendation, /do not add a second one/);
+  assert.match(r.recommendation, /v=spf1 include:_spf\.google\.com include:amazonses\.com ~all$/);
+  assert.equal(r.evidence.fixed, 'v=spf1 include:_spf.google.com include:amazonses.com ~all');
+  for (const v of [r.summary, r.detail, r.recommendation]) assert.ok(!v.includes('\u2014'), v);
+});
+
+test('checkSpf: two SPF records fail', async () => {
+  const res = new FakeResolver({ 'x.com|TXT': ['v=spf1 include:_spf.google.com ~all', 'v=spf1 include:amazonses.com ~all'] });
+  const r = await checkSpf(res, 'x.com');
+  assert.equal(r.status, 'fail');
+  assert.match(r.summary, /2 SPF records/);
+  assert.match(r.recommendation, /single SPF record/);
 });
 
 test('checkDmarc: missing record is critical when sending mail', async () => {

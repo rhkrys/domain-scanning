@@ -120,7 +120,8 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
   const spf = findings.find((f) => f.id === 'spf');
   const emailSetup = detectEmailProviders({
     mxHosts: mx.evidence?.hosts ?? [],
-    spfRecord: spf?.evidence?.record ?? null,
+    // A broken record still says who the owner meant to list; use the repaired one.
+    spfRecord: spf?.evidence?.fixed ?? spf?.evidence?.record ?? null,
   });
 
   return {

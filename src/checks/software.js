@@ -29,11 +29,17 @@ function headerText(value) {
 // Pulls "8.3.20" out of headers like "PHP/8.3.20" or
 // "Apache/2.4.58 (Ubuntu) PHP/8.1.2-1ubuntu2.19".
 export function parsePhpVersion(headers = {}) {
-  const sources = [headerText(headers['x-powered-by']), headerText(headers.server)];
-  for (const s of sources) {
+  const sources = [
+    ['X-Powered-By', headerText(headers['x-powered-by'])],
+    ['Server', headerText(headers.server)],
+  ];
+  for (const [header, s] of sources) {
     const m = s.match(/PHP\/(\d+)\.(\d+)(?:\.(\d+))?([^\s;,]*)/i);
     if (m) {
       return {
+        // Which response header gave the version away, and its exact value.
+        header,
+        value: s,
         raw: `${m[1]}.${m[2]}${m[3] != null ? `.${m[3]}` : ''}${m[4] ?? ''}`,
         major: Number(m[1]),
         minor: Number(m[2]),
@@ -108,6 +114,18 @@ export function detectPhp({ headers = {}, html = '', url = '' } = {}) {
   return { signs, platform };
 }
 
+// "Your X-Powered-By header shows "PHP/8.3.20"." when the version is public.
+function headerShows(version) {
+  return version ? ` Your ${version.header} header shows "${version.value}".` : '';
+}
+
+// How to stop the response headers from naming the PHP version.
+function hideVersion(version) {
+  const apache = version?.header === 'Server' ? ' On Apache, also set ServerTokens Prod.' : '';
+  return `Turn off the ${version?.header ?? 'X-Powered-By'} header that shows your PHP version: ` +
+    `set expose_php = Off in php.ini, or ask your host to.${apache}`;
+}
+
 function joinList(items) {
   if (items.length <= 1) return items.join('');
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
@@ -163,14 +181,16 @@ export function evaluateSoftware(page) {
   const status = phpPatchStatus(version);
 
   if (status === 'patched') {
+    // Patched, but the public version still tells attackers what to target.
     return {
       ...BASE,
-      status: 'pass',
-      severity: 'info',
-      summary: `PHP ${version.raw} includes the October 2026 fix`,
-      detail: `${seen} Your site reports PHP ${version.raw}, which includes the fix for the two critical PHP flaws.`,
-      recommendation:
-        'Turn off the header that shows your PHP version (expose_php = Off) so attackers cannot read it.',
+      status: 'warn',
+      severity: 'low',
+      summary: `PHP ${version.raw} is patched, but your ${version.header} header shows the version`,
+      detail:
+        `${seen}${headerShows(version)} PHP ${version.raw} includes the fix for the two critical PHP flaws. ` +
+        'Showing the version helps attackers pick their target when the next flaw comes out.',
+      recommendation: `${hideVersion(version)} This hides the version so attackers cannot read it.`,
       evidence,
     };
   }
@@ -186,7 +206,7 @@ export function evaluateSoftware(page) {
       severity: 'critical',
       summary: `PHP ${version.raw} is open to two critical flaws being exploited now`,
       detail:
-        `${seen} Your site reports PHP ${version.raw}. ` +
+        `${seen}${headerShows(version)} Your site reports PHP ${version.raw}. ` +
         (oldBranch
           ? 'This version has no fix. It needs an upgrade to a supported version.'
           : 'This version is missing the October 2026 fix.') +
@@ -194,7 +214,7 @@ export function evaluateSoftware(page) {
         cloudflareNote,
       recommendation:
         `Update PHP today to ${FIXED_LIST} or newer. If you cannot update today, take the site offline until you can. ` +
-        `${COMPROMISE_CHECK} Also turn off the header that shows your PHP version (expose_php = Off).`,
+        `${COMPROMISE_CHECK} ${hideVersion(version)}`,
       evidence,
     };
   }
@@ -208,12 +228,15 @@ export function evaluateSoftware(page) {
       ? `Your ${platform} site runs on PHP. Confirm it is patched`
       : 'Your site likely runs PHP. Confirm it is patched',
     detail:
-      `${seen} Your site does not show its PHP version, so we cannot tell from outside if it is patched. ` +
-      'Hiding the version is good practice.' +
+      (version
+        ? `${seen}${headerShows(version)} That does not include the exact release, so we cannot tell from outside if it is patched.`
+        : `${seen} Your site does not show its PHP version, so we cannot tell from outside if it is patched. ` +
+          'Hiding the version is good practice.') +
       cloudflareNote,
     recommendation:
       `Ask your host or web person today to confirm your PHP is ${FIXED_LIST} or newer. ` +
-      COMPROMISE_CHECK,
+      COMPROMISE_CHECK +
+      (version ? ` ${hideVersion(version)}` : ''),
     evidence,
   };
 }

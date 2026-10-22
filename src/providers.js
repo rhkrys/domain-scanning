@@ -87,7 +87,7 @@ export const PROVIDERS = [
 ];
 
 function cleanHost(host) {
-  return String(host ?? '').trim().toLowerCase().replace(/\.$/, '');
+  return String(host ?? '').trim().toLowerCase().replace(/,+$/, '').replace(/\.$/, '');
 }
 
 // "include:_spf.google.com" and "include:spf.mandrillapp.com" both count:

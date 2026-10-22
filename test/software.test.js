@@ -68,10 +68,39 @@ test('evaluateSoftware: a distro build asks the host to confirm', () => {
   assert.match(r.detail, /Ask them to confirm/);
 });
 
-test('evaluateSoftware: patched version passes', () => {
+test('evaluateSoftware: patched version is a low warning to hide the header', () => {
   const r = evaluateSoftware(page({ 'x-powered-by': 'PHP/8.4.27' }));
-  assert.equal(r.status, 'pass');
-  assert.match(r.recommendation, /expose_php/);
+  assert.equal(r.status, 'warn');
+  assert.equal(r.severity, 'low');
+  assert.match(r.summary, /8\.4\.27 is patched/);
+  assert.match(r.summary, /X-Powered-By/);
+  assert.match(r.detail, /X-Powered-By header shows "PHP\/8\.4\.27"/);
+  assert.match(r.recommendation, /Turn off the X-Powered-By header/);
+  assert.match(r.recommendation, /expose_php = Off/);
+});
+
+test('evaluateSoftware: names the header and exact value that show the version', () => {
+  const r = evaluateSoftware(page({ 'x-powered-by': 'PHP/8.3.20' }));
+  assert.equal(parsePhpVersion({ 'x-powered-by': 'PHP/8.3.20' }).header, 'X-Powered-By');
+  assert.match(r.detail, /X-Powered-By header shows "PHP\/8\.3\.20"/);
+  assert.match(r.recommendation, /Turn off the X-Powered-By header/);
+});
+
+test('evaluateSoftware: a PHP version in the Server header adds the Apache tip', () => {
+  const value = 'Apache/2.4.58 (Unix) PHP/8.5.12';
+  const r = evaluateSoftware(page({ server: value }));
+  assert.match(r.detail, /Server header shows "Apache\/2\.4\.58 \(Unix\) PHP\/8\.5\.12"/);
+  assert.match(r.recommendation, /Turn off the Server header/);
+  assert.match(r.recommendation, /ServerTokens Prod/);
+});
+
+test('evaluateSoftware: a partial version is shown and still asks to turn it off', () => {
+  const r = evaluateSoftware(page({ 'x-powered-by': 'PHP/8.3' }));
+  assert.equal(r.status, 'warn');
+  assert.equal(r.severity, 'high');
+  assert.match(r.detail, /X-Powered-By header shows "PHP\/8\.3"/);
+  assert.match(r.detail, /exact release/);
+  assert.match(r.recommendation, /expose_php = Off/);
 });
 
 test('evaluateSoftware: PHP with a hidden version is a high warning', () => {

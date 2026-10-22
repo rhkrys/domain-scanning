@@ -97,3 +97,13 @@ test('the email says check with your provider when the provider is unknown', asy
   assert.match(email.text, /Check with your email provider/);
   assert.match(email.html, /Check with your email provider/);
 });
+
+test('a broken SPF record still lists the sender the owner meant to include', async () => {
+  const resolver = new FakeResolver({
+    'tip.com|MX': ['1 aspmx.l.google.com.'],
+    'tip.com|TXT': ['v=spf1 include:_spf.google.com, amazonses.com ~all'],
+  });
+  const report = await runAudit('tip.com', { resolver, loadPage: async () => null });
+  assert.equal(report.emailSetup.mailbox.id, 'google');
+  assert.deepEqual(report.emailSetup.senders.map((s) => s.id), ['ses']);
+});
