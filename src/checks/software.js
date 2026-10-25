@@ -126,6 +126,32 @@ function hideVersion(version) {
     `set expose_php = Off in php.ini, or ask your host to.${apache}`;
 }
 
+// Version details the home page gives away, for the report's "Your website"
+// section. A leak is X-Powered-By naming PHP, a Server header with a version
+// number, any X-Generator header, or a WordPress generator meta tag.
+// Returns { checked, leaks: [{ header, value }], wordpress }.
+export function detectVersionLeaks(page) {
+  if (!page) return { checked: false, leaks: [], wordpress: false };
+  const headers = page.headers ?? {};
+  const html = typeof page.html === 'string' ? page.html : '';
+  const leaks = [];
+  const poweredBy = headerText(headers['x-powered-by']);
+  const server = headerText(headers.server);
+  const generator = headerText(headers['x-generator']);
+
+  if (/php/i.test(poweredBy)) leaks.push({ header: 'X-Powered-By', value: poweredBy });
+  if (/\d+\.\d+/.test(server) || /\/\d/.test(server)) leaks.push({ header: 'Server', value: server });
+  if (generator.trim()) leaks.push({ header: 'X-Generator', value: generator });
+  const meta = html.match(/<meta[^>]+name=["']generator["'][^>]*content=["'](wordpress[^"']*)["']/i)
+    ?? html.match(/<meta[^>]+content=["'](wordpress[^"']*)["'][^>]*name=["']generator["']/i);
+  if (meta) leaks.push({ header: 'generator tag', value: meta[1] });
+
+  const wordpress =
+    detectPhp({ headers, html, url: page.url }).platform === 'WordPress' ||
+    leaks.some((l) => /wordpress/i.test(l.value));
+  return { checked: true, leaks, wordpress };
+}
+
 function joinList(items) {
   if (items.length <= 1) return items.join('');
   if (items.length === 2) return `${items[0]} and ${items[1]}`;

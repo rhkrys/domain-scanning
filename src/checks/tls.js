@@ -3,7 +3,11 @@
 
 import tls from 'node:tls';
 
-export function evaluateCertificate(cert, protocol, now = new Date()) {
+// trust: what the TLS handshake said about the certificate. authorized is
+// false when no trusted authority vouches for it (self-signed, expired chain);
+// hostnameMatch is false when it was issued for a different name.
+export function evaluateCertificate(cert, protocol, now = new Date(), trust = {}) {
+  const { authorized = true, authError = null, hostnameMatch = true } = trust;
   if (!cert || !cert.valid_to) {
     return {
       id: 'tls',
@@ -14,6 +18,7 @@ export function evaluateCertificate(cert, protocol, now = new Date()) {
       summary: 'No TLS certificate presented',
       detail: 'The server did not present a certificate on port 443.',
       recommendation: 'Install a valid TLS certificate so traffic to your site is encrypted.',
+      evidence: { valid: false, expiresAt: null, daysLeft: null, hostnameMatch: false, authorized: false },
     };
   }
 
@@ -37,6 +42,16 @@ export function evaluateCertificate(cert, protocol, now = new Date()) {
     severity = 'critical';
     summary = 'Certificate has expired';
     recommendation = 'Renew the TLS certificate immediately; browsers are rejecting connections to your site.';
+  } else if (!hostnameMatch) {
+    status = 'fail';
+    severity = 'high';
+    summary = 'Certificate does not match this domain';
+    recommendation = 'Install a certificate issued for this exact domain name so browsers trust it.';
+  } else if (!authorized) {
+    status = 'fail';
+    severity = 'high';
+    summary = 'Certificate is not trusted by browsers';
+    recommendation = 'Replace it with a certificate from a trusted authority, such as a free Let\u2019s Encrypt certificate.';
   } else if (daysLeft < 14) {
     status = 'warn';
     severity = 'high';
@@ -60,7 +75,16 @@ export function evaluateCertificate(cert, protocol, now = new Date()) {
       cert.issuer?.O ?? cert.issuer?.CN ?? 'unknown'
     }; valid ${cert.valid_from} → ${cert.valid_to}; protocol ${protocol ?? 'unknown'}.`,
     recommendation,
-    evidence: { daysLeft, protocol },
+    evidence: {
+      daysLeft,
+      protocol,
+      expiresAt: Number.isNaN(validTo.getTime()) ? null : validTo.toISOString(),
+      hostnameMatch,
+      authorized,
+      authError,
+      // A working certificate: trusted, issued for this name, and in date.
+      valid: authorized && hostnameMatch && now >= validFrom && daysLeft >= 0,
+    },
   };
 }
 
@@ -71,8 +95,13 @@ export async function checkTls(domain, { timeoutMs = 6000, connect = tls.connect
       () => {
         const cert = socket.getPeerCertificate();
         const protocol = socket.getProtocol();
+        const trust = {
+          authorized: Boolean(socket.authorized),
+          authError: socket.authorizationError ? String(socket.authorizationError) : null,
+          hostnameMatch: cert?.subject ? tls.checkServerIdentity(domain, cert) === undefined : false,
+        };
         socket.end();
-        resolve(evaluateCertificate(cert, protocol));
+        resolve(evaluateCertificate(cert, protocol, new Date(), trust));
       },
     );
     socket.on('timeout', () => {
@@ -95,5 +124,6 @@ function unreachable(reason) {
     summary: 'Could not establish HTTPS connection',
     detail: `Unable to complete a TLS handshake on port 443 (${reason}).`,
     recommendation: 'Confirm the site serves HTTPS on port 443 with a valid certificate.',
+    evidence: { valid: false, expiresAt: null, daysLeft: null, hostnameMatch: false, authorized: false },
   };
 }

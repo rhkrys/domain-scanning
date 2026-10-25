@@ -1,6 +1,8 @@
 // Email authentication checks. These are the highest-impact findings for most
 // domains: weak SPF/DMARC is what lets attackers spoof a business's address.
 
+import https from 'node:https';
+
 export function parseSpf(txtRecords) {
   return txtRecords.find((r) => /^v=spf1\b/i.test(r.trim())) ?? null;
 }
@@ -335,9 +337,52 @@ export async function checkDkim(resolver, domain, { sendsMail = true, extraSelec
   };
 }
 
-export async function checkMtaSts(resolver, domain, { sendsMail = true } = {}) {
+// Fetches https://mta-sts.<domain>/.well-known/mta-sts.txt and resolves its
+// text, or null if it is missing or unreachable. Small and time-boxed.
+export function fetchMtaStsPolicy(domain, { timeoutMs = 5000, requestImpl = https.request } = {}) {
+  return new Promise((resolve) => {
+    let body = '';
+    let done = false;
+    const finish = (v) => {
+      if (done) return;
+      done = true;
+      resolve(v);
+    };
+    const req = requestImpl(
+      { host: `mta-sts.${domain}`, port: 443, path: '/.well-known/mta-sts.txt', method: 'GET', timeout: timeoutMs },
+      (res) => {
+        if (res.statusCode !== 200) {
+          res.resume?.();
+          return finish(null);
+        }
+        res.setEncoding?.('utf8');
+        res.on('data', (c) => {
+          body += c;
+          if (body.length > 64 * 1024) req.destroy();
+        });
+        res.on('end', () => finish(body));
+        res.on('error', () => finish(null));
+      },
+    );
+    req.on('timeout', () => {
+      req.destroy();
+      finish(null);
+    });
+    req.on('error', () => finish(null));
+    req.end();
+  });
+}
+
+export function isValidMtaStsPolicy(text) {
+  return typeof text === 'string' && /^\s*version:\s*STSv1\s*$/im.test(text) && /^\s*mode:\s*(enforce|testing|none)\s*$/im.test(text);
+}
+
+export async function checkMtaSts(resolver, domain, { sendsMail = true, fetchPolicy = fetchMtaStsPolicy } = {}) {
   const txt = await resolver.txt(`_mta-sts.${domain}`);
   const has = txt.some((r) => /^v=stsv1\b/i.test(r.trim()));
+  // The policy file only matters once the DNS record points to it.
+  const policy = has ? isValidMtaStsPolicy(await fetchPolicy(domain).catch(() => null)) : false;
+  const evidence = { txt: has, policy };
   if (!sendsMail) {
     return {
       id: 'mta-sts',
@@ -347,6 +392,20 @@ export async function checkMtaSts(resolver, domain, { sendsMail = true } = {}) {
       severity: 'info',
       summary: 'Not applicable (domain receives no mail)',
       detail: 'MTA-STS only applies to domains that receive email.',
+      evidence,
+    };
+  }
+  if (has && !policy) {
+    return {
+      id: 'mta-sts',
+      category: 'Email Deliverability',
+      title: 'MTA-STS',
+      status: 'warn',
+      severity: 'low',
+      summary: 'MTA-STS record found, but the policy file is missing',
+      detail: `The _mta-sts record exists, but https://mta-sts.${domain}/.well-known/mta-sts.txt did not return a valid policy.`,
+      recommendation: `Publish the policy file at https://mta-sts.${domain}/.well-known/mta-sts.txt so senders can read it.`,
+      evidence,
     };
   }
   return {
@@ -357,11 +416,12 @@ export async function checkMtaSts(resolver, domain, { sendsMail = true } = {}) {
     severity: has ? 'info' : 'low',
     summary: has ? 'MTA-STS policy published' : 'No MTA-STS policy',
     detail: has
-      ? 'An MTA-STS TXT record is present, enforcing TLS for inbound mail.'
+      ? 'An MTA-STS TXT record and policy file are present, enforcing TLS for inbound mail.'
       : `${domain} has no MTA-STS policy, so inbound mail can be delivered over unencrypted connections.`,
     recommendation: has
       ? undefined
       : 'Publish an MTA-STS policy and TLS-RPT record to require encryption for mail sent to you.',
+    evidence,
   };
 }
 

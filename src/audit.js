@@ -16,8 +16,8 @@ import {
 } from './checks/email.js';
 import { checkDnssec } from './checks/dnssec.js';
 import { checkTls } from './checks/tls.js';
-import { checkHeaders, fetchPage } from './checks/headers.js';
-import { checkSoftware } from './checks/software.js';
+import { checkHeaders, fetchPage, securityHeaderPresence } from './checks/headers.js';
+import { checkSoftware, detectVersionLeaks } from './checks/software.js';
 import { scoreFindings } from './scoring.js';
 import { detectEmailProviders } from './providers.js';
 import { sendersFromSpf, selectorsForSenders } from './senders.js';
@@ -82,7 +82,7 @@ export function spfRecordOf(spf) {
 
 export const DELIVERABILITY_IDS = new Set(['spf', 'dkim', 'dmarc']);
 
-export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage } = {}) {
+export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage, fetchPolicy } = {}) {
   const domain = normaliseDomain(rawDomain);
   if (!domain) {
     const error = new Error('Invalid domain');
@@ -113,7 +113,8 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
     spfCheck,
     safe('dmarc', 'DMARC', 'Email Deliverability', () => checkDmarc(resolver, domain, opts)),
     dkimCheck,
-    safe('mta-sts', 'MTA-STS', 'Email Deliverability', () => checkMtaSts(resolver, domain, opts)),
+    safe('mta-sts', 'MTA-STS', 'Email Deliverability', () =>
+      checkMtaSts(resolver, domain, fetchPolicy ? { ...opts, fetchPolicy } : opts)),
     safe('bimi', 'BIMI', 'Email Deliverability', () => checkBimi(resolver, domain)),
     Promise.resolve(mx),
     safe('addressing', 'A / AAAA records', 'DNS Foundation', () => checkAddressing(resolver, domain)),
@@ -139,6 +140,13 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
     spfRecord: spfRecordOf(spf),
   });
 
+  // Raw facts from the home page that the report sections need.
+  const page = await sharedPage();
+  const facts = {
+    website: detectVersionLeaks(page),
+    headers: securityHeaderPresence(page),
+  };
+
   return {
     domain,
     scannedAt: new Date().toISOString(),
@@ -146,5 +154,6 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
     ...scored,
     findings,
     emailSetup,
+    facts,
   };
 }

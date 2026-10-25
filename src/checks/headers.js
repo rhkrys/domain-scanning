@@ -216,6 +216,26 @@ export function evaluateHeaders(headers, { signals = [], context = null } = {}) 
   };
 }
 
+// The six response headers the report's "HTTP security" list names, in order.
+export const SECURITY_HEADERS = [
+  ['strict-transport-security', 'Strict-Transport-Security'],
+  ['content-security-policy', 'Content-Security-Policy'],
+  ['x-frame-options', 'X-Frame-Options'],
+  ['x-content-type-options', 'X-Content-Type-Options'],
+  ['referrer-policy', 'Referrer-Policy'],
+  ['permissions-policy', 'Permissions-Policy'],
+];
+
+// Which of the six are present on the page we fetched. null when nothing answered.
+export function securityHeaderPresence(page) {
+  if (!page) return null;
+  const headers = page.headers ?? {};
+  const present = [];
+  const missing = [];
+  for (const [key, name] of SECURITY_HEADERS) (headers[key] ? present : missing).push(name);
+  return { present, missing };
+}
+
 // loadPage lets the audit fetch the home page once and share it with the
 // website software check. Without it we fetch the page ourselves.
 export async function checkHeaders(domain, { timeoutMs = 6000, requestImpl, loadPage } = {}) {
