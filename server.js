@@ -109,7 +109,7 @@ export function createApp({
       return res.status(429).json({ error: 'You’ve run a few scans in a row — please wait a minute and try again.' });
     }
 
-    const { domain, email } = req.body ?? {};
+    const { domain, email, newsletter_opt_in: newsletterOptIn } = req.body ?? {};
     const domainProblem = domainInputProblem(domain);
     if (domainProblem) {
       return res.status(400).json({ error: domainProblem, field: 'domain' });
@@ -139,7 +139,7 @@ export function createApp({
       }
 
       const scanId = newScanId();
-      await saveScan({ scanId, report, source: 'web', email: cleanEmail || null, rendered });
+      await saveScan({ scanId, report, source: 'web', email: cleanEmail || null, newsletterOptIn, rendered });
       res.json({ report, mail, report_url: reportUrl(scanId) });
     } catch (err) {
       if (err.code === 'INVALID_DOMAIN') {
@@ -162,15 +162,31 @@ export function createApp({
       console.error('Rate limiter failed:', err.message);
     }
 
-    const { domain } = req.body ?? {};
+    // Only domain is required. email and newsletter_opt_in are optional, and
+    // opt-in counts only when it is exactly true.
+    const { domain, email, newsletter_opt_in: newsletterOptIn } = req.body ?? {};
     const domainProblem = domainInputProblem(domain);
     if (domainProblem) return res.status(400).json({ error: domainProblem, field: 'domain' });
+    const cleanEmail = typeof email === 'string' ? email.trim() : '';
+    if (cleanEmail) {
+      const emailProblem = emailInputProblem(cleanEmail);
+      if (emailProblem) return res.status(400).json({ error: emailProblem, field: 'email' });
+    }
 
     try {
       const report = await audit(normaliseDomain(domain));
+      const rendered = renderEmail(report);
+      let emailed = false;
+      if (cleanEmail) {
+        try {
+          emailed = Boolean((await send(cleanEmail, report, rendered))?.delivered);
+        } catch (err) {
+          console.error('API report email failed:', err.message);
+        }
+      }
       const scanId = newScanId();
-      await saveScan({ scanId, report, source: 'api', rendered: renderEmail(report) });
-      res.json({ ...report.result, report_url: reportUrl(scanId) });
+      await saveScan({ scanId, report, source: 'api', email: cleanEmail || null, newsletterOptIn, rendered });
+      res.json({ ...report.result, report_url: reportUrl(scanId), report_emailed: emailed });
     } catch (err) {
       if (err.code === 'INVALID_DOMAIN') {
         return res.status(400).json({ error: 'That is not a valid domain. Try the format example.com.', field: 'domain' });
@@ -201,7 +217,15 @@ export function createApp({
   // can be re-sent without scanning again.
   async function saveScan({ scanId, report, source, email = null, newsletterOptIn = false, rendered }) {
     try {
-      const record = buildScanRecord({ scanId, report, source, email, newsletterOptIn, rendered });
+      const record = buildScanRecord({
+        scanId,
+        report,
+        source,
+        email,
+        newsletterOptIn,
+        consentAt: newsletterOptIn === true ? new Date().toISOString() : null,
+        rendered,
+      });
       await (await storeReady).save(record);
     } catch (err) {
       // A storage problem must not cost the visitor their result.

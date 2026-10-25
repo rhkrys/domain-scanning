@@ -159,11 +159,13 @@
           <p id="domain-error" class="error field-error" hidden></p>
         </div>
         <div class="field">
-          <label for="email">Your email <span class="muted">(optional)</span></label>
-          <input id="email" name="email" type="email" placeholder="you@example.com"
-                 aria-describedby="email-hint" />
-          <p id="email-hint" class="hint">We’ll send your results and what to do next. Nothing else — no spam.</p>
+          <label for="email">Email (optional). We'll send you the report.</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" />
           <p id="email-error" class="error field-error" hidden></p>
+          <label class="check newsletter" for="newsletter">
+            <input id="newsletter" name="newsletter" type="checkbox" />
+            <span>Also send me the monthly Tech in Peace newsletter.</span>
+          </label>
         </div>
         <div class="field">
           <label class="check" for="authorize">
@@ -179,6 +181,7 @@
         <p id="progress" class="progress" hidden>Checking your website… this usually takes under a minute.</p>
         <p id="form-error" class="error" hidden></p>
       </form>
+      <p class="form-privacy">We check only the public records attached to your domain. We never read your inbox or ask for a password. Your email is used to send this report, and the newsletter only if you tick the box.</p>
     </section>
 
     <section id="result" class="result" hidden>

@@ -4,6 +4,7 @@ const domainErrorEl = document.getElementById('domain-error');
 const emailErrorEl = document.getElementById('email-error');
 const authorizeEl = document.getElementById('authorize');
 const authorizeErrorEl = document.getElementById('authorize-error');
+const newsletterEl = document.getElementById('newsletter');
 const progressEl = document.getElementById('progress');
 const submitBtn = document.getElementById('submit');
 const resultEl = document.getElementById('result');
@@ -44,6 +45,12 @@ form.addEventListener('submit', async (e) => {
     showError('Please enter your website address, e.g. example.com.', 'domain');
     return;
   }
+  // The newsletter needs somewhere to go; never subscribe without an address.
+  const newsletterOptIn = Boolean(newsletterEl?.checked);
+  if (newsletterOptIn && !email) {
+    showError('Add your email above to get the newsletter, or untick the box.', 'email');
+    return;
+  }
   if (!authorizeEl.checked) {
     showError('Please confirm you own this domain or have permission to audit it, and agree to the Terms.', 'authorize');
     return;
@@ -64,7 +71,7 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, email }),
+      body: JSON.stringify({ domain, email, newsletter_opt_in: newsletterOptIn }),
     });
     const data = await res.json();
     if (!res.ok) {

@@ -152,3 +152,42 @@ test('a storage failure never costs the visitor their result', async () => {
     s.close();
   }
 });
+
+const post = (path, body, ip) =>
+  fetch(`${base}${path}`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
+    body: JSON.stringify(body),
+  });
+
+test('API: email and newsletter_opt_in are optional; opt-in must be exactly true', async () => {
+  let res = await post('/api/v1/scan', { domain: 'nodmarc.com', email: 'jo@nodmarc.com', newsletter_opt_in: 'true' }, '192.0.2.60');
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).report_emailed, true);
+  assert.equal(saved.at(-1).email, 'jo@nodmarc.com');
+  assert.equal(saved.at(-1).newsletter_opt_in, false);
+  assert.equal('consent_at' in saved.at(-1), false);
+
+  res = await post('/api/v1/scan', { domain: 'nodmarc.com', email: 'jo@nodmarc.com', newsletter_opt_in: true }, '192.0.2.61');
+  assert.equal(saved.at(-1).newsletter_opt_in, true);
+  assert.match(saved.at(-1).consent_at, /^\d{4}-\d{2}-\d{2}T/);
+
+  res = await post('/api/v1/scan', { domain: 'nodmarc.com', newsletter_opt_in: true }, '192.0.2.62');
+  assert.equal((await res.json()).report_emailed, false);
+  assert.equal(saved.at(-1).newsletter_opt_in, false, 'no email, no subscription');
+});
+
+test('API: a mistyped email is a 400 on the email field', async () => {
+  const res = await post('/api/v1/scan', { domain: 'nodmarc.com', email: 'jo@gmial.com' }, '192.0.2.63');
+  assert.equal(res.status, 400);
+  assert.equal((await res.json()).field, 'email');
+});
+
+test('web form: the newsletter box records opt-in and consent time only when ticked', async () => {
+  await post('/api/scan', { domain: 'nodmarc.com', email: 'sam@nodmarc.com', newsletter_opt_in: true }, '192.0.2.64');
+  assert.equal(saved.at(-1).newsletter_opt_in, true);
+  assert.ok(saved.at(-1).consent_at);
+  await post('/api/scan', { domain: 'nodmarc.com', email: 'sam@nodmarc.com', newsletter_opt_in: false }, '192.0.2.65');
+  assert.equal(saved.at(-1).newsletter_opt_in, false);
+  assert.equal('consent_at' in saved.at(-1), false);
+});

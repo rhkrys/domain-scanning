@@ -196,6 +196,8 @@ button:disabled { opacity: 0.6; cursor: progress; }
 }
 .form label.check a { color: var(--navy); text-decoration: underline; font-weight: 700; }
 .form label.check .req { color: var(--fail); font-weight: 700; }
+.form label.check.newsletter { margin-top: 10px; }
+.form-privacy { margin: 12px 0 0; font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 60ch; }
 
 .error { color: var(--fail); font-size: 14px; margin: 12px 0 0; font-weight: 700; }
 .field-error { margin: 7px 0 0; }

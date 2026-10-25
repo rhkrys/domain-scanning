@@ -162,7 +162,11 @@ test('landing page uses plain language, not jargon, for the form', async () => {
   assert.match(html, /Your website address/);
   assert.match(html, /Check my website/);
   assert.match(html, /paste your full website link/i);
-  assert.match(html, /no spam/i);
+  assert.match(html, /We never read your inbox or ask for a password\./);
+  assert.match(html, /Your email is used to send this report, and the newsletter only if you tick the box\./);
+  assert.match(html, /<label for="email">Email \(optional\)\. We'll send you the report\.<\/label>/);
+  // The newsletter box is unchecked by default.
+  assert.match(html, /<input id="newsletter" name="newsletter" type="checkbox" \/>/);
   // The form labels themselves should not lead with acronyms.
   assert.doesNotMatch(html.match(/<label[^>]*>.*?<\/label>/gs).join(' '), /\b(SPF|DKIM|DMARC|DNS|TLS)\b/);
 });
