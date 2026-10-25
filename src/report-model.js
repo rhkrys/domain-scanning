@@ -5,7 +5,7 @@
 // and returns plain data: flags, friendly names, exact DNS records, and the
 // ready-to-show sentences for each section of "What to do".
 
-import { sendersFromSpf } from './senders.js';
+import { sendersFromSpf, systemForDkimTarget } from './senders.js';
 
 const SPF_INCLUDE_FOR_MAILBOX = {
   google: 'include:_spf.google.com',
@@ -159,13 +159,29 @@ function dmarcChange(dmarc, state, domain) {
 
 function dkimState(dkim, senders, sendsMail) {
   const found = dkim?.evidence?.selectors ?? [];
+  const targets = dkim?.evidence?.targets ?? {};
+  // Who holds each key we found: the CNAME target decides when there is one,
+  // otherwise the selector name is our best guess.
+  const signers = found.map((sel) => {
+    const owner = systemForDkimTarget(targets[sel]);
+    return { selector: sel, points_to: targets[sel] ?? null, sender: owner?.name ?? null, owner_id: owner?.id ?? null };
+  });
+  const keyBelongsTo = (sel, system) => {
+    const signer = signers.find((x) => x.selector === sel);
+    if (signer?.owner_id) return signer.owner_id === system.id;
+    return system.selectors.includes(sel);
+  };
+
+  const spfIds = new Set(senders.map((s) => s.system?.id).filter(Boolean));
   const systems = senders
     .filter((s) => s.system)
     .map((s) => {
-      const hit = s.system.selectors.filter((sel) => found.includes(sel));
+      const hit = found.filter((sel) => keyBelongsTo(sel, s.system));
       const status = hit.length ? 'found' : s.system.verifiable ? 'missing' : 'unconfirmed';
       return { name: s.name, status, selectors: hit, dashboard: s.system.dashboard };
     });
+  // Keys whose CNAME names a system that SPF does not list.
+  const otherSigners = [...new Set(signers.filter((x) => x.owner_id && !spfIds.has(x.owner_id)).map((x) => x.sender))];
   const missing = systems.filter((s) => s.status === 'missing');
   let status;
   let problem = null;
@@ -178,7 +194,14 @@ function dkimState(dkim, senders, sendsMail) {
     status = 'missing';
     problem = 'No DKIM signature found, so inboxes cannot tell your email really came from you.';
   }
-  return { status, problem, found_selectors: found, systems };
+  return {
+    status,
+    problem,
+    found_selectors: found,
+    systems,
+    signers: signers.map(({ owner_id, ...rest }) => rest),
+    other_signers: otherSigners,
+  };
 }
 
 function emailSection(report) {

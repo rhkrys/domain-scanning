@@ -92,3 +92,67 @@ test('the audit tests DKIM selectors implied by SPF', async () => {
   const dkim = report.findings.find((f) => f.id === 'dkim');
   assert.deepEqual(dkim.evidence.selectors, ['ctct2']);
 });
+
+// ---- SPF sender -> DKIM check, for every system on the list ----------------
+
+const KEY = 'v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEB';
+
+async function dkimFor(spfInclude, dns = {}) {
+  const resolver = new FakeResolver({
+    'x.com|MX': ['10 mx.x.com.'],
+    'x.com|TXT': [`v=spf1 include:${spfInclude} ~all`],
+    '_dmarc.x.com|TXT': ['v=DMARC1; p=none; rua=mailto:d@x.com'],
+    ...dns,
+  });
+  const report = await runAudit('x.com', { resolver, loadPage: async () => null, fetchPolicy: async () => null, tlsCheck: async () => ({ id: 'tls', category: 'Transport Security', title: 'TLS certificate', status: 'pass', severity: 'info', summary: 'ok' }) });
+  return report.result.email.dkim;
+}
+
+for (const system of SENDING_SYSTEMS) {
+  const include = system.spf[0];
+  if (system.selectors.length) {
+    test(`SPF ${include} leads to DKIM checks for ${system.name} (${system.selectors.join(', ')})`, async () => {
+      for (const sel of system.selectors) {
+        const dkim = await dkimFor(include, { [`${sel}._domainkey.x.com|TXT`]: [KEY] });
+        const entry = dkim.systems.find((s) => s.name === system.name);
+        assert.equal(entry?.status, 'found', `${system.name} via ${sel}`);
+      }
+    });
+  }
+  test(`SPF ${include} with no DKIM key: ${system.name} is ${system.verifiable ? 'missing' : "can't confirm"}`, async () => {
+    const dkim = await dkimFor(include);
+    assert.equal(dkim.systems.find((s) => s.name === system.name)?.status, system.verifiable ? 'missing' : 'unconfirmed');
+  });
+}
+
+test('a CNAME names the real holder of a key: k1 pointing at Mailchimp counts for Mailchimp', async () => {
+  const dkim = await dkimFor('servers.mcsv.net', {
+    'k1._domainkey.x.com|TXT': [KEY],
+    'k1._domainkey.x.com|CNAME': ['dkim.mcsv.net.'],
+  });
+  assert.equal(dkim.systems[0].status, 'found');
+  assert.deepEqual(dkim.signers, [{ selector: 'k1', points_to: 'dkim.mcsv.net', sender: 'Mailchimp' }]);
+});
+
+test('a key named for one system but pointing at another does not count for the first', async () => {
+  const dkim = await dkimFor('servers.mcsv.net', {
+    'k1._domainkey.x.com|TXT': [KEY],
+    'k1._domainkey.x.com|CNAME': ['k1.example.mailgun.org.'],
+  });
+  assert.equal(dkim.systems.find((s) => s.name === 'Mailchimp').status, 'missing');
+  assert.deepEqual(dkim.other_signers, ['Mailgun']);
+});
+
+test('a CNAME to Amazon SES confirms SES even though its names are random', async () => {
+  const dkim = await dkimFor('amazonses.com', {
+    'default._domainkey.x.com|TXT': [KEY],
+    'default._domainkey.x.com|CNAME': ['abc123.dkim.amazonses.com.'],
+  });
+  assert.equal(dkim.systems.find((s) => s.name === 'Amazon SES').status, 'found');
+});
+
+test('without a CNAME the selector name is the guess', async () => {
+  const dkim = await dkimFor('sendgrid.net', { 's1._domainkey.x.com|TXT': [KEY] });
+  assert.equal(dkim.systems[0].status, 'found');
+  assert.deepEqual(dkim.signers, [{ selector: 's1', points_to: null, sender: null }]);
+});

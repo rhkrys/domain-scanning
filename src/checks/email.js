@@ -309,6 +309,17 @@ export async function checkDkim(resolver, domain, { sendsMail = true, extraSelec
   );
   found.sort((a, b) => selectors.indexOf(a) - selectors.indexOf(b));
 
+  // Where each found key points, when it is a CNAME. This names the system
+  // that really holds the key, whatever the selector is called.
+  const targets = {};
+  await Promise.all(
+    found.map(async (sel) => {
+      const cname = await resolver.query(`${sel}._domainkey.${domain}`, 'CNAME').catch(() => null);
+      const target = cname?.records?.find((r) => r.type === 'CNAME')?.data;
+      if (target) targets[sel] = String(target).toLowerCase().replace(/\.$/, '');
+    }),
+  );
+
   if (found.length > 0) {
     return {
       id: 'dkim',
@@ -318,7 +329,7 @@ export async function checkDkim(resolver, domain, { sendsMail = true, extraSelec
       severity: 'info',
       summary: `DKIM key found (${found.join(', ')})`,
       detail: `Discovered DKIM selectors: ${found.join(', ')}.`,
-      evidence: { selectors: found, checked: selectors },
+      evidence: { selectors: found, checked: selectors, targets },
     };
   }
 
@@ -333,7 +344,7 @@ export async function checkDkim(resolver, domain, { sendsMail = true, extraSelec
     recommendation: sendsMail
       ? 'Confirm DKIM signing is enabled with your mail provider and that the published selector matches your DNS.'
       : undefined,
-    evidence: { selectors: [], checked: selectors },
+    evidence: { selectors: [], checked: selectors, targets: {} },
   };
 }
 

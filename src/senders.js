@@ -5,6 +5,9 @@
 //      domain itself or any subdomain of it.
 // selectors: DKIM names the system publishes. We test these on top of the
 //      common list, so a Mailchimp sender gets k1/k2/k3 checked.
+// dkimTargets: where the system's DKIM records point when they are CNAMEs
+//      (k1._domainkey.you.com -> dkim.mcsv.net is Mailchimp). A CNAME is
+//      stronger evidence than the selector name, which systems can share.
 // verifiable: false when the system uses random or owner-chosen DKIM names
 //      that no outside scan can guess. If we find nothing for these we say
 //      "can't confirm from outside" instead of calling DKIM missing.
@@ -18,6 +21,7 @@ export const SENDING_SYSTEMS = [
     name: 'Google Workspace',
     spf: ['_spf.google.com', 'googlemail.com'],
     selectors: ['google'],
+    dkimTargets: [],
     dashboard: 'In the Google Admin console, go to Apps, Google Workspace, Gmail, then Authenticate email.',
   },
   {
@@ -25,6 +29,7 @@ export const SENDING_SYSTEMS = [
     name: 'Microsoft 365',
     spf: ['spf.protection.outlook.com'],
     selectors: ['selector1', 'selector2'],
+    dkimTargets: ['onmicrosoft.com', 'dkim.mail.microsoft'],
     dashboard:
       'In the Microsoft Defender portal, go to Email and collaboration, Policies and rules, Threat policies, Email authentication settings, then DKIM.',
   },
@@ -33,6 +38,7 @@ export const SENDING_SYSTEMS = [
     name: 'Mailchimp',
     spf: ['servers.mcsv.net'],
     selectors: ['k1', 'k2', 'k3'],
+    dkimTargets: ['mcsv.net'],
     dashboard: 'In Mailchimp, go to Account and billing, Domains, then Authenticate next to your domain.',
   },
   {
@@ -40,6 +46,7 @@ export const SENDING_SYSTEMS = [
     name: 'SendGrid',
     spf: ['sendgrid.net'],
     selectors: ['s1', 's2'],
+    dkimTargets: ['sendgrid.net'],
     dashboard: 'In SendGrid, go to Settings, then Sender Authentication.',
   },
   {
@@ -47,6 +54,7 @@ export const SENDING_SYSTEMS = [
     name: 'Mailgun',
     spf: ['mailgun.org'],
     selectors: ['mx', 'k1', 'smtp'],
+    dkimTargets: ['mailgun.org'],
     verifiable: false,
     dashboard: 'In Mailgun, open your sending domain and go to its DNS records page.',
   },
@@ -55,6 +63,7 @@ export const SENDING_SYSTEMS = [
     name: 'Amazon SES',
     spf: ['amazonses.com'],
     selectors: [],
+    dkimTargets: ['dkim.amazonses.com'],
     verifiable: false,
     dashboard: 'In the Amazon SES console, go to Identities, choose your domain, then the Authentication tab.',
   },
@@ -63,12 +72,14 @@ export const SENDING_SYSTEMS = [
     name: 'Constant Contact',
     spf: ['spf.constantcontact.com'],
     selectors: ['ctct1', 'ctct2'],
+    dkimTargets: ['ccsend.com'],
   },
   {
     id: 'salesforce',
     name: 'Salesforce',
     spf: ['_spf.salesforce.com'],
     selectors: [],
+    dkimTargets: ['salesforce.com'],
     verifiable: false,
     dashboard: 'In Salesforce Setup, search for DKIM Keys.',
   },
@@ -77,12 +88,14 @@ export const SENDING_SYSTEMS = [
     name: 'Zendesk',
     spf: ['mail.zendesk.com'],
     selectors: ['zendesk1', 'zendesk2'],
+    dkimTargets: ['zendesk.com'],
   },
   {
     id: 'mandrill',
     name: 'Mandrill',
     spf: ['spf.mandrillapp.com'],
     selectors: ['mandrill'],
+    dkimTargets: ['mandrillapp.com'],
     dashboard: 'In Mandrill, go to Settings, Domains, then Sending domains.',
   },
   {
@@ -90,12 +103,14 @@ export const SENDING_SYSTEMS = [
     name: 'Hostinger',
     spf: ['_spf.mail.hostinger.com'],
     selectors: ['hostingermail1', 'hostingermail2', 'hostingermail3'],
+    dkimTargets: ['hostinger.com'],
   },
   {
     id: 'godaddy',
     name: 'GoDaddy',
     spf: ['secureserver.net'],
     selectors: ['default'],
+    dkimTargets: ['secureserver.net'],
     verifiable: false,
   },
   {
@@ -103,6 +118,7 @@ export const SENDING_SYSTEMS = [
     name: 'Resend',
     spf: ['spf.resend.com'],
     selectors: ['resend'],
+    dkimTargets: ['resend.com'],
     dashboard: 'In Resend, go to Domains and open your domain.',
   },
   {
@@ -110,12 +126,14 @@ export const SENDING_SYSTEMS = [
     name: 'Klaviyo',
     spf: ['spf.klaviyo.com'],
     selectors: ['kl', 'kl2'],
+    dkimTargets: ['klaviyo.com'],
   },
   {
     id: 'shopify',
     name: 'Shopify',
     spf: ['shops.shopify.com'],
     selectors: [],
+    dkimTargets: ['shopify.com', 'myshopify.com'],
     verifiable: false,
   },
   {
@@ -123,6 +141,7 @@ export const SENDING_SYSTEMS = [
     name: 'Squarespace',
     spf: ['spf.squarespace.com'],
     selectors: [],
+    dkimTargets: ['squarespace.com'],
     verifiable: false,
   },
   {
@@ -130,6 +149,7 @@ export const SENDING_SYSTEMS = [
     name: 'Wix',
     spf: ['_spf.wix.com'],
     selectors: [],
+    dkimTargets: ['wix.com'],
     verifiable: false,
   },
   {
@@ -137,6 +157,7 @@ export const SENDING_SYSTEMS = [
     name: 'Zoho Mail',
     spf: ['zoho.com', 'zohomail.com', 'zoho.eu', 'zoho.in', 'zoho.com.au'],
     selectors: ['zoho', 'zmail'],
+    dkimTargets: ['zoho.com'],
     verifiable: false,
     dashboard: 'In the Zoho Mail Admin Console, go to Domains, choose your domain, then Email configuration, DKIM.',
   },
@@ -177,6 +198,13 @@ export function sendersFromSpf(record) {
     }
   }
   return out;
+}
+
+// The sending system a DKIM CNAME target belongs to, or null.
+export function systemForDkimTarget(target) {
+  const host = String(target ?? '').toLowerCase().replace(/\.$/, '');
+  if (!host) return null;
+  return SENDING_SYSTEMS.find((s) => matchesDomain(host, s.dkimTargets ?? [])) ?? null;
 }
 
 // DKIM selectors to test because of what SPF says the domain sends with.
