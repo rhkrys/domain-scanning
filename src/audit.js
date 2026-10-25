@@ -20,6 +20,7 @@ import { checkHeaders, fetchPage } from './checks/headers.js';
 import { checkSoftware } from './checks/software.js';
 import { scoreFindings } from './scoring.js';
 import { detectEmailProviders } from './providers.js';
+import { sendersFromSpf, selectorsForSenders } from './senders.js';
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i;
 
@@ -72,6 +73,13 @@ async function safe(id, title, category, fn) {
   }
 }
 
+// The SPF text to read senders from. A broken record still says who the owner
+// meant to list, so use the repaired one; several records are read together.
+export function spfRecordOf(spf) {
+  const ev = spf?.evidence ?? {};
+  return ev.fixed ?? ev.record ?? (ev.records ? ev.records.join(' ') : null);
+}
+
 export const DELIVERABILITY_IDS = new Set(['spf', 'dkim', 'dmarc']);
 
 export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage } = {}) {
@@ -92,11 +100,19 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
   let homePage;
   const sharedPage = () => (homePage ??= (loadPage ?? (() => fetchPage(domain, 6000)))().catch(() => null));
 
+  // SPF names the systems that send as the domain; DKIM then also tests the
+  // selectors those systems use (k1-k3 for Mailchimp, and so on).
+  const spfCheck = safe('spf', 'SPF', 'Email Deliverability', () => checkSpf(resolver, domain, opts));
+  const dkimCheck = spfCheck.then((spf) => {
+    const extraSelectors = selectorsForSenders(sendersFromSpf(spfRecordOf(spf)));
+    return safe('dkim', 'DKIM', 'Email Deliverability', () => checkDkim(resolver, domain, { ...opts, extraSelectors }));
+  });
+
   // Email deliverability checks come first so they lead the report.
   const findings = await Promise.all([
-    safe('spf', 'SPF', 'Email Deliverability', () => checkSpf(resolver, domain, opts)),
+    spfCheck,
     safe('dmarc', 'DMARC', 'Email Deliverability', () => checkDmarc(resolver, domain, opts)),
-    safe('dkim', 'DKIM', 'Email Deliverability', () => checkDkim(resolver, domain, opts)),
+    dkimCheck,
     safe('mta-sts', 'MTA-STS', 'Email Deliverability', () => checkMtaSts(resolver, domain, opts)),
     safe('bimi', 'BIMI', 'Email Deliverability', () => checkBimi(resolver, domain)),
     Promise.resolve(mx),
@@ -120,8 +136,7 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage 
   const spf = findings.find((f) => f.id === 'spf');
   const emailSetup = detectEmailProviders({
     mxHosts: mx.evidence?.hosts ?? [],
-    // A broken record still says who the owner meant to list; use the repaired one.
-    spfRecord: spf?.evidence?.fixed ?? spf?.evidence?.record ?? null,
+    spfRecord: spfRecordOf(spf),
   });
 
   return {

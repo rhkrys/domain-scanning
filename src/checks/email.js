@@ -150,7 +150,7 @@ export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
 
   // RFC 7208 caps SPF at 10 DNS-querying mechanisms; exceeding it makes SPF
   // fail "permerror" and silently stop protecting the domain.
-  const lookups = (spf.match(/\b(include|a|mx|ptr|exists|redirect)[:=]/gi) ?? []).length;
+  const lookups = await countSpfLookups(resolver, spf);
   if (lookups > 10 && status === 'pass') {
     status = 'warn';
     severity = 'medium';
@@ -167,19 +167,54 @@ export async function checkSpf(resolver, domain, { sendsMail = true } = {}) {
     summary,
     detail: `Record: ${spf}`,
     recommendation,
-    evidence: { record: spf, lookups },
+    evidence: { record: spf, lookups, all: all ?? null },
   };
 }
 
+// Counts DNS lookups the way receivers do: every include, a, mx, ptr, exists
+// and redirect costs one, and includes are followed into their own records.
+export async function countSpfLookups(resolver, record, depth = 0, seen = new Set()) {
+  if (typeof record !== 'string' || depth > 10) return 0;
+  const terms = record.trim().split(/\s+/).slice(1).map((t) => t.replace(/,+$/, '').replace(/^[+\-~?]/, ''));
+  let count = 0;
+  const follow = [];
+  for (const term of terms) {
+    const m = term.match(/^(?:include:|redirect=)(.+)$/i);
+    if (m) {
+      count += 1;
+      const target = m[1].toLowerCase().replace(/\.$/, '');
+      if (!seen.has(target)) {
+        seen.add(target);
+        follow.push(target);
+      }
+    } else if (/^(a|mx|ptr)(?:[:/]|$)/i.test(term) || /^exists:/i.test(term)) {
+      count += 1;
+    }
+  }
+  const nested = await Promise.all(
+    follow.map(async (target) => {
+      const txt = await resolver.txt(target).catch(() => []);
+      return countSpfLookups(resolver, parseSpf(txt), depth + 1, seen);
+    }),
+  );
+  return count + nested.reduce((a, b) => a + b, 0);
+}
+
 export function parseDmarc(txtRecords) {
-  const rec = txtRecords.find((r) => /^v=dmarc1\b/i.test(r.trim())) ?? null;
+  const recs = txtRecords.filter((r) => /^v=dmarc1\b/i.test(r.trim()));
+  const rec = recs[0] ?? null;
   if (!rec) return null;
   const tags = {};
   for (const part of rec.split(';')) {
     const [k, v] = part.split('=').map((s) => s && s.trim());
     if (k && v) tags[k.toLowerCase()] = v;
   }
-  return { record: rec, tags };
+  // "mailto:a@x.com!10m,mailto:b@y.com" -> ["a@x.com", "b@y.com"]
+  const rua = (tags.rua ?? '')
+    .split(',')
+    .map((u) => u.trim().replace(/^mailto:/i, '').replace(/!.*$/, ''))
+    .filter(Boolean);
+  return { record: rec, tags, rua, count: recs.length };
 }
 
 export async function checkDmarc(resolver, domain, { sendsMail = true } = {}) {
@@ -237,26 +272,40 @@ export async function checkDmarc(resolver, domain, { sendsMail = true } = {}) {
     summary,
     detail: `Record: ${parsed.record}`,
     recommendation,
-    evidence: { policy, reporting: hasReporting },
+    evidence: {
+      policy,
+      reporting: hasReporting,
+      record: parsed.record,
+      tags: parsed.tags,
+      rua: parsed.rua,
+      count: parsed.count,
+    },
   };
 }
 
 // DKIM has no way to enumerate selectors from DNS, so we probe the selectors
-// used by the most common mail providers.
-const COMMON_DKIM_SELECTORS = [
-  'google', 'selector1', 'selector2', 'k1', 'k2', 'k3',
-  's1', 's2', 'dkim', 'mail', 'default', 'mandrill',
-  'mxvault', 'zoho', 'fm1', 'fm2', 'fm3', 'protonmail', 'pic',
+// used by the most common mail providers, plus any the SPF senders imply.
+export const COMMON_DKIM_SELECTORS = [
+  'google', 'default', 'selector1', 'selector2', 'k1', 'k2', 'k3',
+  'mandrill', 's1', 's2', 'mail', 'dkim', 'protonmail', 'zoho', 'pm',
+  'fm1', 'fm2', 'fm3', 'mxvault', 'everlytickey1', 'everlytickey2',
 ];
 
-export async function checkDkim(resolver, domain, { sendsMail = true } = {}) {
+// A usable key has a non-empty p= value (an empty p= means the key is revoked).
+export function isValidDkimRecord(record) {
+  return /(?:^|;)\s*p=\s*[A-Za-z0-9+/]/.test(String(record));
+}
+
+export async function checkDkim(resolver, domain, { sendsMail = true, extraSelectors = [] } = {}) {
+  const selectors = [...new Set([...COMMON_DKIM_SELECTORS, ...extraSelectors])];
   const found = [];
   await Promise.all(
-    COMMON_DKIM_SELECTORS.map(async (sel) => {
+    selectors.map(async (sel) => {
       const txt = await resolver.txt(`${sel}._domainkey.${domain}`);
-      if (txt.some((r) => /v=dkim1|k=rsa|p=/i.test(r))) found.push(sel);
+      if (txt.some(isValidDkimRecord)) found.push(sel);
     }),
   );
+  found.sort((a, b) => selectors.indexOf(a) - selectors.indexOf(b));
 
   if (found.length > 0) {
     return {
@@ -267,7 +316,7 @@ export async function checkDkim(resolver, domain, { sendsMail = true } = {}) {
       severity: 'info',
       summary: `DKIM key found (${found.join(', ')})`,
       detail: `Discovered DKIM selectors: ${found.join(', ')}.`,
-      evidence: { selectors: found },
+      evidence: { selectors: found, checked: selectors },
     };
   }
 
@@ -278,10 +327,11 @@ export async function checkDkim(resolver, domain, { sendsMail = true } = {}) {
     status: sendsMail ? 'warn' : 'info',
     severity: sendsMail ? 'medium' : 'info',
     summary: 'No DKIM key found on common selectors',
-    detail: `No DKIM record was found on the ${COMMON_DKIM_SELECTORS.length} selectors we probe. DKIM may still be configured under a custom selector.`,
+    detail: `No DKIM record was found on the ${selectors.length} selectors we probe. DKIM may still be configured under a custom selector.`,
     recommendation: sendsMail
       ? 'Confirm DKIM signing is enabled with your mail provider and that the published selector matches your DNS.'
       : undefined,
+    evidence: { selectors: [], checked: selectors },
   };
 }
 
