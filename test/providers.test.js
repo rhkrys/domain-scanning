@@ -74,7 +74,7 @@ test('every provider has https links for SPF, DKIM and DMARC', () => {
   }
 });
 
-test('the audit report and email carry the provider links', async () => {
+test('the email folds each sender\u2019s dashboard into the DKIM steps', async () => {
   const resolver = new FakeResolver({
     'acme.com|MX': ['10 acme-com.mail.protection.outlook.com.'],
     'acme.com|TXT': ['v=spf1 include:spf.protection.outlook.com include:servers.mcsv.net -all'],
@@ -84,18 +84,18 @@ test('the audit report and email carry the provider links', async () => {
   assert.deepEqual(report.emailSetup.senders.map((s) => s.id), ['mailchimp']);
 
   const email = renderEmail(report);
-  assert.match(email.text, /hosted by Microsoft 365/);
-  assert.match(email.text, /email-authentication-dkim-configure/);
-  assert.match(email.html, /Where to set up SPF, DKIM, and DMARC/);
-  assert.match(email.html, /set-up-email-domain-authentication/);
+  assert.match(email.text, /You are sending mail or newsletters from Microsoft 365 and Mailchimp\. Is that correct\?/);
+  assert.match(email.text, /Turn on DKIM in Microsoft 365\. In the Microsoft Defender portal/);
+  assert.match(email.text, /Turn on DKIM in Mailchimp\. In Mailchimp, go to Account and billing/);
+  assert.match(email.html, /Turn on DKIM in Mailchimp/);
 });
 
-test('the email says check with your provider when the provider is unknown', async () => {
+test('with no SPF and an unknown provider, the email gives a fill-in SPF record', async () => {
   const resolver = new FakeResolver({ 'odd.com|MX': ['10 mail.odd-host.net.'] });
   const report = await runAudit('odd.com', { resolver, loadPage: async () => null });
   const email = renderEmail(report);
-  assert.match(email.text, /Check with your email provider/);
-  assert.match(email.html, /Check with your email provider/);
+  assert.match(email.text, /Value: v=spf1 include:<your email provider\u2019s SPF domain> ~all/);
+  assert.match(email.html, /include:&lt;your email provider\u2019s SPF domain&gt;/);
 });
 
 test('a broken SPF record still lists the sender the owner meant to include', async () => {

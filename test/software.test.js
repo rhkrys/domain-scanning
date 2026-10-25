@@ -159,12 +159,15 @@ test('runAudit fetches the home page once for both checks', async () => {
   assert.equal(report.priorities[0].id, 'php');
 });
 
-test('report email shows the PHP alert only when PHP needs attention', async () => {
+test('report email names the WordPress update line instead of the old PHP alert box', async () => {
   const { renderEmail } = await import('../src/email/render.js');
   const resolver = new FakeResolver({ 'example.com|A': ['1.2.3.4'] });
-  const bad = await runAudit('example.com', { resolver, loadPage: async () => page({ 'x-powered-by': 'PHP/8.3.1' }) });
+  const wp = await runAudit('example.com', {
+    resolver,
+    loadPage: async () => page({ 'x-powered-by': 'PHP/8.3.1' }, '<link href="/wp-content/x.css">'),
+  });
   const good = await runAudit('example.com', { resolver, loadPage: async () => page({ server: 'nginx' }, '<p>hi</p>') });
-  assert.match(renderEmail(bad).text, /CRITICAL PHP FLAWS/);
-  assert.match(renderEmail(bad).html, /two critical PHP flaws/);
-  assert.doesNotMatch(renderEmail(good).text, /CRITICAL PHP FLAWS/);
+  assert.match(renderEmail(wp).text, /^If you are using WordPress, please run updates asap\.$/m);
+  assert.doesNotMatch(renderEmail(wp).text, /CRITICAL PHP FLAWS/);
+  assert.match(renderEmail(good).text, /not sharing version details with the public\. Good\./);
 });

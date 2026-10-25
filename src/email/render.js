@@ -1,6 +1,8 @@
-// Renders the audit report into the email we send the user: a plain-English
-// summary, the grade, and a prioritised list of next steps. Pure functions so
-// they can be unit-tested without a mail server.
+// Renders the report email from the scan result object (report.result), the
+// same object the JSON endpoint returns. Plain text and HTML carry the same
+// words. Pure functions so they can be snapshot-tested without a mail server.
+
+import { buildReportModel } from '../report-model.js';
 
 // CPI brand tokens. Email clients rarely load web fonts, so
 // the display face falls back through Oswald → Arial Narrow → Arial.
@@ -29,223 +31,231 @@ const GRADE_COLOUR = {
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Review', fail: 'Action needed', info: 'Info' };
 
-// Where the footer sends people to scan again after they fix something.
-const RESCAN_URL = 'https://www.techinpeace.com/scan';
-
 // Content-ID the mailer uses when attaching the logo inline.
 export const LOGO_CID = 'cpi-logo';
+
+// Where the email sends people to scan again after they fix something.
+const RESCAN_URL = 'https://www.techinpeace.com/scan';
+const RESCAN_LINE = 'After making changes to your DNS or website, be sure to check your score again';
+const NEED_A_HAND = "Reply to this email. If I don't hear back, I'll check in once in two weeks.";
+const SIGNATURE = ['Crystal Pugh', 'Trust Architect', 'Tech in Peace', 'techinpeace.com'];
+const DISCLAIMER = 'This automated scan is a starting point, not a full security audit.';
 
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 }
 
-export function subjectFor(report) {
-  return `Security scan for ${report.domain}: grade ${report.grade} (${report.score}/100)`;
+function resultOf(report) {
+  return report.result ?? buildReportModel(report);
 }
 
-// Shown only when the scan found PHP that is unpatched or could not be confirmed.
-function phpAlert(report) {
-  const php = report.findings?.find((f) => f.id === 'php');
-  if (!php || (php.status !== 'fail' && php.status !== 'warn') || php.severity === 'low') return null;
-  return {
-    title: 'Security alert: two critical PHP flaws are being exploited now',
-    body:
-      'Your site shows signs of PHP. Update PHP today to 8.5.12, 8.4.27, 8.3.36, or 8.2.35 or newer. ' +
-      'If you cannot update today, take the site offline until you can. ' +
-      'After updating, check for a break-in going back to at least June 2026.',
-  };
+export function subjectFor(report) {
+  return `Your domain and website security report for ${report.domain}`;
+}
+
+function opening(r) {
+  return `Here is your free Tech in Peace report for ${r.domain}, scanned ${r.checked_on}.`;
+}
+
+// "Great to haves" line: "MTA-STS (request emails to use a secure connection): Set."
+function haveLine(item) {
+  return `${item.name} (${item.description.replace(/\.$/, '')}): ${item.status}`;
+}
+
+// The numbered DNS steps as plain lines (number, then indented detail lines).
+function changeBlocks(email) {
+  return email.dns_changes.map((c, i) => {
+    const n = `${i + 1}. ${c.setting}`;
+    if (!c.change) return { head: `${n}: no change needed.`, lines: [] };
+    if (c.steps) return { head: `${n}:`, lines: c.steps };
+    if (!c.value) return { head: `${n}: change needed.`, lines: [c.note] };
+    const verb = c.action === 'add' ? 'Add this record.' : 'Change it to this record.';
+    return {
+      head: `${n}: ${verb}`,
+      lines: [`Type: ${c.type}`, `Host: ${c.host}`, `Value: ${c.value}`, ...(c.note ? [c.note] : [])],
+      record: true,
+    };
+  });
 }
 
 export function renderText(report) {
-  const lines = [];
-  lines.push('CPI | Consulting Services');
-  lines.push('');
-  lines.push(`Domain and website security scan: ${report.domain}`);
-  lines.push(`Overall grade: ${report.grade}  (${report.score}/100)`);
-  lines.push(
-    `Checks: ${report.counts.pass} passed, ${report.counts.warn} to review, ${report.counts.fail} need action.`,
-  );
-  lines.push('');
-
-  const alert = phpAlert(report);
-  if (alert) {
-    lines.push(alert.title.toUpperCase());
-    lines.push(alert.body);
-    lines.push('');
-  }
-
-  if (report.priorities.length === 0) {
-    lines.push('No action items. Every check passed. Nicely done.');
+  const r = resultOf(report);
+  const L = [];
+  L.push('Hi,');
+  L.push('');
+  L.push(opening(r));
+  L.push(`Grade: ${r.grade} (${r.score}/100)`);
+  L.push('');
+  L.push('WHAT TO DO');
+  L.push('');
+  L.push('1. Your website');
+  L.push(r.website.line);
+  L.push('');
+  L.push('2. Your email');
+  if (r.email.all_correct) {
+    L.push(r.email.summary_line);
   } else {
-    lines.push('Your next steps (most important first):');
-    report.priorities.forEach((f, i) => {
-      const tag = f.deliverability ? ' (important for email deliverability)' : '';
-      lines.push(`  ${i + 1}. [${f.severity.toUpperCase()}] ${f.title}${tag}: ${f.summary}`);
-      lines.push(`     ${f.recommendation}`);
-    });
-  }
-
-  const setup = report.emailSetup;
-  if (setup) {
-    lines.push('');
-    lines.push('Where to set up SPF, DKIM, and DMARC:');
-    if (setup.mailbox) {
-      lines.push(`  Your email is hosted by ${setup.mailbox.name}, based on your MX records.`);
-      lines.push(...providerTextLines(setup.mailbox));
-    } else {
-      lines.push(`  ${UNKNOWN_PROVIDER}`);
+    if (r.email.correct_lines.length) {
+      L.push('These email settings are correct:');
+      for (const line of r.email.correct_lines) L.push(`- ${line}`);
     }
-    if (setup.senders.length) {
-      lines.push('  Your SPF record shows these services also send email as you. Set each one up too:');
-      for (const p of setup.senders) lines.push(...providerTextLines(p));
+    if (r.email.attention_lines.length) {
+      L.push('These email settings need attention:');
+      for (const line of r.email.attention_lines) L.push(`- ${line}`);
     }
-    lines.push(`  ${PROVIDER_NOTE}`);
+    L.push('Changes to make in your DNS, in this order:');
+    for (const b of changeBlocks(r.email)) {
+      L.push(b.head);
+      for (const line of b.lines) L.push(`   ${line}`);
+    }
+    if (r.email.dmarc_advice) L.push(r.email.dmarc_advice);
   }
+  L.push('');
+  L.push('3. Your security certificate');
+  for (const line of r.certificate.lines) L.push(line);
+  L.push('');
+  L.push('4. Advanced settings');
+  L.push('HTTP security');
+  L.push(r.advanced.http_security.intro);
+  if (r.advanced.http_security.checked) {
+    L.push(`In place: ${r.advanced.http_security.in_place.join(', ') || 'none'}`);
+    L.push(`Missing: ${r.advanced.http_security.missing.join(', ') || 'none'}`);
+  } else {
+    L.push('We could not read these settings because your website did not answer over HTTPS.');
+  }
+  L.push('');
+  L.push('Great to haves');
+  L.push(r.advanced.great_to_haves.intro);
+  for (const item of r.advanced.great_to_haves.items) L.push(`- ${haveLine(item)}`);
+  L.push('');
+  L.push('Need a hand?');
+  L.push(NEED_A_HAND);
+  L.push('');
+  for (const line of SIGNATURE) L.push(line);
+  L.push('');
+  L.push(`${RESCAN_LINE}: ${RESCAN_URL}`);
+  L.push('');
+  L.push('Full list of checks');
+  for (const f of report.findings) L.push(`- ${f.title} [${STATUS_LABEL[f.status]}]: ${f.summary}`);
+  L.push('');
+  L.push(`Scanned at ${r.checked_at}. ${DISCLAIMER}`);
+  return L.join('\n');
+}
 
-  lines.push('');
-  lines.push('Full results:');
-  for (const f of report.findings) {
-    lines.push(`  - ${f.title} [${STATUS_LABEL[f.status]}]: ${f.summary}`);
-  }
-  lines.push('');
-  lines.push(`Scanned at ${report.scannedAt}.`);
-  lines.push('This automated scan is a starting point, not a full security audit.');
-  lines.push(`After making changes to your DNS or website, be sure to check your score again: ${RESCAN_URL}`);
-  return lines.join('\n');
+// ---- HTML ------------------------------------------------------------------
+// One column, fluid width, no fixed pixel widths on content, long values wrap.
+
+const P = `margin:0 0 10px;color:${CPI.ink};font-size:15px;line-height:1.5`;
+const H2 = `font-family:${CPI.fontDisplay};font-weight:400;text-transform:uppercase;letter-spacing:0.02em;color:${CPI.navyDeep};margin:0 0 12px;font-size:20px;border-bottom:2px solid ${CPI.gold};padding-bottom:6px;display:inline-block`;
+const H3 = `font-family:${CPI.fontBody};font-weight:700;color:${CPI.navy};font-size:16px;margin:18px 0 8px`;
+const H4 = `font-family:${CPI.fontBody};font-weight:700;color:${CPI.navyDeep};font-size:14px;margin:12px 0 6px;text-transform:uppercase;letter-spacing:0.08em`;
+const UL = 'padding-left:20px;margin:0 0 12px';
+const LI = `margin:0 0 6px;color:${CPI.ink};font-size:15px;line-height:1.5`;
+const CODE = `font-family:Menlo,Consolas,monospace;font-size:13px;background:${CPI.paper};padding:1px 4px;word-break:break-all`;
+
+const p = (text) => `<p style="${P}">${esc(text)}</p>`;
+const list = (items) => `<ul style="${UL}">${items.map((i) => `<li style="${LI}">${esc(i)}</li>`).join('')}</ul>`;
+
+function emailHtml(email) {
+  if (email.all_correct) return p(email.summary_line);
+  let out = '';
+  if (email.correct_lines.length) out += p('These email settings are correct:') + list(email.correct_lines);
+  if (email.attention_lines.length) out += p('These email settings need attention:') + list(email.attention_lines);
+  out += p('Changes to make in your DNS, in this order:');
+  const items = changeBlocks(email).map((b) => {
+    const detail = b.lines
+      .map((line) => {
+        const m = line.match(/^(Type|Host|Value): (.*)$/);
+        return m
+          ? `<br><span style="color:${CPI.muted}">${m[1]}:</span> <code style="${CODE}">${esc(m[2])}</code>`
+          : `<br>${esc(line)}`;
+      })
+      .join('');
+    return `<li style="${LI};margin-bottom:10px">${esc(b.head.replace(/^\d+\.\s/, ''))}${detail}</li>`;
+  });
+  out += `<ol style="${UL}">${items.join('')}</ol>`;
+  if (email.dmarc_advice) out += p(email.dmarc_advice);
+  return out;
 }
 
 export function renderHtml(report) {
-  const colour = GRADE_COLOUR[report.grade] ?? CPI.info;
-  const headingStyle = `font-family:${CPI.fontDisplay};font-weight:400;text-transform:uppercase;letter-spacing:0.02em;color:${CPI.navyDeep};margin:0 0 12px;font-size:19px;border-bottom:2px solid ${CPI.gold};padding-bottom:6px;display:inline-block`;
-
-  const steps = report.priorities.length
-    ? `<ol style="padding-left:20px;margin:0">${report.priorities
-        .map(
-          (f) => `<li style="margin-bottom:14px">
-            <strong style="color:${CPI.navyDeep}">${esc(f.title)}</strong>
-            <span style="color:#fff;background:${severityColour(f.severity)};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em">${esc(
-              f.severity.toUpperCase(),
-            )}</span>${f.deliverability ? deliverabilityTag() : ''}<br>
-            <span style="color:${CPI.muted}">${esc(f.summary)}.</span><br>
-            <span style="color:${CPI.ink}">${esc(f.recommendation)}</span>
-          </li>`,
-        )
-        .join('')}</ol>`
-    : `<p style="color:${CPI.pass}"><strong>No action items. Every check passed.</strong></p>`;
+  const r = resultOf(report);
+  const colour = GRADE_COLOUR[r.grade] ?? CPI.info;
+  const hs = r.advanced.http_security;
 
   const rows = report.findings
     .map((f) => {
       const badge = { pass: CPI.pass, warn: CPI.warn, fail: CPI.fail, info: CPI.info }[f.status];
       return `<tr>
-        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.navyDeep};font-weight:700">${esc(f.title)}${f.deliverability ? deliverabilityTag() : ''}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${badge};font-weight:700">${esc(
-          STATUS_LABEL[f.status],
-        )}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid ${CPI.border};color:${CPI.muted}">${esc(f.summary)}</td>
+        <td style="padding:7px 8px;border-bottom:1px solid ${CPI.border};color:${CPI.navyDeep};font-weight:700;vertical-align:top">${esc(f.title)}</td>
+        <td style="padding:7px 8px;border-bottom:1px solid ${CPI.border};color:${badge};font-weight:700;vertical-align:top;white-space:nowrap">${esc(STATUS_LABEL[f.status])}</td>
+        <td style="padding:7px 8px;border-bottom:1px solid ${CPI.border};color:${CPI.muted};vertical-align:top">${esc(f.summary)}</td>
       </tr>`;
     })
     .join('');
 
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet"></head>
-  <body style="margin:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight: 400;color:${CPI.ink}">
-  <div style="max-width:640px;margin:0 auto;padding:24px">
-    <div style="background:${CPI.surface};border:1px solid ${CPI.border};border-radius:2px;overflow:hidden">
-      <!-- Brand header (logo embedded as an inline CID attachment) -->
-      <div style="padding:18px 24px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
+  <body style="margin:0;padding:0;background:${CPI.paper};font-family:${CPI.fontBody};font-weight:400;color:${CPI.ink};-webkit-text-size-adjust:100%">
+  <div style="max-width:640px;width:100%;margin:0 auto;padding:16px 0;box-sizing:border-box">
+    <div style="background:${CPI.surface};border:1px solid ${CPI.border};border-radius:2px;overflow:hidden;margin:0 12px">
+      <div style="padding:16px 20px;background:${CPI.navyDeep};border-bottom:2px solid ${CPI.gold}">
         <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-          <td style="padding-right:14px;vertical-align:middle"><img src="cid:${LOGO_CID}" width="44" height="44" alt="CPI" style="display:block;border:0"></td>
+          <td style="padding-right:12px;vertical-align:middle"><img src="cid:${LOGO_CID}" width="40" height="40" alt="CPI" style="display:block;border:0"></td>
           <td style="vertical-align:middle">
             <div style="font-family:${CPI.fontBody};font-weight:700;color:#ffffff;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">CPI</div>
             <div style="font-family:${CPI.fontBody};font-weight:700;color:${CPI.gold};font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-top:5px">Consulting Services</div>
           </td>
         </tr></table>
       </div>
-      <div style="padding:22px 24px 6px;border-bottom:1px solid ${CPI.border}">
-        <p style="margin:0 0 4px;color:${CPI.navy};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em">Domain and website security scan</p>
-        <h1 style="margin:0 0 16px;font-family:${CPI.fontDisplay};font-weight:400;font-size:30px;text-transform:uppercase;color:${CPI.navyDeep};letter-spacing:0.01em">${esc(report.domain)}</h1>
-      </div>
-      <!-- Grade -->
-      <div style="padding:22px 24px">
-        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-          <td style="width:76px;height:76px;background:${colour};color:#ffffff;font-family:${CPI.fontDisplay};font-weight:400;font-size:40px;text-align:center;vertical-align:middle;border-radius:2px">${esc(
-            report.grade,
-          )}</td>
-          <td style="padding-left:18px;vertical-align:middle">
-            <div style="font-family:${CPI.fontDisplay};font-size:26px;color:${CPI.navy}">${report.score}/100</div>
-            <div style="color:${CPI.muted};font-size:14px">${report.counts.pass} OK · ${report.counts.warn} to review · ${report.counts.fail} need action</div>
-          </td>
+
+      <div style="padding:20px 20px 4px">
+        ${p('Hi,')}
+        ${p(opening(r))}
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr>
+          <td style="width:60px;height:60px;background:${colour};color:#ffffff;font-family:${CPI.fontDisplay};font-size:32px;text-align:center;vertical-align:middle;border-radius:2px">${esc(r.grade)}</td>
+          <td style="padding-left:14px;vertical-align:middle;font-family:${CPI.fontDisplay};font-size:22px;color:${CPI.navy}">${esc(r.score)}/100</td>
         </tr></table>
       </div>
-      ${alertHtml(phpAlert(report))}
-      <div style="padding:0 24px 10px"><h2 style="${headingStyle}">What to do next</h2>${steps}</div>
-      ${emailSetupHtml(report.emailSetup, headingStyle)}
-      <div style="padding:14px 24px 24px">
-        <h2 style="${headingStyle}">All ${report.findings.length} checks</h2>
-        <p style="margin:0 0 12px;font-size:13px;color:${CPI.navyDeep};background:${CPI.paperAlt};border-left:3px solid ${CPI.gold};padding:8px 12px">${esc(DELIVERABILITY_NOTE)}</p>
-        <table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table>
+
+      <div style="padding:14px 20px 4px">
+        <h2 style="${H2}">What to do</h2>
+        <h3 style="${H3}">1. Your website</h3>
+        ${p(r.website.line)}
+        <h3 style="${H3}">2. Your email</h3>
+        ${emailHtml(r.email)}
+        <h3 style="${H3}">3. Your security certificate</h3>
+        ${r.certificate.lines.map(p).join('')}
+        <h3 style="${H3}">4. Advanced settings</h3>
+        <h4 style="${H4}">HTTP security</h4>
+        ${p(hs.intro)}
+        ${hs.checked
+          ? p(`In place: ${hs.in_place.join(', ') || 'none'}`) + p(`Missing: ${hs.missing.join(', ') || 'none'}`)
+          : p('We could not read these settings because your website did not answer over HTTPS.')}
+        <h4 style="${H4}">Great to haves</h4>
+        ${p(r.advanced.great_to_haves.intro)}
+        ${list(r.advanced.great_to_haves.items.map(haveLine))}
       </div>
-      <div style="padding:16px 24px;background:${CPI.paperAlt};color:${CPI.muted};font-size:12px">
-        Scanned at ${esc(report.scannedAt)}. This automated scan is a starting point, not a full security audit.
-        <p style="margin:10px 0 0;color:${CPI.ink};font-size:13px">After making changes to your DNS or website, be sure to <a href="${RESCAN_URL}" style="color:${CPI.navy};font-weight:700">check your score again</a>.</p>
+
+      <div style="padding:6px 20px 16px">
+        <h3 style="${H3}">Need a hand?</h3>
+        ${p(NEED_A_HAND)}
+        <p style="${P};margin-top:14px">${SIGNATURE.map(esc).join('<br>')}</p>
+        <p style="${P};margin-top:14px">${esc(RESCAN_LINE.replace(/check your score again$/, ''))}<a href="${RESCAN_URL}" style="color:${CPI.navy};font-weight:700">check your score again</a>.</p>
+      </div>
+
+      <div style="padding:14px 20px 20px;border-top:1px solid ${CPI.border}">
+        <h2 style="${H2}">Full list of checks</h2>
+        <table role="presentation" style="width:100%;border-collapse:collapse;font-size:13px;table-layout:auto">${rows}</table>
+      </div>
+      <div style="padding:14px 20px;background:${CPI.paperAlt};color:${CPI.muted};font-size:12px">
+        Scanned at ${esc(r.checked_at)}. ${esc(DISCLAIMER)}
       </div>
     </div>
     <div style="text-align:center;color:${CPI.muted};font-size:11px;margin-top:14px;letter-spacing:0.14em;text-transform:uppercase">CPI · Consulting Services</div>
   </div>
 </body></html>`;
-}
-
-const DELIVERABILITY_NOTE =
-  'Gmail, Yahoo, and Outlook check SPF, DKIM, and DMARC before they deliver your mail. Missing or weak records can send your email to spam.';
-
-const UNKNOWN_PROVIDER =
-  'We could not tell who hosts your email from your MX records. Check with your email provider for how to set up SPF, DKIM, and DMARC.';
-const PROVIDER_NOTE =
-  'Your provider gives you the exact records to add. If someone else manages your DNS, send them these links.';
-
-function providerTextLines(p) {
-  return [
-    `  ${p.name}`,
-    `     Set up SPF: ${p.links.spf}`,
-    `     Set up DKIM: ${p.links.dkim}`,
-    `     Set up DMARC: ${p.links.dmarc}`,
-  ];
-}
-
-function emailSetupHtml(setup, headingStyle) {
-  if (!setup) return '';
-  const link = (url, label) => `<a href="${esc(url)}" style="color:${CPI.navy};font-weight:700">${label}</a>`;
-  const item = (p) => `<li style="margin-bottom:8px"><strong style="color:${CPI.navyDeep}">${esc(p.name)}</strong><br>
-            ${link(p.links.spf, 'Set up SPF')} · ${link(p.links.dkim, 'Set up DKIM')} · ${link(p.links.dmarc, 'Set up DMARC')}</li>`;
-  const p = (text) => `<p style="margin:0 0 10px;color:${CPI.ink};font-size:14px">${text}</p>`;
-  let body = setup.mailbox
-    ? p(`Your email is hosted by <strong>${esc(setup.mailbox.name)}</strong>, based on your MX records. Use their guides:`) +
-      `<ul style="padding-left:20px;margin:0 0 12px">${item(setup.mailbox)}</ul>`
-    : p(esc(UNKNOWN_PROVIDER));
-  if (setup.senders.length) {
-    body += p('Your SPF record shows these services also send email as you. Set each one up too:') +
-      `<ul style="padding-left:20px;margin:0 0 12px">${setup.senders.map(item).join('')}</ul>`;
-  }
-  body += `<p style="margin:0;color:${CPI.muted};font-size:13px">${esc(PROVIDER_NOTE)}</p>`;
-  return `<div style="padding:4px 24px 10px"><h2 style="${headingStyle}">Where to set up SPF, DKIM, and DMARC</h2>${body}</div>`;
-}
-
-function alertHtml(alert) {
-  if (!alert) return '';
-  return `<div style="margin:0 24px 18px;padding:12px 14px;background:${CPI.paperAlt};border-left:4px solid ${CPI.fail};border-radius:2px">
-        <p style="margin:0 0 6px;color:${CPI.fail};font-weight:700;font-size:14px">${esc(alert.title)}</p>
-        <p style="margin:0;color:${CPI.ink};font-size:14px">${esc(alert.body)}</p>
-      </div>`;
-}
-
-function deliverabilityTag() {
-  return `<span style="color:${CPI.navyDeep};background:${CPI.goldSoft ?? '#f0c889'};border-radius:2px;padding:2px 8px;font-size:10px;margin-left:6px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Important for email deliverability</span>`;
-}
-
-function severityColour(severity) {
-  if (severity === 'critical' || severity === 'high') return CPI.fail;
-  if (severity === 'medium') return CPI.warn;
-  return CPI.navy;
 }
 
 export function renderEmail(report) {

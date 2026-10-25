@@ -55,9 +55,9 @@ test('renderEmail produces subject, text and html that mention the grade', async
   const report = await runAudit('x.com', { resolver });
   const email = renderEmail(report);
 
-  assert.match(email.subject, /x\.com/);
-  assert.match(email.subject, new RegExp(`grade ${report.grade}`));
-  assert.match(email.text, /next steps|action item|every check passed/i);
+  assert.equal(email.subject, 'Your domain and website security report for x.com');
+  assert.match(email.text, new RegExp(`Grade: ${report.grade} \\(${report.score}/100\\)`));
+  assert.match(email.text, /^WHAT TO DO$/m);
   assert.match(email.html, /<html/);
   assert.match(email.html, new RegExp(`${report.score}/100`));
 });
@@ -66,15 +66,15 @@ test('the email footer links back to the scan page to check the score again', as
   const resolver = new FakeResolver({ 'x.com|A': ['1.2.3.4'] });
   const report = await runAudit('x.com', { resolver, loadPage: async () => null });
   const email = renderEmail(report);
-  assert.match(email.text, /After making changes to your DNS or website, be sure to check your score again: https:\/\/www\.techinpeace\.com\/scan$/);
+  assert.match(email.text, /^After making changes to your DNS or website, be sure to check your score again: https:\/\/www\.techinpeace\.com\/scan$/m);
   assert.match(email.html, /<a href="https:\/\/www\.techinpeace\.com\/scan"[^>]*>check your score again<\/a>/);
 });
 
-test('the report email is branded CPI, not Cyber Protection', async () => {
+test('the report email opens with Hi and keeps the CPI header, not Cyber Protection', async () => {
   const resolver = new FakeResolver({ 'x.com|A': ['1.2.3.4'] });
   const report = await runAudit('x.com', { resolver, loadPage: async () => null });
   const email = renderEmail(report);
-  assert.match(email.text, /^CPI \| Consulting Services/);
+  assert.match(email.text, /^Hi,\n\nHere is your free Tech in Peace report for x\.com, scanned /);
   assert.match(email.html, />CPI</);
   assert.match(email.html, /CPI · Consulting Services/);
   assert.doesNotMatch(email.text + email.html, /cyber protection/i);
