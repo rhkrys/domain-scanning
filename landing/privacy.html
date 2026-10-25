@@ -99,7 +99,7 @@
     <span class="eyebrow">Legal</span>
     <h1>Privacy Policy</h1>
     <p class="who">Chlamys Piste Inc. (CPI) &nbsp;|&nbsp; techinpeace.com</p>
-    <p class="dates">Effective date: September 24, 2026 &nbsp;&nbsp; Last updated: October 21, 2026</p>
+    <p class="dates">Effective date: September 24, 2026 &nbsp;&nbsp; Last updated: October 25, 2026</p>
     <div class="rule"></div>
 
     <h2><span class="num">1.</span>Our privacy promise</h2>
@@ -126,14 +126,19 @@
       <tbody>
         <tr><td>Domain name you enter</td><td>To run the scan</td><td>Yes</td></tr>
         <tr><td>Public DNS, email authentication (SPF, DKIM, DMARC), SSL/TLS, HTTP security header, and website software (such as PHP) results for that domain</td><td>To produce your report</td><td>Yes (created by the scan)</td></tr>
-        <tr><td>Email address</td><td>To send you the full report</td><td>Only if you want the report emailed</td></tr>
+        <tr><td>Email address, from the optional email field on the scan form or passed by an app that runs the scan for you</td><td>To send you the report</td><td>Optional. The scan works without it</td></tr>
+        <tr><td>Your newsletter choice and the time you ticked the box</td><td>To send the newsletter only if you ask, and to prove you asked</td><td>Optional. The box is unchecked unless you tick it</td></tr>
         <tr><td>Name, organization, role</td><td>To tailor the report and any follow-up</td><td>Optional</td></tr>
-        <tr><td>IP address, browser type, time of request</td><td>To stop abuse, rate-limit automated scans, and keep the tool running</td><td>Yes (collected automatically)</td></tr>
+        <tr><td>IP address, browser type, time of request</td><td>To stop abuse, rate-limit automated scans, and keep the tool running</td><td>Yes (collected automatically). For the scan limit we store only a scrambled form of your IP address, never the address itself</td></tr>
       </tbody>
     </table>
+    <p>We check only the public records attached to your domain. We never read your inbox or ask for a password. Your email is used to send this report, and the newsletter only if you tick the box.</p>
+    <p>Each scan gets a private report link so you can come back to your results. The page behind it shows the scan results only, never your email address. The link stops working when the scan record is deleted (see Section 9).</p>
     <div class="callout">Only scan domains you own or have permission to assess. By using the scanner, you confirm you have that authority. We may block scans we believe are abusive.</div>
 
     <h3>3.2 Newsletter</h3>
+    <p>You can join the newsletter list by ticking "Also send me the monthly Tech in Peace newsletter." under the email field on the scan form. The box is unchecked by default, and running a scan never adds you on its own. We send the newsletter through Substack and Gumroad.</p>
+    <p><strong>How to unsubscribe:</strong> every newsletter has a one-click unsubscribe link. Click it and you are off the list. You can also email us and we will remove you.</p>
     <table>
       <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
       <tbody>
@@ -203,9 +208,9 @@
     <table>
       <thead><tr><th>Provider type</th><th>Purpose</th><th>Provider</th></tr></thead>
       <tbody>
-        <tr><td>Cloud hosting</td><td>Runs the scanner and website</td><td>Amazon Web Services</td></tr>
-        <tr><td>Email delivery</td><td>Sends your scan report and transactional email</td><td>Google Workspace</td></tr>
-        <tr><td>Newsletter</td><td>Sends our email newsletter</td><td>Substack</td></tr>
+        <tr><td>Cloud hosting</td><td>Runs the scanner and website, and stores scan records</td><td>Amazon Web Services</td></tr>
+        <tr><td>Email delivery</td><td>Sends your scan report and transactional email</td><td>Amazon Web Services (Amazon SES), Google Workspace</td></tr>
+        <tr><td>Newsletter</td><td>Sends our email newsletter</td><td>Substack, Gumroad</td></tr>
         <tr><td>Payments</td><td>Processes payments and invoices for paid services</td><td>Stripe</td></tr>
         <tr><td>SMS and voice</td><td>Sends texts and places calls</td><td>Zoom</td></tr>
         <tr><td>Video meetings</td><td>Hosts video consultations you schedule</td><td>Zoom</td></tr>
@@ -234,6 +239,8 @@
       <tbody>
         <tr><td>Scan results linked to your email</td><td>12 months, then deleted or de-identified</td></tr>
         <tr><td>Anonymous scans (no email given)</td><td>90 days</td></tr>
+        <tr><td>Newsletter choice and consent time from the scan form</td><td>With the scan record (12 months), and on the newsletter list until you unsubscribe</td></tr>
+        <tr><td>Scrambled IP address used for the scan limit</td><td>About two hours</td></tr>
         <tr><td>Newsletter subscriber data</td><td>Until you unsubscribe, then deleted within 30 days (we keep a minimal suppression record so we never email you again)</td></tr>
         <tr><td>Newsletter inactive for 24 months</td><td>Removed from the list</td></tr>
         <tr><td>SMS and call consent records</td><td>5 years after consent ends, as legal proof of consent</td></tr>
