@@ -21,6 +21,7 @@ import { checkSoftware, detectVersionLeaks } from './checks/software.js';
 import { scoreFindings } from './scoring.js';
 import { detectEmailProviders } from './providers.js';
 import { sendersFromSpf, selectorsForSenders } from './senders.js';
+import { buildReportModel } from './report-model.js';
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i;
 
@@ -82,7 +83,8 @@ export function spfRecordOf(spf) {
 
 export const DELIVERABILITY_IDS = new Set(['spf', 'dkim', 'dmarc']);
 
-export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage, fetchPolicy } = {}) {
+// Tests can pass loadPage, fetchPolicy, tlsCheck and now to run fully offline.
+export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage, fetchPolicy, tlsCheck, now } = {}) {
   const domain = normaliseDomain(rawDomain);
   if (!domain) {
     const error = new Error('Invalid domain');
@@ -121,7 +123,7 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage,
     safe('nameservers', 'Nameservers', 'DNS Foundation', () => checkNameservers(resolver, domain)),
     safe('dnssec', 'DNSSEC', 'DNS Foundation', () => checkDnssec(resolver, domain)),
     safe('caa', 'CAA record', 'DNS Foundation', () => checkCaa(resolver, domain)),
-    safe('tls', 'TLS certificate', 'Transport Security', () => checkTls(domain)),
+    safe('tls', 'TLS certificate', 'Transport Security', () => (tlsCheck ?? checkTls)(domain)),
     safe('headers', 'HTTP security headers', 'Transport Security', () => checkHeaders(domain, { loadPage: sharedPage })),
     safe('php', 'PHP (website software)', 'Website Software', () => checkSoftware(domain, { loadPage: sharedPage })),
   ]);
@@ -147,13 +149,16 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage,
     headers: securityHeaderPresence(page),
   };
 
-  return {
+  const report = {
     domain,
-    scannedAt: new Date().toISOString(),
+    scannedAt: (now ?? new Date()).toISOString(),
     sendsMail,
     ...scored,
     findings,
     emailSetup,
     facts,
   };
+  // The one result object the email, the page and the JSON endpoint all read.
+  report.result = buildReportModel(report);
+  return report;
 }
