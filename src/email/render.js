@@ -90,6 +90,7 @@ export function renderText(report) {
   L.push('');
   L.push('1. Your website');
   L.push(r.website.line);
+  if (r.website.load_balancer_line) L.push(r.website.load_balancer_line);
   L.push('');
   L.push('2. Your email');
   if (r.email.all_correct) {
@@ -223,6 +224,7 @@ export function renderHtml(report) {
         <h2 style="${H2}">What to do</h2>
         <h3 style="${H3}">1. Your website</h3>
         ${p(r.website.line)}
+        ${r.website.load_balancer_line ? p(r.website.load_balancer_line) : ''}
         <h3 style="${H3}">2. Your email</h3>
         ${emailHtml(r.email)}
         <h3 style="${H3}">3. Your security certificate</h3>

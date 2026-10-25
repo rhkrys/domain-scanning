@@ -111,3 +111,14 @@ test('top_fix never uses an acronym', async () => {
     assert.doesNotMatch(fix, /\b(SPF|DKIM|DMARC|DNS|SSL|TLS|HTTPS|MTA|BIMI|CAA)\b/, `${name}: ${fix}`);
   }
 });
+
+test('the website section lists load balancers in a plain line', async () => {
+  const report = await SCENARIOS['all-pass']();
+  report.facts.website = { checked: true, leaks: [], wordpress: false, infrastructure: ['AWS Elastic Load Balancing', 'Amazon CloudFront'] };
+  const w = buildReportModel(report).website;
+  assert.equal(w.line, 'Your website is not sharing version details with the public. Good.');
+  assert.deepEqual(w.load_balancers, ['AWS Elastic Load Balancing', 'Amazon CloudFront']);
+  assert.equal(w.load_balancer_line, 'Your website is served through AWS Elastic Load Balancing and Amazon CloudFront.');
+  const none = (await SCENARIOS['no-cert']()).result.website;
+  assert.equal(none.load_balancer_line, null);
+});

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { FakeResolver } from './helpers.js';
-import { detectVersionLeaks } from '../src/checks/software.js';
+import { detectVersionLeaks, detectInfrastructure } from '../src/checks/software.js';
 import { securityHeaderPresence } from '../src/checks/headers.js';
 import { evaluateCertificate } from '../src/checks/tls.js';
 import { checkMtaSts, isValidMtaStsPolicy, fetchMtaStsPolicy } from '../src/checks/email.js';
@@ -33,7 +33,7 @@ test('version leaks: a bare Server name or Express is not a leak', () => {
   const r = detectVersionLeaks(page({ server: 'cloudflare', 'x-powered-by': 'Express' }));
   assert.deepEqual(r.leaks, []);
   assert.equal(r.wordpress, false);
-  assert.deepEqual(detectVersionLeaks(null), { checked: false, leaks: [], wordpress: false });
+  assert.deepEqual(detectVersionLeaks(null), { checked: false, leaks: [], wordpress: false, infrastructure: [] });
 });
 
 test('security headers: lists the six in place and missing, in order', () => {
@@ -110,4 +110,37 @@ test('the audit report carries the page facts', async () => {
   });
   assert.deepEqual(report.facts.website.leaks, [{ header: 'Server', value: 'Apache/2.4.58' }]);
   assert.deepEqual(report.facts.headers.present, ['Referrer-Policy']);
+});
+
+test('load balancers: awselb is listed, not treated as a version leak (the techinpeace.com case)', () => {
+  const r = detectVersionLeaks(page({ server: 'awselb/2.0' }));
+  assert.deepEqual(r.leaks, []);
+  assert.deepEqual(r.infrastructure, ['AWS Elastic Load Balancing']);
+});
+
+test('load balancers and delivery networks are spotted from their headers', () => {
+  const cases = [
+    [{ server: 'CloudFront', 'x-amz-cf-id': 'abc' }, ['Amazon CloudFront']],
+    [{ via: '1.1 abc.cloudfront.net (CloudFront)', server: 'AmazonS3' }, ['Amazon CloudFront', 'Amazon S3']],
+    [{ server: 'cloudflare', 'cf-ray': '1' }, ['Cloudflare']],
+    [{ server: 'AkamaiGHost' }, ['Akamai']],
+    [{ 'x-served-by': 'cache-iad-kjyo7100111-IAD', 'x-fastly-request-id': '1' }, ['Fastly']],
+    [{ server: 'Google Frontend' }, ['Google Cloud Load Balancing']],
+    [{ 'x-azure-ref': '0abc' }, ['Azure Front Door']],
+    [{ server: 'Vercel', 'x-vercel-id': 'iad1' }, ['Vercel']],
+    [{ server: 'Netlify' }, ['Netlify']],
+    [{ 'set-cookie': ['BIGipServerpool=123; path=/'] }, ['F5 BIG-IP']],
+    [{ 'x-sucuri-id': '1' }, ['Sucuri']],
+    [{ via: '1.1 vegur' }, ['Heroku']],
+    [{ server: 'GitHub.com' }, ['GitHub Pages']],
+    [{ server: 'nginx/1.24.0' }, []],
+  ];
+  for (const [headers, names] of cases) assert.deepEqual(detectInfrastructure(page(headers)), names, JSON.stringify(headers));
+  assert.deepEqual(detectInfrastructure(null), []);
+});
+
+test('real software behind a load balancer still counts as a leak', () => {
+  const r = detectVersionLeaks(page({ server: 'Apache/2.4.58', 'cf-ray': '1' }));
+  assert.deepEqual(r.leaks.map((l) => l.value), ['Apache/2.4.58']);
+  assert.deepEqual(r.infrastructure, ['Cloudflare']);
 });

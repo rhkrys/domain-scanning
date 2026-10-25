@@ -126,12 +126,47 @@ function hideVersion(version) {
     `set expose_php = Off in php.ini, or ask your host to.${apache}`;
 }
 
+// Load balancers and delivery networks in front of the site, spotted from the
+// response headers. These are services, not software the owner updates, so
+// their Server values never count as version leaks.
+//   server: matches the Server header value
+//   test:   matches other headers (lower-case names)
+export const INFRASTRUCTURE = [
+  { name: 'AWS Elastic Load Balancing', server: /^awselb\b/i },
+  { name: 'Amazon CloudFront', server: /^cloudfront$/i, test: (h) => 'x-amz-cf-id' in h || /cloudfront/i.test(headerText(h.via)) },
+  { name: 'Amazon S3', server: /^amazons3$/i },
+  { name: 'Cloudflare', server: /^cloudflare$/i, test: (h) => 'cf-ray' in h },
+  { name: 'Akamai', server: /^akamai/i, test: (h) => Object.keys(h).some((k) => k.startsWith('x-akamai')) },
+  { name: 'Fastly', test: (h) => 'x-fastly-request-id' in h || /fastly/i.test(headerText(h['x-served-by'])) },
+  { name: 'Google Cloud Load Balancing', server: /^(google frontend|gfe|esf)\b/i, test: (h) => /\bgoogle\b/i.test(headerText(h.via)) },
+  { name: 'Azure Front Door', test: (h) => 'x-azure-ref' in h },
+  { name: 'Azure Application Gateway', server: /^microsoft-azure-application-gateway/i },
+  { name: 'Vercel', server: /^vercel$/i, test: (h) => 'x-vercel-id' in h },
+  { name: 'Netlify', server: /^netlify$/i, test: (h) => 'x-nf-request-id' in h },
+  { name: 'F5 BIG-IP', server: /^big-?ip/i, test: (h) => /BIGipServer/i.test(headerText(h['set-cookie'])) },
+  { name: 'Sucuri', server: /^sucuri/i, test: (h) => 'x-sucuri-id' in h },
+  { name: 'Heroku', test: (h) => /\bvegur\b/i.test(headerText(h.via)) },
+  { name: 'GitHub Pages', server: /^github\.com$/i },
+];
+
+function isInfrastructureServer(server) {
+  return INFRASTRUCTURE.some((i) => i.server?.test(server.trim()));
+}
+
+// Names of the load balancers and delivery networks the page came through.
+export function detectInfrastructure(page) {
+  if (!page) return [];
+  const headers = page.headers ?? {};
+  const server = headerText(headers.server).trim();
+  return INFRASTRUCTURE.filter((i) => (server && i.server?.test(server)) || i.test?.(headers)).map((i) => i.name);
+}
+
 // Version details the home page gives away, for the report's "Your website"
 // section. A leak is X-Powered-By naming PHP, a Server header with a version
 // number, any X-Generator header, or a WordPress generator meta tag.
 // Returns { checked, leaks: [{ header, value }], wordpress }.
 export function detectVersionLeaks(page) {
-  if (!page) return { checked: false, leaks: [], wordpress: false };
+  if (!page) return { checked: false, leaks: [], wordpress: false, infrastructure: [] };
   const headers = page.headers ?? {};
   const html = typeof page.html === 'string' ? page.html : '';
   const leaks = [];
@@ -140,7 +175,9 @@ export function detectVersionLeaks(page) {
   const generator = headerText(headers['x-generator']);
 
   if (/php/i.test(poweredBy)) leaks.push({ header: 'X-Powered-By', value: poweredBy });
-  if (/\d+\.\d+/.test(server) || /\/\d/.test(server)) leaks.push({ header: 'Server', value: server });
+  if ((/\d+\.\d+/.test(server) || /\/\d/.test(server)) && !isInfrastructureServer(server)) {
+    leaks.push({ header: 'Server', value: server });
+  }
   if (generator.trim()) leaks.push({ header: 'X-Generator', value: generator });
   const meta = html.match(/<meta[^>]+name=["']generator["'][^>]*content=["'](wordpress[^"']*)["']/i)
     ?? html.match(/<meta[^>]+content=["'](wordpress[^"']*)["'][^>]*name=["']generator["']/i);
@@ -149,7 +186,7 @@ export function detectVersionLeaks(page) {
   const wordpress =
     detectPhp({ headers, html, url: page.url }).platform === 'WordPress' ||
     leaks.some((l) => /wordpress/i.test(l.value));
-  return { checked: true, leaks, wordpress };
+  return { checked: true, leaks, wordpress, infrastructure: detectInfrastructure(page) };
 }
 
 function joinList(items) {

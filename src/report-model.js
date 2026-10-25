@@ -34,7 +34,8 @@ function spfRecordOf(spf) {
 // ---- 1. Your website ----------------------------------------------------
 
 function websiteSection(facts) {
-  const w = facts?.website ?? { checked: false, leaks: [], wordpress: false };
+  const w = facts?.website ?? { checked: false, leaks: [], wordpress: false, infrastructure: [] };
+  const loadBalancers = w.infrastructure ?? [];
   let line;
   if (!w.checked) {
     line = 'We could not reach your website over HTTPS, so we could not check it.';
@@ -45,7 +46,14 @@ function websiteSection(facts) {
   } else {
     line = 'Your website is not sharing version details with the public. Good.';
   }
-  return { checked: w.checked, version_leaks: w.leaks, wordpress: w.wordpress, line };
+  return {
+    checked: w.checked,
+    version_leaks: w.leaks,
+    wordpress: w.wordpress,
+    line,
+    load_balancers: loadBalancers,
+    load_balancer_line: loadBalancers.length ? `Your website is served through ${joinList(loadBalancers)}.` : null,
+  };
 }
 
 // ---- 2. Your email ------------------------------------------------------
