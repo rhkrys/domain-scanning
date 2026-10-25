@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ScanRecordsAndRateLimit",
+      "Effect": "Allow",
+      "Action": ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:UpdateItem"],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:306499034564:table/cyber-protection-site-my-ScansTable-*",
+        "arn:aws:dynamodb:us-east-1:306499034564:table/cyber-protection-site-my-RateTable-*"
+      ]
+    }
+  ]
+}

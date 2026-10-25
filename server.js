@@ -16,7 +16,8 @@ import { runAudit, normaliseDomain, domainInputProblem } from './src/audit.js';
 import { sendReport } from './src/email/mailer.js';
 import { loadConfig } from './src/config.js';
 import { createApiLimiter } from './src/ratelimit.js';
-import { createMemoryStore, newScanId, SCAN_ID_RE } from './src/store.js';
+import { createStore, buildScanRecord, newScanId, SCAN_ID_RE } from './src/store.js';
+import { renderEmail } from './src/email/render.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -66,10 +67,11 @@ export function createApp({
   rateLimit = {},
   config = loadConfig(),
   apiLimiter,
-  store = createMemoryStore(),
+  store,
 } = {}) {
   const { windowMs = 60_000, max = 10 } = rateLimit;
   const limiterReady = apiLimiter ? Promise.resolve(apiLimiter) : createApiLimiter(config);
+  const storeReady = store ? Promise.resolve(store) : createStore(config);
   const app = express();
 
   // CORS for the JSON API only. Allowed browser origins come from config;
@@ -124,17 +126,21 @@ export function createApp({
 
     try {
       const report = await audit(cleanDomain);
+      // One rendering, used for the email we send and the copy we store.
+      const rendered = renderEmail(report);
 
       let mail = null;
       if (cleanEmail) {
         try {
-          mail = await send(cleanEmail, report);
+          mail = await send(cleanEmail, report, rendered);
         } catch (err) {
           mail = { delivered: false, mode: 'error', error: err.message };
         }
       }
 
-      res.json({ report, mail });
+      const scanId = newScanId();
+      await saveScan({ scanId, report, source: 'web', email: cleanEmail || null, rendered });
+      res.json({ report, mail, report_url: reportUrl(scanId) });
     } catch (err) {
       if (err.code === 'INVALID_DOMAIN') {
         return res.status(400).json({ error: 'We couldn’t recognise that as a website address. Try the format example.com.', field: 'domain' });
@@ -163,7 +169,7 @@ export function createApp({
     try {
       const report = await audit(normaliseDomain(domain));
       const scanId = newScanId();
-      await saveScan({ scanId, report, source: 'api' });
+      await saveScan({ scanId, report, source: 'api', rendered: renderEmail(report) });
       res.json({ ...report.result, report_url: reportUrl(scanId) });
     } catch (err) {
       if (err.code === 'INVALID_DOMAIN') {
@@ -178,7 +184,7 @@ export function createApp({
   app.get('/api/report/:id', async (req, res) => {
     if (!SCAN_ID_RE.test(req.params.id)) return res.status(404).json({ error: 'Report not found.' });
     try {
-      const record = await store.get(req.params.id);
+      const record = await (await storeReady).get(req.params.id);
       if (!record) return res.status(404).json({ error: 'Report not found. Links expire after a while; run a new scan.' });
       res.json({ report: JSON.parse(record.result_json) });
     } catch (err) {
@@ -191,15 +197,12 @@ export function createApp({
     return `${config.publicBaseUrl}/scan?report=${scanId}`;
   }
 
-  async function saveScan({ scanId, report, source }) {
+  // Saves the scan, its result object, and the rendered email, so a report
+  // can be re-sent without scanning again.
+  async function saveScan({ scanId, report, source, email = null, newsletterOptIn = false, rendered }) {
     try {
-      await store.save({
-        scan_id: scanId,
-        domain: report.domain,
-        checked_at: report.scannedAt,
-        result_json: JSON.stringify(report),
-        source,
-      });
+      const record = buildScanRecord({ scanId, report, source, email, newsletterOptIn, rendered });
+      await (await storeReady).save(record);
     } catch (err) {
       // A storage problem must not cost the visitor their result.
       console.error('Saving scan failed:', err.message);

@@ -304,3 +304,15 @@ function escapeHtml(s) {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c],
   );
 }
+
+// A report link (/scan?report=<id>) opens a saved scan instead of a new one.
+const reportId = new URLSearchParams(window.location.search).get('report');
+if (reportId && API_ENABLED) {
+  fetch(`/api/report/${encodeURIComponent(reportId)}`)
+    .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok && data.report) render({ report: data.report, mail: null }, data.report.domain);
+      else showError(data.error || 'We couldn’t find that report. Please run a new scan.');
+    })
+    .catch(() => showError('We couldn’t load that report. Please run a new scan.'));
+}

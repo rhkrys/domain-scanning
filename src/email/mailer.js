@@ -72,8 +72,10 @@ function getSmtpTransport() {
   return smtpTransport;
 }
 
-export async function sendReport(to, report) {
-  const email = renderEmail(report);
+// rendered: the already-rendered email (so the copy we store is exactly what
+// was sent). Rendered here when not given.
+export async function sendReport(to, report, rendered = renderEmail(report)) {
+  const email = rendered;
   const from = process.env.MAIL_FROM ?? 'CPI <scanner@localhost>';
   const logo = await getLogo();
 

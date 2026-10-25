@@ -15,7 +15,7 @@ Parameters:
     Description: Route 53 hosted zone ID for the parent domain
   ExecutionRoleArn:
     Type: String
-    Description: ARN of an existing Lambda execution role (needs Logs + ses:SendEmail)
+    Description: ARN of an existing Lambda execution role (needs Logs, ses:SendEmail, and the DynamoDB access in scan-tables-policy.json)
   LambdaCodeBucket:
     Type: String
   LambdaCodeKey:
@@ -23,8 +23,57 @@ Parameters:
   MailFrom:
     Type: String
     Default: "Cyber Protection <crystal@awesomeblackbusiness.com>"
+  AllowedOrigins:
+    Type: String
+    Default: ""
+    Description: Comma-separated browser origins allowed to call /api/v1/* (CORS)
+  PublicBaseUrl:
+    Type: String
+    Default: "https://www.techinpeace.com"
+    Description: Base URL for report links
+  RateSalt:
+    Type: String
+    NoEcho: true
+    Default: ""
+    Description: Secret mixed into hashed IPs for the API rate limit. Empty keeps the limit in memory.
 
 Resources:
+  # One row per scan, keyed by a random scan id. Rows expire on their own
+  # (expires_at): 12 months with an email, 90 days without.
+  ScansTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: scan_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: scan_id
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  # API rate-limit counters: a salted hash of the IP plus the hour, never the
+  # IP itself. Rows expire after about two hours.
+  RateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: key
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+
   SiteBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -64,6 +113,11 @@ Resources:
           EMAIL_TRANSPORT: ses
           MAIL_FROM: !Ref MailFrom
           PREVIEW_DIR: /tmp/previews
+          SCANS_TABLE: !Ref ScansTable
+          RATE_TABLE: !Ref RateTable
+          RATE_SALT: !Ref RateSalt
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
+          PUBLIC_BASE_URL: !Ref PublicBaseUrl
 
   # API Gateway HTTP API in front of the Lambda. A Function URL was ruled out:
   # the account SCP blocks public (NONE) URLs, and CloudFront OAC (IAM) can't
