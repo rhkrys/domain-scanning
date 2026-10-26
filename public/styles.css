@@ -544,3 +544,12 @@ dialog.popup::backdrop { background: rgba(13, 26, 38, .55); }
   .key-message h3 { font-size: 22px; }
   .key-message p { font-size: 16px; }
 }
+
+/* ---- Sample report images (What your report looks like) ---------------- */
+.report-row { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start; margin: 0 0 18px; }
+.report-row p { margin: 0; }
+.report-sample { width: 200px; height: auto; display: block; border-radius: 6px; }
+@media (max-width: 560px) {
+  .report-row { grid-template-columns: 1fr; gap: 12px; }
+  .report-sample { width: 100%; max-width: 320px; }
+}

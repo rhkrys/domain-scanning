@@ -280,3 +280,17 @@ test('When a tool is not enough sits in a brand-colored key message mat', async 
   assert.match(css, /--brand-navy: #263D95/);
   assert.match(css, /--brand-gold: #C09B3D/);
 });
+
+test('three sample report placeholders sit beside the first three report paragraphs', async () => {
+  const html = await fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+  const rows = html.match(/<div class="report-row">[\s\S]*?<\/div>/g) ?? [];
+  assert.equal(rows.length, 3);
+  for (const r of rows) assert.match(r, /<img class="report-sample" src="\/sample-report-placeholder\.svg"[^>]*alt="Placeholder for a sample report/);
+  const svg = await fs.readFile(new URL('../public/sample-report-placeholder.svg', import.meta.url), 'utf8');
+  assert.match(svg, /Placeholder until the real image is supplied/);
+  assert.doesNotMatch(svg, /@|\.com/, 'no real data in the placeholder');
+  // The "two limits" note lives inside Email protection, after BIMI.
+  const panel = html.slice(html.indexOf('id="check-2"'), html.indexOf('id="check-3"'));
+  assert.match(panel, /BIMI\.<\/strong>[\s\S]*<\/ul>\s*<p class="note">Two limits to know\./);
+  assert.equal((html.match(/Two limits to know/g) ?? []).length, 1);
+});

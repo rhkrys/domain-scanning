@@ -269,6 +269,7 @@
           <li><strong>MTA-STS.</strong> Looks for a policy that asks other mail servers to send to you over an encrypted connection.</li>
           <li><strong>BIMI.</strong> An optional record that can show your logo next to your email in supporting inboxes.</li>
         </ul>
+            <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
           </div>
         </div>
         <div class="acc-item">
@@ -282,15 +283,18 @@
           </div>
         </div>
         </div>
-
-
-        <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
       </section>
 
       <section class="block" id="your-report" aria-labelledby="your-report-title">
         <h2 id="your-report-title">What your report looks like</h2>
-        <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 13 checks, passed or not. Add your email and we send the same report to your inbox.</p>
-        <p>Each item in the list shows a priority label, what we found, and the suggested fix. Here is what the labels mean:</p>
+        <div class="report-row">
+          <img class="report-sample" src="/sample-report-placeholder.svg" width="320" height="220" alt="Placeholder for a sample report showing the grade and score">
+          <p>Your report opens with a grade from A to F and a score out of 100. Below that is a ranked list of what to fix, followed by all 13 checks, passed or not. Add your email and we send the same report to your inbox.</p>
+        </div>
+        <div class="report-row">
+          <img class="report-sample" src="/sample-report-placeholder.svg" width="320" height="220" alt="Placeholder for a sample report showing the priority labels">
+          <p>Each item in the list shows a priority label, what we found, and the suggested fix. Here is what the labels mean:</p>
+        </div>
         <ul class="label-list">
           <li><span class="chip critical">Critical</span><span>Fix this first. It has the biggest effect on your email or your site.</span></li>
           <li><span class="chip high">High</span><span>Fix this soon. It leaves a real gap.</span></li>
@@ -298,7 +302,10 @@
           <li><span class="chip low">Low</span><span>An improvement for maximum security. Do it when it is convenient.</span></li>
         </ul>
         <h3>Why the order matters</h3>
-        <p>The list runs from most to least important, so your first hour of work goes where it helps most. Some fixes also build on others. For example, DMARC only passes when SPF or DKIM is working.</p>
+        <div class="report-row">
+          <img class="report-sample" src="/sample-report-placeholder.svg" width="320" height="220" alt="Placeholder for a sample report showing the ranked list of fixes">
+          <p>The list runs from most to least important, so your first hour of work goes where it helps most. Some fixes also build on others. For example, DMARC only passes when SPF or DKIM is working.</p>
+        </div>
         <p>The suggested fix tells you what to change. Choosing the right settings for your setup, and changing them without interrupting your email, is where a person helps. You can <a href="#book">book a call</a> after you see your results.</p>
       </section>
 
