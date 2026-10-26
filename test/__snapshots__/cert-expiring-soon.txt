@@ -1,0 +1,59 @@
+Subject: Your domain and website security report for soon.com
+
+Hi,
+
+Here is your free Tech in Peace report for soon.com, scanned October 25, 2026.
+Grade: A (90/100)
+
+WHAT TO DO
+
+1. Your website
+Your website is not sharing version details with the public. Good.
+
+2. Your email
+Your emails are locked down and any errors go to dmarc@soon.com. That's great! Who is reviewing DMARC notices for you?
+
+3. Your security certificate
+HTTPS can give your website a small boost in SEO when paired with content people want to read.
+Your SSL cert expires November 14, 2026.
+That is soon. Renew it now.
+
+4. Advanced settings
+HTTP security
+The right settings protect your site. But settings that are too strict can stop parts of your website from working, such as videos, logins, forms, and other tools.
+In place: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+Missing: none
+
+Great to haves
+These DNS settings are great to have but less common for smaller organizations.
+- MTA-STS (request emails to use a secure connection): Not set.
+- BIMI (for large established brands to add a logo next to their email name): Not set.
+- CAA records (locks the security certificates): Not set.
+- DNSSEC (locks your DNS settings): Not set.
+
+Need a hand?
+Reply to this email. If I don't hear back, I'll check in once in two weeks.
+
+Crystal Pugh
+Trust Architect
+Tech in Peace
+techinpeace.com
+
+After making changes to your DNS or website, be sure to check your score again: https://www.techinpeace.com/scan
+
+Full list of checks
+- SPF [Review]: SPF uses soft policy ("~all")
+- DMARC [OK]: DMARC enforced (p=reject)
+- DKIM [OK]: DKIM key found (google)
+- MTA-STS [Review]: No MTA-STS policy
+- BIMI [Info]: No BIMI record
+- MX records [OK]: 1 mail server configured
+- A / AAAA records [Info]: IPv4 only (no IPv6)
+- Nameservers [OK]: 2 nameservers (2 providers)
+- DNSSEC [Review]: DNSSEC not enabled
+- CAA record [Review]: No CAA record
+- TLS certificate [OK]: Valid certificate (20 days left)
+- HTTP security headers [OK]: All key security headers present
+- PHP (website software) [OK]: No signs of PHP on your home page
+
+Scanned at 2026-10-25T15:00:00.000Z. This automated scan is a starting point, not a full security audit.
