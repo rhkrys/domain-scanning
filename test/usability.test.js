@@ -251,3 +251,23 @@ test('accordions start collapsed, with aria-expanded triggers wired to hidden pa
   assert.equal((ws.match(/<article class="session"/g) ?? []).length, 15, 'all 15 workshops kept');
   assert.doesNotMatch(ws, /class="filters"/);
 });
+
+test('the four DMARC tools are icon buttons that open pop-ups holding the original descriptions', async () => {
+  const html = await fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+  assert.match(html, /popup\.js/);
+  const tiles = html.match(/<button class="tool-tile"[^>]*data-popup="([^"]+)"/g) ?? [];
+  assert.equal(tiles.length, 4);
+  for (const t of tiles) {
+    const id = t.match(/data-popup="([^"]+)"/)[1];
+    assert.match(html, new RegExp(`<dialog class="popup" id="${id}"`), id);
+  }
+  for (const name of ['Tech in Peace scan', 'dmarcian Domain Checker', 'MxToolbox DMARC lookup', 'EasyDMARC DMARC lookup']) {
+    assert.ok(html.includes(`<span class="tool-name">${name}</span>`), name);
+  }
+  // The descriptions moved into the pop-ups, word for word.
+  assert.match(html, /<dialog class="popup" id="tool-mxtoolbox"[\s\S]*?Best for quick DNS and mail diagnostics\./);
+  assert.match(html, /<dialog class="popup" id="tool-easydmarc"[\s\S]*?Best for understanding each part of a DMARC record\./);
+  assert.ok(html.split('<dialog').length - 1 === 4);
+  // Each What we check row has an icon before its title.
+  assert.equal((html.match(/<span class="acc-icon"><svg/g) ?? []).length, 3);
+});

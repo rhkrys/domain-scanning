@@ -248,7 +248,7 @@
 
         <div data-accordion="rows">
         <div class="acc-item">
-          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-1" id="check-1-btn"><span class="acc-title">Domain setup</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-1" id="check-1-btn"><span class="acc-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" fill="#C09B3D"/></svg></span><span class="acc-title">Domain setup</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
           <div class="acc-panel" id="check-1" role="region" aria-labelledby="check-1-btn" hidden>
         <ul class="check-list">
           <li><strong>Mail servers (MX).</strong> Shows where your email is delivered, so messages reach the right inbox.</li>
@@ -260,7 +260,7 @@
           </div>
         </div>
         <div class="acc-item">
-          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-2" id="check-2-btn"><span class="acc-title">Email protection</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-2" id="check-2-btn"><span class="acc-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="15" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m3 6 7 5.5L17 6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M18.5 11.5c1.6.6 2.6.6 4 0v3.6c0 2-1.5 3.3-2 3.6-.5-.3-2-1.6-2-3.6z" fill="#C09B3D" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span><span class="acc-title">Email protection</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
           <div class="acc-panel" id="check-2" role="region" aria-labelledby="check-2-btn" hidden>
         <ul class="check-list">
           <li><strong>SPF.</strong> Lists which servers may send email as your domain, and how strict that list is.</li>
@@ -272,7 +272,7 @@
           </div>
         </div>
         <div class="acc-item">
-          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-3" id="check-3-btn"><span class="acc-title">Website encryption and security</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-3" id="check-3-btn"><span class="acc-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="15.5" r="1.6" fill="#C09B3D"/><path d="M12 16.5v2.2" stroke="#C09B3D" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="acc-title">Website encryption and security</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
           <div class="acc-panel" id="check-3" role="region" aria-labelledby="check-3-btn" hidden>
         <ul class="check-list">
           <li><strong>TLS certificate.</strong> Checks your site’s certificate is valid and not close to expiring, so browsers connect without warnings.</li>
@@ -306,17 +306,41 @@
         <h2 id="free-dmarc-checkers-title">The Best Free DMARC Checkers (and When You Need More Than a Tool)</h2>
         <p>The right free DMARC checker depends on what you need. For a plain-language report and a person to help fix it, use the Tech in Peace scan. To see how many DNS lookups your SPF record needs, use dmarcian’s SPF Surveyor. For quick DNS and mail diagnostics, use MxToolbox. To have each part of your DMARC record explained, use EasyDMARC.</p>
 
-        <h3><a href="#scan-form">Tech in Peace scan</a></h3>
-        <p>Best for a plain-language report plus a person to help fix it. It checks SPF, DKIM and DMARC along with your DNS and website settings. Run it at the top of this page.</p>
-
-        <h3><a href="https://dmarcian.com/domain-checker/" target="_blank" rel="noopener">dmarcian Domain Checker</a></h3>
-        <p>Best for checking SPF, DKIM and DMARC in one place. dmarcian was founded by a co-author of the DMARC specification. Its separate <a href="https://dmarcian.com/spf-survey/" target="_blank" rel="noopener">SPF Surveyor</a> shows how many DNS lookups an SPF record needs.</p>
-
-        <h3><a href="https://mxtoolbox.com/dmarc.aspx" target="_blank" rel="noopener">MxToolbox DMARC lookup</a></h3>
-        <p>Best for quick DNS and mail diagnostics. It looks up your DMARC record, and its SuperTool covers a wide range of DNS and mail checks, including SPF and DKIM.</p>
-
-        <h3><a href="https://easydmarc.com/tools/dmarc-lookup" target="_blank" rel="noopener">EasyDMARC DMARC lookup</a></h3>
-        <p>Best for understanding each part of a DMARC record. It explains every tag it finds. Its separate Domain Scanner checks SPF, DKIM, DMARC and BIMI.</p>
+        <!-- Tool icons. The three third-party tiles are placeholders (initials) until official logos are approved. -->
+        <div class="tool-row" role="list">
+          <div role="listitem"><button class="tool-tile" type="button" data-popup="tool-tip" id="tool-tip-btn"><span class="tool-icon"><img src="/logo-mark.png" alt=""></span><span class="tool-name">Tech in Peace scan</span></button></div>
+          <div role="listitem"><button class="tool-tile" type="button" data-popup="tool-dmarcian" id="tool-dmarcian-btn"><span class="tool-icon"><span class="tool-initial" aria-hidden="true">d</span></span><span class="tool-name">dmarcian Domain Checker</span></button></div>
+          <div role="listitem"><button class="tool-tile" type="button" data-popup="tool-mxtoolbox" id="tool-mxtoolbox-btn"><span class="tool-icon"><span class="tool-initial" aria-hidden="true">MX</span></span><span class="tool-name">MxToolbox DMARC lookup</span></button></div>
+          <div role="listitem"><button class="tool-tile" type="button" data-popup="tool-easydmarc" id="tool-easydmarc-btn"><span class="tool-icon"><span class="tool-initial" aria-hidden="true">E</span></span><span class="tool-name">EasyDMARC DMARC lookup</span></button></div>
+        </div>
+        <dialog class="popup" id="tool-tip" aria-labelledby="tool-tip-title">
+          <div class="popup-body">
+            <h3 id="tool-tip-title"><a href="#scan-form">Tech in Peace scan</a></h3>
+            <p>Best for a plain-language report plus a person to help fix it. It checks SPF, DKIM and DMARC along with your DNS and website settings. Run it at the top of this page.</p>
+            <button class="popup-close" type="button">Close</button>
+          </div>
+        </dialog>
+        <dialog class="popup" id="tool-dmarcian" aria-labelledby="tool-dmarcian-title">
+          <div class="popup-body">
+            <h3 id="tool-dmarcian-title"><a href="https://dmarcian.com/domain-checker/" target="_blank" rel="noopener">dmarcian Domain Checker</a></h3>
+            <p>Best for checking SPF, DKIM and DMARC in one place. dmarcian was founded by a co-author of the DMARC specification. Its separate <a href="https://dmarcian.com/spf-survey/" target="_blank" rel="noopener">SPF Surveyor</a> shows how many DNS lookups an SPF record needs.</p>
+            <button class="popup-close" type="button">Close</button>
+          </div>
+        </dialog>
+        <dialog class="popup" id="tool-mxtoolbox" aria-labelledby="tool-mxtoolbox-title">
+          <div class="popup-body">
+            <h3 id="tool-mxtoolbox-title"><a href="https://mxtoolbox.com/dmarc.aspx" target="_blank" rel="noopener">MxToolbox DMARC lookup</a></h3>
+            <p>Best for quick DNS and mail diagnostics. It looks up your DMARC record, and its SuperTool covers a wide range of DNS and mail checks, including SPF and DKIM.</p>
+            <button class="popup-close" type="button">Close</button>
+          </div>
+        </dialog>
+        <dialog class="popup" id="tool-easydmarc" aria-labelledby="tool-easydmarc-title">
+          <div class="popup-body">
+            <h3 id="tool-easydmarc-title"><a href="https://easydmarc.com/tools/dmarc-lookup" target="_blank" rel="noopener">EasyDMARC DMARC lookup</a></h3>
+            <p>Best for understanding each part of a DMARC record. It explains every tag it finds. Its separate Domain Scanner checks SPF, DKIM, DMARC and BIMI.</p>
+            <button class="popup-close" type="button">Close</button>
+          </div>
+        </dialog>
 
         <h3>How they compare</h3>
         <p class="table-hint">Scroll sideways to see every column.</p>
@@ -437,6 +461,7 @@
   </script>
   <script src="/config.js"></script>
   <script src="/accordion.js" defer></script>
+  <script src="/popup.js" defer></script>
   <script src="/app.js"></script>
 </body>
 </html>
