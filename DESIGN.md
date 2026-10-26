@@ -51,15 +51,15 @@ The website itself is **light only**. The Gumroad profile page follows the visit
 
 | Role | Font | Notes |
 |---|---|---|
-| Headings, prices, buttons, grade | **League Gothic** (fallbacks Oswald, Bebas Neue, Arial Narrow) | Weight 400, uppercase, tight leading (about 1.0) |
-| Body and UI | **Lato** (fallbacks Helvetica Neue, Arial) | Regular 400 for body, Bold 700 for emphasis and small nav links |
+| Headings, prices, buttons, grade | **Noto Sans** (fallbacks Helvetica Neue, Arial) | Bold 700, uppercase, tight leading (about 1.0) |
+| Body and UI | **Noto Sans** (fallbacks Helvetica Neue, Arial) | Regular 400 for body, Bold 700 for emphasis and small nav links |
 | Monospace | JetBrains Mono | Scanner input placeholders only |
 
-- **Lato has no 600 or 800 weight.** Use 400 or 700 only. Load: `family=Lato:wght@400;700`.
+- Use 400 or 700 only. Load: `family=Noto+Sans:wght@400;700`.
 - Hero heading: `clamp(40px, 6vw, 68px)`, uppercase. Section headings: `clamp(30px, 4vw, 44px)`, uppercase. Card headings 24 to 26 px. Prices 46 to 48 px.
 - Eyebrow (small label above a heading): 13 px, Bold, uppercase, letter-spacing `.16em`, primary navy (soft gold on dark), with a 2 px gold underline.
 - Body copy 15.5 to 17.5 px; small notes 13 to 14.5 px. Line height 1.6.
-- Google Fonts link used on every page: `League Gothic`, `Oswald` (400, 600), `Lato` (400, 700).
+- Google Fonts link used on every page: `Noto Sans` (400, 700). The scan page also loads `JetBrains Mono`.
 
 ## Shape, spacing, layout
 

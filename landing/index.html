@@ -22,9 +22,9 @@
 <link rel="icon" href="/logo-gold.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* ============ Cyber Protection (CPI) brand: navy + gold, League Gothic display ============ */
+  /* ============ Cyber Protection (CPI) brand: navy + gold, Noto Sans ============ */
   :root {
     --navy-900: #101f36;
     --navy-800: #142534;   /* CPI navy-deep — dark grounds */
@@ -41,8 +41,8 @@
     --white: #ffffff;
     --radius: 2px;
     --shadow: 0 10px 30px rgba(20, 37, 52, .12);
-    --font-display: "League Gothic", "Oswald", "Bebas Neue", "Arial Narrow", sans-serif;
-    --font-body: "Lato", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -53,12 +53,12 @@
     font-weight: 400;
     line-height: 1.6;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; letter-spacing: .01em; }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: .01em; }
   a { color: var(--navy-600); }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
   .btn {
     display: inline-block; padding: 13px 26px; border-radius: var(--radius);
-    font-family: var(--font-display); font-weight: 400; font-size: 18px; letter-spacing: .04em;
+    font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: .04em;
     text-transform: uppercase; text-decoration: none; cursor: pointer;
     border: none; transition: transform .15s ease, box-shadow .15s ease;
   }
@@ -180,7 +180,7 @@
   }
   .persona-section.dark .feature-list li::before { background: rgba(232,174,92,.18); color: var(--gold-300); }
   .price-tag { margin: 22px 0; }
-  .price-tag .amount { font-family: var(--font-display); font-size: 48px; font-weight: 400; }
+  .price-tag .amount { font-family: var(--font-display); font-size: 48px; font-weight: 700; }
   .price-tag .per { color: var(--muted); font-size: 15px; font-weight: 400; }
   .persona-section.dark .price-tag .per { color: var(--navy-100); }
   .price-tag .amount.gold { color: var(--gold-500); }
@@ -218,7 +218,7 @@
   }
   .tier h3 { font-size: 26px; margin-bottom: 4px; }
   .tier .for { font-size: 13.5px; color: var(--muted); margin-bottom: 18px; font-weight: 400; }
-  .tier .price { font-family: var(--font-display); font-size: 46px; font-weight: 400; color: var(--navy-800); }
+  .tier .price { font-family: var(--font-display); font-size: 46px; font-weight: 700; color: var(--navy-800); }
   .tier .price span { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 400; }
   .tier ul { list-style: none; margin: 22px 0 26px; flex: 1; }
   .tier ul li { padding: 8px 0 8px 30px; position: relative; font-size: 15px; }
