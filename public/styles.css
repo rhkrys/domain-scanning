@@ -26,6 +26,9 @@
   --fail: #c0392b;
   --info: #6a7886;
 
+  /* Logo colors, used where the brand must stand out */
+  --brand-navy: #263D95;
+  --brand-gold: #C09B3D;
   --font-display: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -518,3 +521,26 @@ dialog.popup::backdrop { background: rgba(13, 26, 38, .55); }
   background: var(--navy); color: #fff; border: 0; border-radius: 3px; text-transform: none; letter-spacing: 0;
 }
 .popup-close:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+/* ---- Key message: When a tool is not enough ---------------------------- */
+.key-message {
+  margin: 36px 0 0; padding: 28px 28px 26px;
+  background: var(--brand-navy); color: #ffffff; border-radius: 4px;
+  border-left: 6px solid var(--brand-gold);
+  box-shadow: 0 10px 30px rgba(38, 61, 149, .22);
+}
+.key-message h3 {
+  margin: 0 0 12px; color: #ffffff; font-size: 26px;
+  border-bottom: 2px solid var(--brand-gold); padding-bottom: 8px; display: inline-block;
+}
+.key-message p { margin: 0 0 14px; color: #ffffff; font-size: 17px; line-height: 1.6; }
+.key-message p:last-child { margin-bottom: 0; }
+.key-message a { color: var(--brand-gold); font-weight: 700; }
+.key-message a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 2px; }
+.key-message .key-cta { font-size: 19px; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.key-message .key-cta:hover { color: #ffffff; }
+@media (max-width: 560px) {
+  .key-message { padding: 22px 18px 20px; border-left-width: 5px; }
+  .key-message h3 { font-size: 22px; }
+  .key-message p { font-size: 16px; }
+}

@@ -271,3 +271,12 @@ test('the four DMARC tools are icon buttons that open pop-ups holding the origin
   // Each What we check row has an icon before its title.
   assert.equal((html.match(/<span class="acc-icon"><svg/g) ?? []).length, 3);
 });
+
+test('When a tool is not enough sits in a brand-colored key message mat', async () => {
+  const html = await fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+  assert.match(html, /<div class="key-message" id="when-a-tool-is-not-enough">\s*<h3>When a tool is not enough<\/h3>/);
+  assert.match(html, /<a class="key-cta" href="#book">Book a discovery call<\/a>/);
+  const css = await fs.readFile(new URL('../public/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /--brand-navy: #263D95/);
+  assert.match(css, /--brand-gold: #C09B3D/);
+});
