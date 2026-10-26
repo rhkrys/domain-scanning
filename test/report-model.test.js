@@ -122,3 +122,11 @@ test('the website section lists load balancers in a plain line', async () => {
   const none = (await SCENARIOS['no-cert']()).result.website;
   assert.equal(none.load_balancer_line, null);
 });
+
+test('the website section reports the address checked and its HTTP status', async () => {
+  const report = await SCENARIOS['all-pass']();
+  report.facts.page = { url: 'https://www.allpass.com/', statusCode: 200, redirects: ['https://allpass.com/'] };
+  const w = buildReportModel(report).website;
+  assert.equal(w.checked_url, 'https://www.allpass.com/');
+  assert.equal(w.status_code, 200);
+});

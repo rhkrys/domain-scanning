@@ -145,6 +145,8 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage,
   // Raw facts from the home page that the report sections need.
   const page = await sharedPage();
   const facts = {
+    // What answered at https://<domain>/: the final address and its HTTP status.
+    page: page ? { url: page.url, statusCode: page.statusCode ?? null, redirects: page.redirects ?? [] } : null,
     website: detectVersionLeaks(page),
     headers: securityHeaderPresence(page),
   };

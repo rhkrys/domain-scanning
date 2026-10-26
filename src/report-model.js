@@ -51,6 +51,8 @@ function websiteSection(facts) {
     version_leaks: w.leaks,
     wordpress: w.wordpress,
     line,
+    checked_url: facts?.page?.url ?? null,
+    status_code: facts?.page?.statusCode ?? null,
     load_balancers: loadBalancers,
     load_balancer_line: loadBalancers.length ? `Your website is served through ${joinList(loadBalancers)}.` : null,
   };

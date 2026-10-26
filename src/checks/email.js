@@ -2,6 +2,7 @@
 // domains: weak SPF/DMARC is what lets attackers spoof a business's address.
 
 import https from 'node:https';
+import { SCANNER_USER_AGENT } from './headers.js';
 
 export function parseSpf(txtRecords) {
   return txtRecords.find((r) => /^v=spf1\b/i.test(r.trim())) ?? null;
@@ -360,7 +361,14 @@ export function fetchMtaStsPolicy(domain, { timeoutMs = 5000, requestImpl = http
       resolve(v);
     };
     const req = requestImpl(
-      { host: `mta-sts.${domain}`, port: 443, path: '/.well-known/mta-sts.txt', method: 'GET', timeout: timeoutMs },
+      {
+        host: `mta-sts.${domain}`,
+        port: 443,
+        path: '/.well-known/mta-sts.txt',
+        method: 'GET',
+        timeout: timeoutMs,
+        headers: { 'user-agent': SCANNER_USER_AGENT },
+      },
       (res) => {
         if (res.statusCode !== 200) {
           res.resume?.();

@@ -358,3 +358,17 @@ test('checkHeaders: redirect notes have no em dashes', async () => {
   const requestImpl = routedRequest({ 'example.com/': redirect('https://evil.net/') });
   assert.ok(!(await checkHeaders('example.com', { requestImpl })).detail.includes('—'));
 });
+
+test('page requests identify the scanner with a User-Agent and record the HTTP status', async () => {
+  const { SCANNER_USER_AGENT } = await import('../src/checks/headers.js');
+  let sent;
+  const base = fakeRequest({ statusCode: 403, headers: { 'content-type': 'text/html' }, body: '<p>Blocked</p>' });
+  const requestImpl = (opts, cb) => {
+    sent = opts;
+    return base(opts, cb);
+  };
+  const r = await checkHeaders('blocked.example', { requestImpl });
+  assert.equal(sent.headers['user-agent'], SCANNER_USER_AGENT);
+  assert.match(SCANNER_USER_AGENT, /^TechInPeaceScanner\/1\.0 \(\+https:\/\/www\.techinpeace\.com\/scan\)$/);
+  assert.equal(r.evidence.statusCode, 403);
+});

@@ -15,6 +15,10 @@ import https from 'node:https';
 
 const MAX_BODY_BYTES = 200 * 1024;
 
+// Identify ourselves. Some servers answer requests with no User-Agent with a
+// block page instead of the real site, which would make us grade the wrong page.
+export const SCANNER_USER_AGENT = 'TechInPeaceScanner/1.0 (+https://www.techinpeace.com/scan)';
+
 // effort: how the finding is framed in the report.
 //   'quick win'    a one-line setting, usually minutes
 //   'site type'    how much it matters depends on what the site does
@@ -211,6 +215,7 @@ export function evaluateHeaders(headers, { signals = [], context = null } = {}) 
       signals,
       items: missing.map((m) => ({ name: m.name, severity: m.rated, effort: m.effort })),
       checkedUrl: context?.checkedUrl ?? null,
+      statusCode: context?.statusCode ?? null,
       redirects: context?.redirects ?? [],
     },
   };
@@ -254,7 +259,13 @@ export async function checkHeaders(domain, { timeoutMs = 6000, requestImpl, load
   }
   return evaluateHeaders(page.headers, {
     signals: detectSensitiveSite(page.html),
-    context: { checkedUrl: page.url, redirects: page.redirects, stopped: page.stopped, stoppedAt: page.stoppedAt },
+    context: {
+      checkedUrl: page.url,
+      statusCode: page.statusCode ?? null,
+      redirects: page.redirects,
+      stopped: page.stopped,
+      stoppedAt: page.stoppedAt,
+    },
   });
 }
 
@@ -355,7 +366,15 @@ function fetchOnce(host, path, timeoutMs, requestImpl) {
     };
 
     req = requestImpl(
-      { host, port: 443, path, method: 'GET', timeout: timeoutMs, rejectUnauthorized: false },
+      {
+        host,
+        port: 443,
+        path,
+        method: 'GET',
+        timeout: timeoutMs,
+        rejectUnauthorized: false,
+        headers: { 'user-agent': SCANNER_USER_AGENT, accept: 'text/html,application/xhtml+xml,*/*;q=0.8' },
+      },
       (res) => {
         headers = res.headers;
         statusCode = res.statusCode;
