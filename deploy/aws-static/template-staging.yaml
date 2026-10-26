@@ -1,0 +1,141 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  staging.techinpeace.com: a private S3 bucket behind its own CloudFront
+  distribution, mirroring the live techinpeace.com setup. /api/* goes to the
+  same scanner API as live. Search engines are told not to index it.
+  Nothing here touches the live bucket, distribution or stack.
+
+Parameters:
+  StagingDomain:
+    Type: String
+    Default: staging.techinpeace.com
+  CertificateArn:
+    Type: String
+    Default: ""
+    Description: ACM certificate (us-east-1) for StagingDomain. Leave empty until it is issued; the distribution then answers on its cloudfront.net name only.
+  ApiOriginDomain:
+    Type: String
+    Default: xerftm3br1.execute-api.us-east-1.amazonaws.com
+    Description: The live scanner API, shared with staging
+  CleanUrlsFunctionArn:
+    Type: String
+    Default: arn:aws:cloudfront::306499034564:function/techinpeace-cleanurls
+    Description: The CloudFront function live uses to serve /scan as scan.html
+
+Conditions:
+  HasCertificate: !Not [!Equals [!Ref CertificateArn, ""]]
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  SiteOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-site-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # Same security headers as live, plus noindex so staging never shows up in search.
+  HeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "${AWS::StackName}-security-headers"
+        Comment: Security headers for staging.techinpeace.com (copy of live, plus noindex)
+        SecurityHeadersConfig:
+          FrameOptions: { Override: true, FrameOption: DENY }
+          ReferrerPolicy: { Override: true, ReferrerPolicy: strict-origin-when-cross-origin }
+          ContentTypeOptions: { Override: true }
+          StrictTransportSecurity: { Override: true, IncludeSubdomains: true, Preload: false, AccessControlMaxAgeSec: 31536000 }
+          ContentSecurityPolicy:
+            Override: true
+            ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; font-src 'self' data: https://fonts.gstatic.com https://assets.calendly.com; img-src 'self' data: https:; connect-src 'self' https://calendly.com https://*.calendly.com; frame-src https://calendly.com https://*.calendly.com; form-action 'self' https://app.gumroad.com https://*.gumroad.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+        CustomHeadersConfig:
+          Items:
+            - { Header: Permissions-Policy, Value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()", Override: true }
+            - { Header: X-Robots-Tag, Value: "noindex, nofollow", Override: true }
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub "Staging copy of techinpeace.com (${StagingDomain})"
+        DefaultRootObject: index.html
+        PriceClass: PriceClass_100
+        HttpVersion: http2
+        IPV6Enabled: true
+        Aliases: !If [HasCertificate, [!Ref StagingDomain], !Ref "AWS::NoValue"]
+        ViewerCertificate: !If
+          - HasCertificate
+          - { AcmCertificateArn: !Ref CertificateArn, SslSupportMethod: sni-only, MinimumProtocolVersion: TLSv1.2_2021 }
+          - { CloudFrontDefaultCertificate: true }
+        Origins:
+          - Id: s3-site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt SiteOAC.Id
+            S3OriginConfig: { OriginAccessIdentity: "" }
+          - Id: lambda-api
+            DomainName: !Ref ApiOriginDomain
+            CustomOriginConfig: { OriginProtocolPolicy: https-only, OriginSSLProtocols: [TLSv1.2] }
+        DefaultCacheBehavior:
+          TargetOriginId: s3-site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          Compress: true
+          # Managed-CachingOptimized
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          ResponseHeadersPolicyId: !Ref HeadersPolicy
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !Ref CleanUrlsFunctionArn
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: lambda-api
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            # Must stay false, as on live: compression after signing breaks POST.
+            Compress: false
+            # Managed-CachingDisabled and Managed-AllViewerExceptHostHeader
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            ResponseHeadersPolicyId: !Ref HeadersPolicy
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub "${SiteBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+Outputs:
+  SiteBucketName:
+    Value: !Ref SiteBucket
+  DistributionId:
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Value: !GetAtt Distribution.DomainName
+  StagingUrl:
+    Value: !If [HasCertificate, !Sub "https://${StagingDomain}", !Sub "https://${Distribution.DomainName}"]
