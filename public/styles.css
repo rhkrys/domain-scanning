@@ -473,6 +473,11 @@ table.compare .unchecked { color: var(--muted); font-style: italic; }
   color: var(--navy-deep); background: var(--gold-soft); border: 1px solid var(--gold-deep);
   border-radius: 2px; vertical-align: middle; white-space: nowrap;
 }
+/* On phones, let the tag wrap instead of running off the screen. */
+@media (max-width: 560px) {
+  .tag-deliv { display: block; width: fit-content; max-width: 100%; white-space: normal; margin: 4px 0 0; }
+  .finding .title { flex: 1 1 calc(100% - 30px); min-width: 0; }
+}
 .group-note {
   margin: 4px 0 10px; font-size: 14px; line-height: 1.45; color: var(--navy-deep);
   background: #fbf6ec; border-left: 3px solid var(--gold); padding: 8px 12px;

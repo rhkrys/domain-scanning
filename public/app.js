@@ -11,6 +11,13 @@ const resultEl = document.getElementById('result');
 
 const STATUS_LABEL = { pass: 'OK', warn: 'Worth a look', fail: 'Needs fixing', info: 'Info' };
 
+// Result groups shown on the page. The certificate, security headers and
+// website software checks share one group, matching "What we check".
+const CATEGORY_LABEL = {
+  'Transport Security': 'Website encryption and security',
+  'Website Software': 'Website encryption and security',
+};
+
 // When the site is deployed without the scan backend (static S3+CloudFront),
 // config.js sets apiEnabled:false so we explain it's coming soon rather than
 // calling an endpoint that isn't there.
@@ -59,7 +66,7 @@ form.addEventListener('submit', async (e) => {
   // Static deployment without the backend: explain, don't call a dead endpoint.
   if (!API_ENABLED) {
     if (comingSoonEl) comingSoonEl.hidden = false;
-    showError('The live scanner isn’t switched on for this site yet — it’s coming soon. Please check back shortly.');
+    showError('The live scanner isn’t switched on for this site yet. It’s coming soon, so please check back shortly.');
     return;
   }
 
@@ -102,7 +109,7 @@ function render({ report, mail }, typedDomain) {
   const cleanedNote = document.getElementById('cleaned-note');
   const typed = typedDomain.toLowerCase();
   if (typed !== report.domain && typed !== `www.${report.domain}`) {
-    cleanedNote.textContent = `You entered “${typedDomain}” — we checked ${report.domain}.`;
+    cleanedNote.textContent = `You entered “${typedDomain}”, so we checked ${report.domain}.`;
     cleanedNote.hidden = false;
   } else if (typed === `www.${report.domain}`) {
     cleanedNote.textContent = `We checked ${report.domain} (the security settings live there, not on www).`;
@@ -128,7 +135,7 @@ function render({ report, mail }, typedDomain) {
     mailStatus.textContent = 'Email preview generated (email sending isn’t set up on this server yet).';
     mailStatus.hidden = false;
   } else if (mail && mail.mode === 'error') {
-    mailStatus.textContent = 'We couldn’t send that just now — please try again shortly.';
+    mailStatus.textContent = 'We couldn’t send that just now. Please try again shortly.';
     mailStatus.hidden = false;
   } else {
     mailStatus.hidden = true;
@@ -148,7 +155,7 @@ function render({ report, mail }, typedDomain) {
         `<strong>${escapeHtml(f.title)}</strong>` +
         `<span class="sev ${f.severity}">${f.severity.toUpperCase()}</span>` +
         (f.deliverability ? DELIVERABILITY_TAG : '') +
-        `<span class="what"> — ${escapeHtml(f.summary)}.</span>` +
+        `<span class="what">: ${escapeHtml(f.summary)}.</span>` +
         `<span class="fix">${escapeHtml(f.recommendation)}</span>`;
       steps.appendChild(li);
     }
@@ -160,7 +167,7 @@ function render({ report, mail }, typedDomain) {
   const container = document.getElementById('findings');
   container.innerHTML = '';
   const byCategory = {};
-  for (const f of report.findings) (byCategory[f.category] ??= []).push(f);
+  for (const f of report.findings) (byCategory[CATEGORY_LABEL[f.category] ?? f.category] ??= []).push(f);
   for (const [category, items] of Object.entries(byCategory)) {
     const group = document.createElement('div');
     group.className = 'finding-group';
@@ -173,7 +180,7 @@ function render({ report, mail }, typedDomain) {
       row.innerHTML =
         `<span class="dot ${f.status}"></span>` +
         `<span class="title">${escapeHtml(f.title)}${f.deliverability ? DELIVERABILITY_TAG : ''}</span>` +
-        `<span class="desc">${escapeHtml(STATUS_LABEL[f.status])} — ${escapeHtml(f.summary)}</span>`;
+        `<span class="desc">${escapeHtml(STATUS_LABEL[f.status])}: ${escapeHtml(f.summary)}</span>`;
       group.appendChild(row);
     }
     container.appendChild(group);
@@ -248,7 +255,7 @@ function setupCta(domain, mail, typedDomain) {
   captureStatus.hidden = true;
 
   if (mail && mail.delivered) {
-    // They already got it — offer to send to another address.
+    // They already got it, so offer to send to another address.
     lead.textContent = 'Want this report sent to someone else too? Add their email.';
     captureEmail.value = '';
   } else {
@@ -285,7 +292,7 @@ if (captureForm) {
       });
       const data = await res.json();
       if (!res.ok) {
-        captureStatus.textContent = data.error || 'We couldn’t send that just now — please try again.';
+        captureStatus.textContent = data.error || 'We couldn’t send that just now. Please try again.';
         captureStatus.className = 'capture-status err';
       } else if (data.mail && data.mail.delivered) {
         captureStatus.textContent = `✓ Sent to ${email}. Check your inbox.`;
