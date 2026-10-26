@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/accordion.css">
+<script src="/accordion.js" defer></script>
 <style>
   /* Layout: navy hero, a navy "key path" band where the key's shaft becomes the timeline, light sections for the schedule and FAQ. Tokens from DESIGN.md (light only, single look). */
   :root {
@@ -179,12 +181,6 @@
   /* Schedule */
   .planned-note { display: flex; gap: 12px; align-items: flex-start; background: var(--gold-100); border-left: 3px solid var(--gold-400); padding: 14px 18px; font-size: 15px; margin-bottom: 28px; max-width: 760px; }
   .planned-note b { color: var(--navy-800); }
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
-  .filters button {
-    font-family: var(--font-body); font-weight: 700; font-size: 13.5px; letter-spacing: .04em;
-    padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--white); color: var(--navy-800); cursor: pointer;
-  }
-  .filters button[aria-pressed="true"] { background: var(--navy-800); color: var(--white); border-color: var(--navy-800); }
   .sessions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
   @media (max-width: 900px) { .sessions { grid-template-columns: 1fr; } }
   .session { min-width: 0; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 24px 24px 22px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .15s ease; }
@@ -346,145 +342,163 @@
       </div>
       <div class="planned-note" role="note"><span aria-hidden="true">📅</span><div><b>Planned schedule.</b> Dates and titles are placeholders until registration opens. All sessions run 12:00 to 1:00 pm ET on Zoom, with a replay for everyone who registers.</div></div>
 
-      <div class="filters" role="group" aria-label="Filter by role">
-        <button type="button" data-filter="all" aria-pressed="true">All roles</button>
-        <button type="button" data-filter="finance" aria-pressed="false">Finance</button>
-        <button type="button" data-filter="leadership" aria-pressed="false">Principals &amp; leadership</button>
-        <button type="button" data-filter="compliance" aria-pressed="false">Compliance &amp; risk</button>
-        <button type="button" data-filter="operations" aria-pressed="false">Operations</button>
-        <button type="button" data-filter="technology" aria-pressed="false">Technology</button>
-      </div>
 
-      <div class="sessions" id="session-list">
-        <!-- Finance -->
-        <article class="session" data-role="finance">
-          <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>The Wire That Wasn't</h3>
-          <p>A simple payment verification routine, and a clear picture of who can reach your finance email and banking.</p>
-          <span class="pillar">Key: who has access</span>
-          <div class="when"><span class="date">Tue, Oct 27</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="finance">
-          <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Renewal Ready</h3>
-          <p>The questions your insurer asks at renewal, and the evidence folder that keeps every answer true all year.</p>
-          <span class="pillar">Key: who is watching</span>
-          <div class="when"><span class="date">Thu, Oct 29</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="finance">
-          <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>The Paper Trail</h3>
-          <p>Map where your financial records live, set retention rules, and confirm your backups will actually restore them.</p>
-          <span class="pillar">Key: records that restore</span>
-          <div class="when"><span class="date">Thu, Nov 5</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-
-        <!-- Leadership -->
-        <article class="session" data-role="leadership">
-          <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>The 15-Minute Monthly Briefing</h3>
-          <p>The five numbers to review each month so you can answer the family or the board with confidence.</p>
-          <span class="pillar">Key: who is watching</span>
-          <div class="when"><span class="date">Tue, Nov 10</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="leadership">
-          <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>A Recovery Week, Rehearsed</h3>
-          <p>A calm tabletop walk from day one to day seven: who decides, who calls whom, and how payroll still runs.</p>
-          <span class="pillar">Key: records that restore</span>
-          <div class="when"><span class="date">Thu, Nov 12</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="leadership">
-          <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Win the Contract</h3>
-          <p>The questions funders, partners and counterparties ask before they sign, and how to answer with proof.</p>
-          <span class="pillar">Key: who has access</span>
-          <div class="when"><span class="date">Tue, Nov 17</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-
-        <!-- Compliance -->
-        <article class="session" data-role="compliance">
-          <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Evidence on Demand</h3>
-          <p>Turn audit prep from weeks of scrambling into a standing evidence folder that fills itself each month.</p>
-          <span class="pillar">Key: who is watching</span>
-          <div class="when"><span class="date">Thu, Nov 19</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="compliance">
-          <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Access Reviews That Pass</h3>
-          <p>A quarterly access review your IT team can run and your examiner will accept. Every key accounted for.</p>
-          <span class="pillar">Key: who has access</span>
-          <div class="when"><span class="date">Tue, Dec 1</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="compliance">
-          <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Retention, Restoration and the Regulator</h3>
-          <p>Line up your retention schedule, your backups and the notice clocks in one plan you can show.</p>
-          <span class="pillar">Key: records that restore</span>
-          <div class="when"><span class="date">Thu, Dec 3</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-
-        <!-- Operations -->
-        <article class="session" data-role="operations">
-          <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Joiners, Movers, Leavers</h3>
-          <p>A same-day checklist for email, shared passwords, apps and devices, so access ends when the role does.</p>
-          <span class="pillar">Key: who has access</span>
-          <div class="when"><span class="date">Tue, Dec 8</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="operations">
-          <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>When Systems Go Dark</h3>
-          <p>Rank your critical systems, set realistic recovery times, and plan the manual workarounds your team can run.</p>
-          <span class="pillar">Key: records that restore</span>
-          <div class="when"><span class="date">Thu, Dec 10</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="operations">
-          <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Vendor Oversight Made Simple</h3>
-          <p>List the vendors who hold a key to your systems, ask five plain questions, and keep an eye on them over time.</p>
-          <span class="pillar">Key: who is watching</span>
-          <div class="when"><span class="date">Tue, Dec 15</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-
-        <!-- Technology -->
-        <article class="session" data-role="technology">
-          <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>From Alert Overload to Clear Signal</h3>
-          <p>Decide what to watch, what to automate, and where a partner adds after-hours coverage without replacing you.</p>
-          <span class="pillar">Key: who is watching</span>
-          <div class="when"><span class="date">Tue, Jan 5</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="technology">
-          <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Restore Test Day</h3>
-          <p>A quarterly restore test routine and a report your leadership and insurer will accept.</p>
-          <span class="pillar">Key: records that restore</span>
-          <div class="when"><span class="date">Thu, Jan 7</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
-        <article class="session" data-role="technology">
-          <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
-          <h3>Apple Fleet Identity</h3>
-          <p>Standard user accounts, sign-in backed by MFA, FileVault, and offboarding that happens on its own. Jamf done right.</p>
-          <span class="pillar">Key: who has access</span>
-          <div class="when"><span class="date">Tue, Jan 12</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
-          <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
-        </article>
+      <div class="session-groups" id="session-list" data-accordion="boxes">
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="group-finance" id="group-finance-btn"><span class="acc-title">Finance, CFOs, and Controllers</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="group-finance" role="region" aria-labelledby="group-finance-btn" hidden>
+            <div class="sessions">
+            <article class="session" data-role="finance">
+              <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>The Wire That Wasn't</h3>
+              <p>A simple payment verification routine, and a clear picture of who can reach your finance email and banking.</p>
+              <span class="pillar">Key: who has access</span>
+              <div class="when"><span class="date">Tue, Oct 27</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="finance">
+              <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Renewal Ready</h3>
+              <p>The questions your insurer asks at renewal, and the evidence folder that keeps every answer true all year.</p>
+              <span class="pillar">Key: who is watching</span>
+              <div class="when"><span class="date">Thu, Oct 29</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="finance">
+              <div class="top"><span class="for">Finance · CFOs and controllers</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>The Paper Trail</h3>
+              <p>Map where your financial records live, set retention rules, and confirm your backups will actually restore them.</p>
+              <span class="pillar">Key: records that restore</span>
+              <div class="when"><span class="date">Thu, Nov 5</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="group-leadership" id="group-leadership-btn"><span class="acc-title">Principles and Leadership</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="group-leadership" role="region" aria-labelledby="group-leadership-btn" hidden>
+            <div class="sessions">
+            <article class="session" data-role="leadership">
+              <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>The 15-Minute Monthly Briefing</h3>
+              <p>The five numbers to review each month so you can answer the family or the board with confidence.</p>
+              <span class="pillar">Key: who is watching</span>
+              <div class="when"><span class="date">Tue, Nov 10</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="leadership">
+              <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>A Recovery Week, Rehearsed</h3>
+              <p>A calm tabletop walk from day one to day seven: who decides, who calls whom, and how payroll still runs.</p>
+              <span class="pillar">Key: records that restore</span>
+              <div class="when"><span class="date">Thu, Nov 12</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="leadership">
+              <div class="top"><span class="for">Principals &amp; leadership</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Win the Contract</h3>
+              <p>The questions funders, partners and counterparties ask before they sign, and how to answer with proof.</p>
+              <span class="pillar">Key: who has access</span>
+              <div class="when"><span class="date">Tue, Nov 17</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="group-compliance" id="group-compliance-btn"><span class="acc-title">Compliance and Risk</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="group-compliance" role="region" aria-labelledby="group-compliance-btn" hidden>
+            <div class="sessions">
+            <article class="session" data-role="compliance">
+              <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Evidence on Demand</h3>
+              <p>Turn audit prep from weeks of scrambling into a standing evidence folder that fills itself each month.</p>
+              <span class="pillar">Key: who is watching</span>
+              <div class="when"><span class="date">Thu, Nov 19</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="compliance">
+              <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Access Reviews That Pass</h3>
+              <p>A quarterly access review your IT team can run and your examiner will accept. Every key accounted for.</p>
+              <span class="pillar">Key: who has access</span>
+              <div class="when"><span class="date">Tue, Dec 1</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="compliance">
+              <div class="top"><span class="for">Compliance &amp; risk</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Retention, Restoration and the Regulator</h3>
+              <p>Line up your retention schedule, your backups and the notice clocks in one plan you can show.</p>
+              <span class="pillar">Key: records that restore</span>
+              <div class="when"><span class="date">Thu, Dec 3</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="group-operations" id="group-operations-btn"><span class="acc-title">Operations</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="group-operations" role="region" aria-labelledby="group-operations-btn" hidden>
+            <div class="sessions">
+            <article class="session" data-role="operations">
+              <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Joiners, Movers, Leavers</h3>
+              <p>A same-day checklist for email, shared passwords, apps and devices, so access ends when the role does.</p>
+              <span class="pillar">Key: who has access</span>
+              <div class="when"><span class="date">Tue, Dec 8</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="operations">
+              <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>When Systems Go Dark</h3>
+              <p>Rank your critical systems, set realistic recovery times, and plan the manual workarounds your team can run.</p>
+              <span class="pillar">Key: records that restore</span>
+              <div class="when"><span class="date">Thu, Dec 10</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="operations">
+              <div class="top"><span class="for">Operations</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Vendor Oversight Made Simple</h3>
+              <p>List the vendors who hold a key to your systems, ask five plain questions, and keep an eye on them over time.</p>
+              <span class="pillar">Key: who is watching</span>
+              <div class="when"><span class="date">Tue, Dec 15</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="group-technology" id="group-technology-btn"><span class="acc-title">Technology and IT Leads</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="group-technology" role="region" aria-labelledby="group-technology-btn" hidden>
+            <div class="sessions">
+            <article class="session" data-role="technology">
+              <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>From Alert Overload to Clear Signal</h3>
+              <p>Decide what to watch, what to automate, and where a partner adds after-hours coverage without replacing you.</p>
+              <span class="pillar">Key: who is watching</span>
+              <div class="when"><span class="date">Tue, Jan 5</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="technology">
+              <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Restore Test Day</h3>
+              <p>A quarterly restore test routine and a report your leadership and insurer will accept.</p>
+              <span class="pillar">Key: records that restore</span>
+              <div class="when"><span class="date">Thu, Jan 7</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            <article class="session" data-role="technology">
+              <div class="top"><span class="for">Technology · IT leads</span><span class="icon"><img src="/key-outline.png" alt=""></span></div>
+              <h3>Apple Fleet Identity</h3>
+              <p>Standard user accounts, sign-in backed by MFA, FileVault, and offboarding that happens on its own. Jamf done right.</p>
+              <span class="pillar">Key: who has access</span>
+              <div class="when"><span class="date">Tue, Jan 12</span><span class="time">12:00 pm ET</span><span class="planned">Planned</span></div>
+              <a class="btn btn-navy reserve" href="#sessions">Reserve on Zoom</a>
+            </article>
+            </div>
+          </div>
+        </div>
       </div>
       <p class="notice" id="notice" role="status">Registration opens soon. Check back for the Zoom link, or join the waitlist on the home page and we will send it to you.</p>
     </div>
@@ -550,19 +564,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
-  // Role filter for the schedule.
-  (function () {
-    var buttons = document.querySelectorAll(".filters button");
-    var cards = document.querySelectorAll("#session-list .session");
-    buttons.forEach(function (b) {
-      b.addEventListener("click", function () {
-        var f = b.getAttribute("data-filter");
-        buttons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-        cards.forEach(function (c) { c.hidden = !(f === "all" || c.getAttribute("data-role") === f); });
-        if (window.ScrollTrigger) ScrollTrigger.refresh();
-      });
-    });
-  })();
 
   // Motion: Lenis smooth scroll + GSAP ScrollTrigger. Everything is visible without JS or with reduced motion.
   (function () {

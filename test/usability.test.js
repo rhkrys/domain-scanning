@@ -225,3 +225,29 @@ test('emailInputProblem accepts good addresses and flags typos', () => {
   assert.match(emailInputProblem('a@hotmial.com'), /hotmail\.com/);
   assert.match(emailInputProblem('nope'), /you@example\.com/);
 });
+
+test('accordions start collapsed, with aria-expanded triggers wired to hidden panels', async () => {
+  const pages = ['../public/index.html', '../landing/workshops.html'];
+  for (const rel of pages) {
+    const html = await fs.readFile(new URL(rel, import.meta.url), 'utf8');
+    assert.match(html, /accordion\.js/);
+    assert.match(html, /accordion\.css/);
+    const triggers = html.match(/<button class="acc-trigger"[^>]*>/g) ?? [];
+    assert.ok(triggers.length >= 3, `${rel}: ${triggers.length} triggers`);
+    for (const t of triggers) {
+      assert.match(t, /aria-expanded="false"/, t);
+      const id = t.match(/aria-controls="([^"]+)"/)?.[1];
+      assert.ok(id, t);
+      assert.match(html, new RegExp(`<div class="acc-panel" id="${id}"[^>]*\\bhidden>`), `${rel}: panel ${id} hidden`);
+    }
+  }
+  const scan = await fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+  assert.equal((scan.match(/aria-controls="faq-\d+"/g) ?? []).length, 7, 'seven FAQ rows');
+  assert.equal((scan.match(/aria-controls="check-\d+"/g) ?? []).length, 3, 'three What we check rows');
+  const ws = await fs.readFile(new URL('../landing/workshops.html', import.meta.url), 'utf8');
+  for (const name of ['Finance, CFOs, and Controllers', 'Principles and Leadership', 'Compliance and Risk', 'Operations', 'Technology and IT Leads']) {
+    assert.ok(ws.includes(`<span class="acc-title">${name}</span>`), name);
+  }
+  assert.equal((ws.match(/<article class="session"/g) ?? []).length, 15, 'all 15 workshops kept');
+  assert.doesNotMatch(ws, /class="filters"/);
+});

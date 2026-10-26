@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/accordion.css" />
   <link rel="icon" href="/logo-gold.png" type="image/png" />
   <script type="application/ld+json">
 {
@@ -245,7 +246,10 @@
         <h2 id="what-we-check-title">What we check</h2>
         <p>The scan runs 13 checks in three groups. It only reads public information about your domain and website, so nothing on your site changes.</p>
 
-        <p class="group-label">Domain setup</p>
+        <div data-accordion="rows">
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-1" id="check-1-btn"><span class="acc-title">Domain setup</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="check-1" role="region" aria-labelledby="check-1-btn" hidden>
         <ul class="check-list">
           <li><strong>Mail servers (MX).</strong> Shows where your email is delivered, so messages reach the right inbox.</li>
           <li><strong>Website address (A and AAAA).</strong> Confirms your domain points to your website, including the newer IPv6 format.</li>
@@ -253,8 +257,11 @@
           <li><strong>DNSSEC.</strong> Checks whether your DNS answers are digitally signed, so visitors reach your real site.</li>
           <li><strong>CAA.</strong> Checks whether you have limited which companies can issue certificates for your domain.</li>
         </ul>
-
-        <p class="group-label">Email protection</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-2" id="check-2-btn"><span class="acc-title">Email protection</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="check-2" role="region" aria-labelledby="check-2-btn" hidden>
         <ul class="check-list">
           <li><strong>SPF.</strong> Lists which servers may send email as your domain, and how strict that list is.</li>
           <li><strong>DMARC.</strong> Tells inboxes what to do with mail that fails checks, and where to send reports.</li>
@@ -262,13 +269,20 @@
           <li><strong>MTA-STS.</strong> Looks for a policy that asks other mail servers to send to you over an encrypted connection.</li>
           <li><strong>BIMI.</strong> An optional record that can show your logo next to your email in supporting inboxes.</li>
         </ul>
-
-        <p class="group-label">Website encryption and security</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="check-3" id="check-3-btn"><span class="acc-title">Website encryption and security</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="check-3" role="region" aria-labelledby="check-3-btn" hidden>
         <ul class="check-list">
           <li><strong>TLS certificate.</strong> Checks your site’s certificate is valid and not close to expiring, so browsers connect without warnings.</li>
           <li><strong>HTTP security headers.</strong> Looks for five settings that tell browsers how to protect your visitors, such as HSTS and Content-Security-Policy.</li>
           <li><strong>PHP.</strong> Looks for signs your site runs PHP, the software behind WordPress, Drupal, Joomla, and Magento. If your site shows its PHP version, we tell you if it has the October 2026 security fix.</li>
         </ul>
+          </div>
+        </div>
+        </div>
+
 
         <p class="note">Two limits to know. We look for the most common DKIM selector names, so a custom setup can be missed. For MTA-STS we look for the published record, not the policy file behind it. Your mail provider, or a call with us, can confirm both.</p>
       </section>
@@ -340,20 +354,50 @@
 
       <section class="block faq" id="faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Frequently asked questions</h2>
-        <h3>Is the scan free?</h3>
-        <p>Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account.</p>
-        <h3>Do I need SPF and DKIM before DMARC?</h3>
-        <p>You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy.</p>
-        <h3>Why is DMARC failing when SPF passes?</h3>
-        <p>DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass.</p>
-        <h3>What does p=none mean?</h3>
-        <p>p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean.</p>
-        <h3>How often should I scan my domain?</h3>
-        <p>Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching.</p>
-        <h3>What happens after I scan?</h3>
-        <p>You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes.</p>
-        <h3>What does DMARC alignment mean?</h3>
-        <p>Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain.</p>
+        <div data-accordion="rows">
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-1" id="faq-1-btn"><span class="acc-title">Is the scan free?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-1" role="region" aria-labelledby="faq-1-btn" hidden>
+            <p>Yes. Enter your domain and your results appear on screen at no cost. Add your email if you want the report sent to you. You do not need an account.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-2" id="faq-2-btn"><span class="acc-title">Do I need SPF and DKIM before DMARC?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-2" role="region" aria-labelledby="faq-2-btn" hidden>
+            <p>You can publish DMARC first, but mail only passes DMARC when SPF or DKIM passes and matches your From domain. Most domains set up both. A common start is DMARC at p=none to collect reports, then tighten the policy.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-3" id="faq-3-btn"><span class="acc-title">Why is DMARC failing when SPF passes?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-3" role="region" aria-labelledby="faq-3-btn" hidden>
+            <p>DMARC needs the SPF result to match your From domain. SPF checks a hidden sending address that can belong to a different domain, such as your email service. A matching DKIM signature can still make DMARC pass.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-4" id="faq-4-btn"><span class="acc-title">What does p=none mean?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-4" role="region" aria-labelledby="faq-4-btn" hidden>
+            <p>p=none is monitor mode. It asks receivers to take no special action on mail that fails DMARC, so you can collect reports first. It does not ask them to block spoofed mail. The usual next steps are quarantine, then reject, once reports look clean.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-5" id="faq-5-btn"><span class="acc-title">How often should I scan my domain?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-5" role="region" aria-labelledby="faq-5-btn" hidden>
+            <p>Scan after any change to your email provider, website host or DNS, and then every few months. Adding a new sending service is a common reason SPF or DKIM stops matching.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-6" id="faq-6-btn"><span class="acc-title">What happens after I scan?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-6" role="region" aria-labelledby="faq-6-btn" hidden>
+            <p>You see a grade, a score and a ranked list of fixes on screen. If you add your email, we send the same report. The scan only reads public information, so nothing changes on your domain. You can book a call if you want help with the fixes.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <h3 class="acc-heading"><button class="acc-trigger" type="button" aria-expanded="false" aria-controls="faq-7" id="faq-7-btn"><span class="acc-title">What does DMARC alignment mean?</span><span class="acc-chevron" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="faq-7" role="region" aria-labelledby="faq-7-btn" hidden>
+            <p>Alignment means the domain that passed SPF or DKIM matches the domain in your From address. DMARC passes when at least one of them passes and aligns. This stops a message from borrowing a pass from an unrelated domain.</p>
+          </div>
+        </div>
+        </div>
       </section>
 
       <section class="block" id="book" aria-labelledby="book-title">
@@ -392,6 +436,7 @@
     })();
   </script>
   <script src="/config.js"></script>
+  <script src="/accordion.js" defer></script>
   <script src="/app.js"></script>
 </body>
 </html>

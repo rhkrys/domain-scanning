@@ -33,6 +33,8 @@ put public/index.html scan.html "text/html; charset=utf-8"
 put public/app.js app.js "application/javascript"
 put public/styles.css styles.css "text/css; charset=utf-8"
 put public/config.js config.js "application/javascript"
+put public/accordion.js accordion.js "application/javascript"
+put public/accordion.css accordion.css "text/css; charset=utf-8"
 for f in public/*.svg public/*.png public/*.jpg public/*.webp public/*.ico; do
   [ -e "$f" ] || continue
   case "$f" in *.svg) ct="image/svg+xml";; *.png) ct="image/png";; *.jpg) ct="image/jpeg";; *.webp) ct="image/webp";; *.ico) ct="image/x-icon";; esac

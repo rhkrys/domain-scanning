@@ -1,0 +1,62 @@
+/* Accordion, used by the scan page (FAQ, What we check) and the Workshops page.
+   Two looks: data-accordion="rows" (hairline rows, like a support FAQ) and
+   data-accordion="boxes" (bordered cards). Colors come from each page's tokens,
+   with the brand navy and gold as fallbacks. */
+
+[data-accordion] { margin: 0; }
+.acc-item { position: relative; }
+/* The selectors below carry [data-accordion] so page-level heading and button
+   styles (uppercase, gold underlines, filled buttons) never leak into the rows. */
+[data-accordion] .acc-heading {
+  display: block; margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; text-transform: none; letter-spacing: normal; line-height: inherit;
+}
+
+[data-accordion] .acc-trigger,
+[data-accordion] .acc-trigger:hover,
+[data-accordion] .acc-trigger:active {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  width: 100%; margin: 0; padding: 18px 4px; border: 0; border-radius: 4px;
+  background: transparent; box-shadow: none; filter: none; transform: none;
+  font: inherit; font-weight: 700; font-size: 18px; line-height: 1.3; text-align: left;
+  text-transform: none; letter-spacing: normal; color: var(--navy-deep, #142534); cursor: pointer;
+}
+[data-accordion] .acc-trigger:hover { color: var(--navy, #203a7b); }
+[data-accordion] .acc-trigger:focus { outline: none; }
+[data-accordion] .acc-trigger:focus-visible { outline: 3px solid var(--gold, #C09B3D); outline-offset: 2px; }
+
+.acc-chevron {
+  flex: 0 0 auto; width: 16px; height: 16px; margin-right: 2px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 5.5 8 11l5.5-5.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 5.5 8 11l5.5-5.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform .2s ease;
+}
+[data-accordion] .acc-trigger[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
+
+.acc-panel { padding: 0 4px 20px; }
+.acc-panel > :first-child { margin-top: 0; }
+.acc-panel > :last-child { margin-bottom: 0; }
+
+/* Rows: one hairline between items, like a support page FAQ. */
+[data-accordion="rows"] .acc-item { border-bottom: 1px solid var(--border, #d9dee4); }
+[data-accordion="rows"] .acc-item:first-child { border-top: 1px solid var(--border, #d9dee4); }
+
+/* Boxes: each item is a card. */
+[data-accordion="boxes"] .acc-item {
+  background: var(--white, #ffffff); border: 1px solid var(--border, #d9dee4);
+  border-top: 3px solid var(--gold, #C09B3D); border-radius: 6px; margin-bottom: 14px;
+}
+[data-accordion="boxes"] .acc-trigger, [data-accordion="boxes"] .acc-trigger:hover { padding: 18px 20px; font-size: 20px; }
+[data-accordion="boxes"] .acc-panel { padding: 0 20px 20px; }
+
+/* Optional icon slot before the title (used by What we check). */
+.acc-icon { flex: 0 0 auto; width: 28px; height: 28px; margin-right: 12px; display: inline-flex; align-items: center; justify-content: center; }
+.acc-title { flex: 1 1 auto; }
+
+@media (prefers-reduced-motion: reduce) { .acc-chevron { transition: none; } }
+@media (max-width: 560px) {
+  [data-accordion] .acc-trigger { font-size: 17px; padding: 16px 2px; }
+  [data-accordion="boxes"] .acc-trigger { padding: 16px 16px; font-size: 18px; }
+  [data-accordion="boxes"] .acc-panel { padding: 0 16px 16px; }
+}
