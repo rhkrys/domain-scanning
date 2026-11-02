@@ -60,3 +60,35 @@
   [data-accordion="boxes"] .acc-trigger { padding: 16px 16px; font-size: 18px; }
   [data-accordion="boxes"] .acc-panel { padding: 0 16px 16px; }
 }
+
+/* FAQ: bordered cards with a gold plus and minus, matching the FAQ sections on
+   the home, Mac support and Workshops pages. Used by the scan page FAQ. */
+[data-accordion="faq"] .acc-item {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d9dee4);
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+[data-accordion="faq"] .acc-trigger,
+[data-accordion="faq"] .acc-trigger:hover,
+[data-accordion="faq"] .acc-trigger:active {
+  padding: 20px 22px; font-size: 17px; border-radius: 6px;
+}
+[data-accordion="faq"] .acc-panel {
+  padding: 0 22px 20px; color: var(--muted, #6a7886); font-size: 16px;
+}
+/* A plus when closed and a minus when open, in place of the chevron. */
+[data-accordion="faq"] .acc-chevron {
+  width: auto; height: auto; margin-right: 0;
+  background: none; -webkit-mask: none; mask: none;
+  font-size: 26px; line-height: 1; color: var(--gold-deep, #b9822a);
+  transition: none;
+}
+[data-accordion="faq"] .acc-chevron::after { content: "+"; }
+[data-accordion="faq"] .acc-trigger[aria-expanded="true"] .acc-chevron { transform: none; }
+[data-accordion="faq"] .acc-trigger[aria-expanded="true"] .acc-chevron::after { content: "\2013"; }
+
+@media (max-width: 560px) {
+  [data-accordion="faq"] .acc-trigger { padding: 16px 16px; font-size: 16px; }
+  [data-accordion="faq"] .acc-panel { padding: 0 16px 16px; }
+}
