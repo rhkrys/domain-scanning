@@ -553,3 +553,14 @@ dialog.popup::backdrop { background: rgba(13, 26, 38, .55); }
   .report-row { grid-template-columns: 1fr; gap: 12px; }
   .report-sample { width: 100%; max-width: 320px; }
 }
+
+/* ---- Security alert as a collapsed row ---------------------------------- */
+.alert .alert-accordion .acc-item,
+.alert .alert-accordion .acc-item:first-child { border: 0; }
+.alert [data-accordion] .acc-trigger,
+.alert [data-accordion] .acc-trigger:hover { padding: 4px 0 8px; font-size: 22px; line-height: 1.15; color: var(--navy-deep); }
+.alert [data-accordion] .acc-trigger:hover { color: var(--fail); }
+.alert [data-accordion] .acc-trigger:focus-visible { outline-color: var(--fail); }
+.alert .acc-panel { padding: 4px 0 0; }
+.alert .acc-panel > p:first-child { margin-top: 0; }
+@media (max-width: 560px) { .alert [data-accordion] .acc-trigger { font-size: 19px; padding: 2px 0 6px; } }
