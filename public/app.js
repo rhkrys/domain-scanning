@@ -217,6 +217,13 @@ function renderEmailSetup(setup) {
   } else {
     html += '<p>We could not tell who hosts your email from your MX records. Check with your email provider for how to set up SPF, DKIM, and DMARC.</p>';
   }
+  // Where the records get added: the DNS host, from the nameservers.
+  const dns = setup.dnsHost;
+  if (dns && dns.known) {
+    html += `<p>Your domain is hosted by <strong>${escapeHtml(dns.name)}</strong>, based on your nameservers. That is where you add or change these records.</p>`;
+  } else if (dns && dns.nameservers && dns.nameservers.length) {
+    html += `<p>Your domain's nameservers are ${escapeHtml(dns.nameservers.join(', '))}. Add or change these records wherever you manage those.</p>`;
+  }
   if (setup.senders.length) {
     html += '<p>Your SPF record shows these services also send email as you. Set each one up too:</p>' +
       `<ul class="provider-list">${setup.senders.map(providerLinks).join('')}</ul>`;

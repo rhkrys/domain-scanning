@@ -96,6 +96,7 @@ export async function checkNameservers(resolver, domain) {
       summary: 'No nameservers found',
       detail: `${domain} has no delegated nameservers, which usually means the domain is misconfigured or expired.`,
       recommendation: 'Check the domain registration and DNS delegation at your registrar.',
+      evidence: { hosts: [] },
     };
   }
 
@@ -119,6 +120,7 @@ export async function checkNameservers(resolver, domain) {
     recommendation: diverse
       ? undefined
       : 'Add at least one more nameserver (ideally on separate infrastructure) so DNS stays up if one fails.',
+    evidence: { hosts },
   };
 }
 

@@ -22,6 +22,7 @@ import { scoreFindings } from './scoring.js';
 import { detectEmailProviders } from './providers.js';
 import { sendersFromSpf, selectorsForSenders } from './senders.js';
 import { buildReportModel } from './report-model.js';
+import { detectDnsHost } from './dnshosts.js';
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i;
 
@@ -141,6 +142,8 @@ export async function runAudit(rawDomain, { resolver = new Resolver(), loadPage,
     mxHosts: mx.evidence?.hosts ?? [],
     spfRecord: spfRecordOf(spf),
   });
+  // Where the DNS records live, from the nameservers.
+  emailSetup.dnsHost = detectDnsHost(findings.find((f) => f.id === 'nameservers')?.evidence?.hosts ?? []);
 
   // Raw facts from the home page that the report sections need.
   const page = await sharedPage();

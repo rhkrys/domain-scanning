@@ -107,3 +107,43 @@ test('a broken SPF record still lists the sender the owner meant to include', as
   assert.equal(report.emailSetup.mailbox.id, 'google');
   assert.deepEqual(report.emailSetup.senders.map((s) => s.id), ['ses']);
 });
+
+// ---- DNS host, from the nameservers ---------------------------------------
+import { detectDnsHost } from '../src/dnshosts.js';
+
+test('nameservers identify the DNS host (the techinpeace.com case is GoDaddy)', () => {
+  const cases = [
+    [['ns77.domaincontrol.com', 'ns78.domaincontrol.com'], 'GoDaddy'],
+    [['ns-443.awsdns-55.com.', 'ns-1272.awsdns-31.org'], 'Amazon Route 53'],
+    [['kate.ns.cloudflare.com', 'rob.ns.cloudflare.com'], 'Cloudflare'],
+    [['ns-cloud-a1.googledomains.com'], 'Google Cloud DNS'],
+    [['ext-dns.squarespacedns.com'], 'Squarespace'],
+    [['dns1.registrar-servers.com'], 'Namecheap'],
+    [['ns1.dns-parking.com'], 'Hostinger'],
+    [['ns1-01.azure-dns.com'], 'Azure DNS'],
+  ];
+  for (const [ns, name] of cases) {
+    const r = detectDnsHost(ns);
+    assert.equal(r.name, name, ns.join(','));
+    assert.equal(r.known, true);
+  }
+});
+
+test('an unknown DNS host falls back to the nameservers’ own domain', () => {
+  const r = detectDnsHost(['ns1.someisp.net', 'ns2.someisp.net']);
+  assert.deepEqual(r, { id: null, name: 'someisp.net', nameservers: ['ns1.someisp.net', 'ns2.someisp.net'], known: false });
+  assert.equal(detectDnsHost([]).known, false);
+  assert.equal(detectDnsHost(['ns1.domaincontrol.com.evil.net']).known, false, 'lookalikes do not match');
+});
+
+test('the report carries the DNS host next to the email provider', async () => {
+  const resolver = new FakeResolver({
+    'tip2.com|MX': ['1 aspmx.l.google.com.'],
+    'tip2.com|NS': ['ns77.domaincontrol.com.', 'ns78.domaincontrol.com.'],
+    'tip2.com|TXT': ['v=spf1 include:_spf.google.com ~all'],
+  });
+  const report = await runAudit('tip2.com', { resolver, loadPage: async () => null });
+  assert.equal(report.emailSetup.mailbox.id, 'google');
+  assert.equal(report.emailSetup.dnsHost.name, 'GoDaddy');
+  assert.deepEqual(report.result.email.dns_host, { name: 'GoDaddy', known: true, nameservers: ['ns77.domaincontrol.com', 'ns78.domaincontrol.com'] });
+});

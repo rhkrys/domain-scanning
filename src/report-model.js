@@ -282,9 +282,11 @@ function emailSection(report) {
   }
 
   const newDmarc = changes[1].change && changes[1].new_record;
+  const dnsHost = report.emailSetup?.dnsHost ?? null;
   return {
     all_correct: allCorrect,
     sending_systems: sendingSystems,
+    dns_host: dnsHost ? { name: dnsHost.name, known: dnsHost.known, nameservers: dnsHost.nameservers } : null,
     spf: spfOut,
     dmarc: dmarcOut,
     dkim: dkimOut,
