@@ -1,0 +1,67 @@
+Subject: Your WISP readiness report: 12 of 20, Partly covered
+
+Hi,
+
+Here is your WISP readiness report from Tech in Peace, from the quiz you took on November 10, 2026.
+
+Your readiness score: 12 of 20 points. Partly covered.
+You have the pieces. They need to be written down and checked. Start with Secure in a Day, then Protect.
+Your office: 3 devices, about 300 returns a year, 400 client records, $250 average fee per return.
+
+WHERE TO TIGHTEN UP
+1. Which email do you use for client work?
+   Your answer: Paid email from another provider (1 of 2 points)
+   Full points: Business email: Google Workspace or Microsoft 365
+2. Where is that email backed up?
+   Your answer: My email provider keeps it (1 of 2 points)
+   Full points: A separate backup service
+4. Do you have a written security plan with your office's details?
+   Your answer: A template or an older plan (1 of 2 points)
+   Full points: Yes, dated in the last 12 months
+5. Who is your named security lead?
+   Your answer: Nobody (0 of 2 points)
+   Full points: Named in writing
+6. When did you last restore a file from backup as a test?
+   Your answer: We back up but never tested (1 of 2 points)
+   Full points: In the last 12 months
+8. Do you have a list of every device that opens client data?
+   Your answer: In my head (1 of 2 points)
+   Full points: A written list
+9. A laptop is stolen tonight. Who do you call first?
+   Your answer: I know to call the IRS, nothing written (1 of 2 points)
+   Full points: I have written steps, starting with IT and the IRS Stakeholder Liaison
+
+ALREADY IN PLACE
+- 3. Do you use a second sign-in step on email and tax software? On both
+- 7. Are your computers and laptops encrypted? All of them
+- 10. When someone leaves, how fast is their access removed? Same day, from a checklist
+
+ESTIMATED EXPOSURE
+Breach response: $72,400
+   400 records x $181
+Filing days lost: $10,000
+   10 days down assumed (backup not tested)
+Disclosure penalty: $10,000
+   $250 per record, capped at $10,000 a year
+Estimated exposure: $92,400
+Legal maximum, not a forecast: $53,088. The FTC ceiling is $53,088 per violation. Your answers show 1 missing written item from questions 3, 4, 5 and 9. Small offices rarely see the full amount.
+
+COST TO COVER IT, PER MONTH
+Plan: $74 ($15 a device)
+Protect: $254 ($75 a device), suggested for your score
+Concierge: $389 ($120 a device)
+$29 a month per office, plus the device fee for each of your 3 devices. A device is any computer, laptop, tablet or phone that opens client tax data.
+
+Book Secure in a Day: https://calendly.com/cpconsulting/15min
+
+Need a hand?
+Reply to this email. If I don't hear back, I'll check in once in two weeks.
+
+Crystal Pugh
+Trust Architect
+Tech in Peace
+techinpeace.com
+
+This is a planning estimate. It is not a prediction, a quote or legal advice. The IRS does not set a fixed fine for a missing WISP.
+Where the numbers come from: $181 per record is an average cost per sensitive record cited by Tax Protection Plus. Filing days lost assumes a 75 working day season and 3, 10 or 21 days down depending on your backup answer. These day counts are assumptions. The disclosure penalty follows IRC 6713. The legal ceiling uses the FTC's 2025 maximum of $53,088 per violation.
+Tech in Peace by CPI. Brooklyn, New York.

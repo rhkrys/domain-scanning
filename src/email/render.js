@@ -6,7 +6,7 @@ import { buildReportModel } from '../report-model.js';
 
 // CPI brand tokens. Email clients rarely load web fonts, so
 // the display face falls back through Oswald → Arial Narrow → Arial.
-const CPI = {
+export const CPI = {
   navy: '#203a7b',
   navyDeep: '#142534',
   gold: '#e8ae5c',
@@ -37,11 +37,11 @@ export const LOGO_CID = 'cpi-logo';
 // Where the email sends people to scan again after they fix something.
 const RESCAN_URL = 'https://www.techinpeace.com/scan';
 const RESCAN_LINE = 'After making changes to your DNS or website, be sure to check your score again';
-const NEED_A_HAND = "Reply to this email. If I don't hear back, I'll check in once in two weeks.";
-const SIGNATURE = ['Crystal Pugh', 'Trust Architect', 'Tech in Peace', 'techinpeace.com'];
+export const NEED_A_HAND = "Reply to this email. If I don't hear back, I'll check in once in two weeks.";
+export const SIGNATURE = ['Crystal Pugh', 'Trust Architect', 'Tech in Peace', 'techinpeace.com'];
 const DISCLAIMER = 'This automated scan is a starting point, not a full security audit.';
 
-function esc(s) {
+export function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 }
 

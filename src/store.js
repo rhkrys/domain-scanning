@@ -5,6 +5,7 @@
 // A record holds only: scan_id, domain, checked_at, result_json, source,
 // email (if given), newsletter_opt_in, consent_at (if opted in), the rendered
 // email (subject, text, html), and expires_at for automatic deletion.
+// WISP quiz submissions use the same table; see buildQuizRecord.
 
 import crypto from 'node:crypto';
 
@@ -35,6 +36,26 @@ export function buildScanRecord({ scanId, report, source, email = null, newslett
     expires_at: Math.floor(new Date(checkedAt).getTime() / 1000) + days * DAY_S,
   };
   if (email) record.email = email;
+  if (optIn) record.consent_at = consentAt ?? new Date().toISOString();
+  return record;
+}
+
+// A WISP quiz submission, kept in the same table as scans (source
+// "wisp-quiz"). An email is always given, so it is kept 12 months.
+export function buildQuizRecord({ id, result, takenAt, email, newsletterOptIn = false, consentAt = null, rendered }) {
+  const optIn = newsletterOptIn === true;
+  const record = {
+    scan_id: id,
+    source: 'wisp-quiz',
+    checked_at: takenAt,
+    result_json: JSON.stringify(result),
+    email,
+    newsletter_opt_in: optIn,
+    email_subject: rendered.subject,
+    email_text: rendered.text,
+    email_html: rendered.html,
+    expires_at: Math.floor(new Date(takenAt).getTime() / 1000) + RETENTION_DAYS.withEmail * DAY_S,
+  };
   if (optIn) record.consent_at = consentAt ?? new Date().toISOString();
   return record;
 }

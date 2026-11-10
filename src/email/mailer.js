@@ -75,6 +75,12 @@ function getSmtpTransport() {
 // rendered: the already-rendered email (so the copy we store is exactly what
 // was sent). Rendered here when not given.
 export async function sendReport(to, report, rendered = renderEmail(report)) {
+  return sendRendered(to, rendered, report.domain);
+}
+
+// Sends any already-rendered email (subject, text, html) the same way. label
+// only names the local preview file.
+export async function sendRendered(to, rendered, label = 'email') {
   const email = rendered;
   const from = process.env.MAIL_FROM ?? 'CPI <scanner@localhost>';
   const logo = await getLogo();
@@ -101,7 +107,7 @@ export async function sendReport(to, report, rendered = renderEmail(report)) {
     const dataUri = `data:image/png;base64,${logo.toString('base64')}`;
     html = html.replaceAll(`cid:${LOGO_CID}`, dataUri);
   }
-  const file = path.join(PREVIEW_DIR, `${report.domain}-${Date.now()}.html`);
+  const file = path.join(PREVIEW_DIR, `${label}-${Date.now()}.html`);
   await fs.writeFile(file, html, 'utf8');
   return { delivered: false, mode: 'preview', previewPath: file };
 }
