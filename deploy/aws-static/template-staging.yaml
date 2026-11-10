@@ -48,6 +48,26 @@ Resources:
         SigningBehavior: always
         SigningProtocol: sigv4
 
+  # Clean URLs for staging: the live rule plus pages that exist only on staging so far.
+  # Kept separate so staging pages never change the live site's routing.
+  CleanUrlsFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub "${AWS::StackName}-cleanurls"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Map /page to /page.html on staging
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        var PAGES = { '/scan': '/scan.html', '/privacy': '/privacy.html', '/workshops': '/workshops.html',
+          '/mac-support': '/mac-support.html', '/about': '/about.html', '/wisp': '/wisp.html' };
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri.length > 1 ? request.uri.replace(/\/$/, '') : request.uri;
+          if (PAGES[uri]) request.uri = PAGES[uri];
+          return request;
+        }
+
   # Same security headers as live, plus noindex so staging never shows up in search.
   HeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
@@ -101,7 +121,7 @@ Resources:
           ResponseHeadersPolicyId: !Ref HeadersPolicy
           FunctionAssociations:
             - EventType: viewer-request
-              FunctionARN: !Ref CleanUrlsFunctionArn
+              FunctionARN: !GetAtt CleanUrlsFunction.FunctionMetadata.FunctionARN
         CacheBehaviors:
           - PathPattern: /api/*
             TargetOriginId: lambda-api
