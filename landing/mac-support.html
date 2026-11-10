@@ -89,6 +89,7 @@
   .nav .btn { padding: 9px 18px; font-size: 16px; color: var(--navy-900); white-space: nowrap; }
   /* Mobile menu: links fold into a panel under the header; the gold button stays visible. */
   .nav-menu { display: flex; gap: 20px; align-items: center; }
+  .nav-short { display: none; }
   .menu-toggle { display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent; border: 2px solid var(--gold-400); border-radius: var(--radius); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
   .menu-toggle span { display: block; width: 20px; height: 2px; background: var(--gold-300); transition: transform .2s ease, opacity .2s ease; }
   .menu-toggle:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
@@ -103,6 +104,8 @@
     header.menu-open .nav-menu { display: flex; }
     .nav-menu a { padding: 14px 0; font-size: 16px; border-bottom: 1px solid rgba(232,239,247,.14); }
     .nav-menu a:last-child { border-bottom: none; }
+    .nav-long { display: none; }
+    .nav-short { display: inline; }
   }
   @media (max-width: 480px) { .nav-menu { padding-inline: 16px; } .nav { gap: 10px; } .nav .btn { padding: 8px 11px; font-size: 15px; white-space: nowrap; } .logo { gap: 9px; } .logo img { height: 36px; } .wordmark .name, .logo .name { white-space: normal; font-size: 14px; letter-spacing: .1em; } }
   @media (max-width: 400px) { .wordmark .name, .logo .name { font-size: 13px; letter-spacing: .08em; } }
@@ -225,11 +228,11 @@
     </a>
     <nav class="nav-links" aria-label="Main">
       <span class="nav-menu" id="site-menu">
+        <a href="/scan"><span class="nav-long">Website Scan</span><span class="nav-short">Scan</span></a>
         <a href="/mac-support">Mac Support</a>
-        <a href="/workshops">Workshops</a>
         <a href="/wisp">WISP</a>
-        <a href="/scan">Security Scan</a>
         <a href="/#pricing">Pricing</a>
+        <a href="/workshops">Workshops</a>
         <a class="tel" href="tel:+13479734629">(347) 973-4629</a>
       </span>
       <a class="btn btn-gold" href="https://calendly.com/cpconsulting/brooklyn-onsite-support-hour" target="_blank" rel="noopener">Book a visit</a>
@@ -422,7 +425,7 @@
   <div class="wrap">
     <div class="brand"><img src="/logo-dark-bg.svg" alt="Tech in Peace by CPI"></div>
     <address>Mac tech support · Brooklyn, NY · <a href="tel:+13479734629">(347) 973-4629</a></address>
-    <nav aria-label="Footer"><a href="/">Home</a><a href="/about">About</a><a href="/mac-support">Mac Support</a><a href="/workshops">Workshops</a><a href="/wisp">WISP</a><a href="/scan">Security Scan</a><a href="/privacy">Privacy</a></nav>
+    <nav aria-label="Footer"><a href="/">Home</a><a href="/about">About</a><a href="/mac-support">Mac Support</a><a href="/workshops">Workshops</a><a href="/wisp">WISP</a><a href="/scan">Website Scan</a><a href="/privacy">Privacy</a></nav>
     <span class="legal">© 2026 Tech in Peace by CPI · Cyber Protection Consulting Services Inc. All rights reserved. Mac, iPhone, iPad and iCloud are trademarks of Apple Inc. Tech in Peace is an independent service provider.</span>
   </div>
 </footer>

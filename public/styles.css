@@ -75,6 +75,7 @@ body {
 /* Mobile menu: links fold into a panel under the bar; the gold button stays visible. */
 .brandbar { position: relative; }
 .brandnav-menu { display: flex; align-items: center; gap: 18px; }
+.nav-short { display: none; }
 .menu-toggle {
   display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent;
   border: 2px solid var(--gold); border-radius: 2px; cursor: pointer;
@@ -97,6 +98,8 @@ body {
   .brandbar.menu-open .brandnav-menu { display: flex; }
   .brandnav-menu a { padding: 14px 0; font-size: 16px; font-weight: 700; border-bottom: 1px solid rgba(232,239,247,.14); }
   .brandnav-menu a:last-child { border-bottom: none; }
+  .nav-long { display: none; }
+  .nav-short { display: inline; }
 }
 @media (max-width: 480px) {
   .brandbar-inner { gap: 10px; }
