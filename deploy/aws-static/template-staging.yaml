@@ -60,7 +60,8 @@ Resources:
         Runtime: cloudfront-js-2.0
       FunctionCode: |
         var PAGES = { '/scan': '/scan.html', '/privacy': '/privacy.html', '/workshops': '/workshops.html',
-          '/mac-support': '/mac-support.html', '/about': '/about.html', '/wisp': '/wisp.html' };
+          '/mac-support': '/mac-support.html', '/about': '/about.html', '/wisp': '/wisp.html',
+          '/wisp/quiz': '/wisp-quiz.html' };
         function handler(event) {
           var request = event.request;
           var uri = request.uri.length > 1 ? request.uri.replace(/\/$/, '') : request.uri;

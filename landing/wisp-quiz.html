@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WISP Readiness Quiz for Tax Preparers | Tech in Peace</title>
+<meta name="description" content="Twelve questions for tax preparers. Three minutes. See your readiness score, your estimated exposure in dollars, and what it costs to cover it.">
+<link rel="canonical" href="https://www.techinpeace.com/wisp/quiz">
+<link rel="icon" href="/logo-gold.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* WISP readiness quiz. Same tokens, header and footer as the WISP page. Same tokens, header, footer and sections as the Mac support page (DESIGN.md). */
+  :root {
+    color-scheme: light;
+    --navy-900: #101f36;
+    --navy-800: #142534;
+    --navy-700: #1b3060;
+    --navy-600: #203a7b;
+    --navy-100: #e8eff7;
+    --gold-500: #b9822a;
+    --gold-400: #e8ae5c;
+    --gold-300: #f0c889;
+    --gold-100: #faf3dd;
+    --paper: #f1f8fa;
+    --ink: #0d1a26;
+    --muted: #5d6b79;
+    --border: #d9dee4;
+    --white: #ffffff;
+    --radius: 2px;
+    --shadow: 0 10px 30px rgba(20, 37, 52, .12);
+    --font-display: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font-body); color: var(--ink); background: var(--white); line-height: 1.6; font-size: 16px; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase; }
+  p { margin: 0; }
+  a { color: var(--navy-600); }
+  a:focus-visible, .btn:focus-visible, summary:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-inline: 24px; }
+  @media (max-width: 480px) { .wrap { padding-inline: 16px; } }
+
+  .btn {
+    display: inline-block; padding: 13px 26px; border-radius: var(--radius);
+    font-family: var(--font-display); font-size: 19px; letter-spacing: .04em;
+    text-transform: uppercase; text-decoration: none; cursor: pointer; border: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,37,52,.25); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-900); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid var(--gold-400); }
+  .btn-navy { background: var(--navy-600); color: var(--white); }
+  @media (prefers-reduced-motion: reduce) { .btn, .btn:hover { transition: none; transform: none; } html { scroll-behavior: auto; } }
+
+  .eyebrow {
+    display: inline-block; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+    color: var(--navy-600); padding-bottom: 7px; border-bottom: 2px solid var(--gold-400); margin-bottom: 16px;
+  }
+  .on-dark .eyebrow { color: var(--gold-300); }
+
+  /* Header */
+  header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--navy-800); border-bottom: 2px solid var(--gold-400); }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding-block: 12px; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; color: var(--white); text-decoration: none; }
+  .logo img { height: 42px; width: auto; display: block; }
+  .wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .wordmark .name { font-weight: 700; font-size: 16px; letter-spacing: .14em; text-transform: uppercase; }
+  .wordmark .by { font-weight: 700; font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-400); margin-top: 5px; }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-links a { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .nav-links a:hover { color: var(--gold-300); }
+  .nav-links a.tel { color: var(--gold-300); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .nav .btn { padding: 9px 18px; font-size: 16px; color: var(--navy-900); white-space: nowrap; }
+  /* Mobile menu: links fold into a panel under the header; the gold button stays visible. */
+  .nav-menu { display: flex; gap: 20px; align-items: center; }
+  .nav-short { display: none; }
+  .menu-toggle { display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent; border: 2px solid var(--gold-400); border-radius: var(--radius); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .menu-toggle span { display: block; width: 20px; height: 2px; background: var(--gold-300); transition: transform .2s ease, opacity .2s ease; }
+  .menu-toggle:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
+  header.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  header.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
+  header.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-menu a { white-space: nowrap; }
+  @media (max-width: 1000px) {
+    .menu-toggle { display: inline-flex; }
+    .nav-links { margin-left: auto; }
+    .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--navy-800); border-top: 1px solid rgba(232,174,92,.35); border-bottom: 2px solid var(--gold-400); padding: 6px 24px 14px; box-shadow: 0 14px 24px rgba(16,31,54,.35); }
+    header.menu-open .nav-menu { display: flex; }
+    .nav-menu a { padding: 14px 0; font-size: 16px; border-bottom: 1px solid rgba(232,239,247,.14); }
+    .nav-menu a:last-child { border-bottom: none; }
+    .nav-long { display: none; }
+    .nav-short { display: inline; }
+  }
+  @media (max-width: 480px) { .nav-menu { padding-inline: 16px; } .nav { gap: 10px; } .nav .btn { padding: 8px 11px; font-size: 15px; white-space: nowrap; } .logo { gap: 9px; } .logo img { height: 36px; } .wordmark .name, .logo .name { white-space: normal; font-size: 14px; letter-spacing: .1em; } }
+  @media (max-width: 400px) { .wordmark .name, .logo .name { font-size: 13px; letter-spacing: .08em; } }
+  @media (prefers-reduced-motion: reduce) { .menu-toggle span { transition: none; } }
+  @media (max-width: 420px) { .wordmark .name { font-size: 14px; letter-spacing: .1em; } .logo img { height: 36px; } .nav .btn { padding: 8px 12px; } }
+
+  /* Hero */
+  .hero {
+    position: relative; overflow: hidden; color: var(--white); padding-block: 76px 70px;
+    background:
+      radial-gradient(1000px 480px at 82% -10%, rgba(232,174,92,.16), transparent 60%),
+      linear-gradient(160deg, var(--navy-900), var(--navy-800) 55%, var(--navy-700));
+  }
+  .hero-copy { max-width: 820px; }
+  .hero h1 { font-size: clamp(44px, 6.4vw, 76px); margin-bottom: 20px; }
+  .hero h1 .line { display: block; overflow: hidden; padding-bottom: .04em; }
+  .hero h1 .line > span { display: inline-block; }
+  .hero h1 em { font-style: normal; color: var(--gold-300); }
+  .shine { background: linear-gradient(110deg, var(--gold-300) 40%, #fff6dc 50%, var(--gold-300) 60%); background-size: 250% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .sub { font-size: clamp(17px, 2vw, 20px); color: var(--navy-100); max-width: 620px; margin-bottom: 30px; }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 26px; padding: 0; list-style: none; font-size: 14px; color: rgba(232,239,247,.85); font-weight: 700; letter-spacing: .04em; }
+  .facts li { display: flex; align-items: center; gap: 8px; }
+  .facts li::before { content: ""; width: 7px; height: 7px; background: var(--gold-400); transform: rotate(45deg); }
+
+  /* Short answer band */
+  .answer-band { background: var(--gold-100); border-bottom: 1px solid var(--border); padding-block: 26px; }
+  .answer-band p { max-width: 900px; font-size: 16.5px; color: var(--navy-800); }
+  .answer-band b { color: var(--navy-800); }
+
+  /* Sections */
+  section.block { padding-block: 80px; }
+  section.alt { background: var(--paper); }
+  .head { max-width: 700px; margin-bottom: 36px; }
+  .head h2 { font-size: clamp(32px, 4vw, 46px); margin-bottom: 10px; }
+  .head p { color: var(--muted); font-size: 17px; }
+
+  /* What we fix */
+  .fix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 900px) { .fix { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .fix { grid-template-columns: 1fr; } }
+  .fix article { min-width: 0; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 24px; transition: box-shadow .15s ease; }
+  .fix article:hover { box-shadow: var(--shadow); }
+  .fix img { width: 46px; display: block; margin-bottom: 12px; }
+  .fix h3 { font-size: 26px; color: var(--navy-800); margin-bottom: 8px; }
+  .fix p { color: var(--muted); font-size: 15.5px; }
+
+  /* How it works */
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .how > div { min-width: 0; border-top: 3px solid var(--gold-400); padding-top: 18px; }
+  .how .n { font-family: var(--font-display); font-size: 40px; color: var(--gold-500); line-height: 1; }
+  .how h3 { font-size: 26px; margin: 8px 0 6px; color: var(--navy-800); }
+  .how p { color: var(--muted); font-size: 15.5px; }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
+
+  /* Two ways to get help */
+  .ways { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 44px; }
+  @media (max-width: 760px) { .ways { grid-template-columns: 1fr; } }
+  .ways > div { min-width: 0; background: var(--gold-100); border-left: 3px solid var(--gold-400); padding: 20px 22px; }
+  .ways h3 { font-size: 24px; color: var(--navy-800); margin-bottom: 6px; }
+  .ways p { font-size: 15.5px; color: var(--ink); }
+
+  /* Pricing */
+  .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; align-items: stretch; max-width: 780px; }
+  @media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+  .plan { min-width: 0; position: relative; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .plan.featured { border: 2px solid var(--gold-400); box-shadow: var(--shadow); }
+  .plan .pill { position: absolute; top: -13px; left: 24px; background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-900); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 12px; border-radius: 999px; }
+  .plan h3 { font-size: 26px; color: var(--navy-800); }
+  .plan .for { font-size: 14.5px; color: var(--muted); }
+  .plan .price { font-family: var(--font-display); font-size: 48px; line-height: 1; color: var(--navy-800); font-variant-numeric: tabular-nums; }
+  .plan .price small { font-family: var(--font-body); font-size: 15px; font-weight: 700; color: var(--muted); letter-spacing: 0; text-transform: none; }
+  .plan ul { list-style: none; padding: 0; margin: 6px 0 10px; flex: 1; }
+  .plan li { position: relative; padding: 7px 0 7px 30px; font-size: 15px; border-bottom: 1px solid var(--border); }
+  .plan li:last-child { border-bottom: none; }
+  .plan li::before { content: "✓"; position: absolute; left: 0; top: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--gold-100); color: var(--gold-500); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .plan .btn { text-align: center; }
+
+  /* Testimonials */
+  .tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 760px) { .tgrid { grid-template-columns: 1fr; } }
+  .tcard { margin: 0; min-width: 0; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); padding: 26px; }
+  .tcard .qmark { font-family: var(--font-display); font-size: 60px; line-height: .6; color: var(--gold-400); margin-bottom: 8px; }
+  .tcard blockquote { margin: 0 0 14px; font-size: 16.5px; }
+  .tcard .tname { display: block; font-weight: 700; color: var(--navy-800); }
+  .tcard .trole { display: block; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+  /* FAQ */
+  .faq-list { max-width: 820px; }
+  details { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; background: var(--white); }
+  summary { list-style: none; cursor: pointer; padding: 18px 22px; font-weight: 700; font-size: 17px; color: var(--navy-800); display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--font-display); color: var(--gold-500); font-size: 26px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details .answer { padding: 0 22px 18px; color: var(--muted); }
+
+  /* Closing */
+  .closing { background: radial-gradient(900px 400px at 15% 0%, rgba(232,174,92,.14), transparent 60%), linear-gradient(160deg, var(--navy-800), var(--navy-900)); color: var(--white); padding-block: 76px; text-align: center; }
+  .closing img { width: 110px; margin-bottom: 18px; }
+  .closing h2 { font-size: clamp(34px, 5vw, 50px); margin-bottom: 12px; }
+  .closing p { color: var(--navy-100); max-width: 560px; margin: 0 auto 28px; }
+  .closing .hero-ctas { justify-content: center; }
+
+  footer { background: var(--navy-900); color: rgba(232,239,247,.75); padding-block: 28px; font-size: 14px; border-top: 2px solid var(--gold-400); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  footer .brand { display: flex; align-items: center; gap: 12px; }
+  footer .brand img { height: 34px; }
+  footer .brand b { color: var(--white); letter-spacing: .12em; text-transform: uppercase; font-size: 14px; }
+  footer address { font-style: normal; }
+  footer a { color: var(--gold-300); text-decoration: none; }
+  footer nav { display: flex; gap: 16px; flex-wrap: wrap; }
+  footer .legal { flex-basis: 100%; font-size: 13px; color: rgba(232,239,247,.6); }
+
+
+  /* Quiz page */
+  .hero.short { padding-block: 56px 50px; }
+  .hero.short h1 { font-size: clamp(36px, 5vw, 58px); }
+  .quiz { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .quiz { grid-template-columns: 1fr; } }
+  .quiz .intro { color: var(--muted); margin-bottom: 18px; max-width: 62ch; }
+  .qs { display: flex; flex-direction: column; gap: 14px; }
+  fieldset.q { margin: 0; min-width: 0; border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); background: var(--white); padding: 14px 16px 12px; }
+  fieldset.q.missing { border-color: #c0392b; border-top-color: #c0392b; }
+  legend { padding: 0 6px; font-weight: 700; font-size: 16.5px; color: var(--navy-800); }
+  legend .n { color: var(--gold-500); font-variant-numeric: tabular-nums; }
+  .opts { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+  .opt { display: flex; gap: 10px; align-items: flex-start; padding: 9px 10px; border: 1px solid transparent; border-radius: var(--radius); cursor: pointer; font-size: 15.5px; }
+  .opt:hover { border-color: var(--border); background: var(--paper); }
+  .opt input { accent-color: var(--navy-600); width: 18px; height: 18px; margin: 3px 0 0; flex: none; }
+  .opt:has(input:checked) { background: var(--gold-100); border-color: var(--gold-400); }
+  .opt:has(input:focus-visible) { outline: 2px solid var(--gold-400); outline-offset: 2px; }
+  .f { display: flex; flex-direction: column; gap: 5px; font-size: 14px; color: var(--muted); }
+  .f input[type=number], .f input[type=email] { font: inherit; font-size: 16px; color: var(--ink); background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 11px; width: 100%; font-variant-numeric: tabular-nums; }
+  .f input:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 1px; border-color: var(--navy-600); }
+  .panel { position: sticky; top: 90px; background: var(--white); border: 2px solid var(--gold-400); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+  @media (min-width: 901px) { .panel { max-height: calc(100vh - 110px); overflow-y: auto; overscroll-behavior: contain; } }
+  @media (max-width: 900px) { .panel { position: static; } }
+  .panel h2 { font-size: 15px; letter-spacing: .12em; color: var(--navy-600); }
+  .score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .score b { font-size: 54px; line-height: 1; color: var(--navy-800); font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 13px; font-weight: 700; border: 1px solid currentColor; }
+  .pill.good { color: #1f7a5a; } .pill.mid { color: #9a6a1d; } .pill.low { color: #c0392b; } .pill.none { color: var(--muted); }
+  .bar { height: 8px; border-radius: 999px; background: var(--navy-100); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--gold-400), var(--gold-500)); transition: width .25s; }
+  @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+  .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .panel table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  .panel td { padding: 7px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .panel td:last-child { text-align: right; white-space: nowrap; padding-left: 10px; font-variant-numeric: tabular-nums; }
+  .panel td small { display: block; color: var(--muted); font-size: 12.5px; }
+  .panel tr.total td { border-bottom: 0; font-weight: 700; font-size: 17px; color: var(--navy-800); }
+  .ceiling { border: 1px dashed var(--border); padding: 11px; font-size: 13.5px; color: var(--muted); }
+  .ceiling b { color: var(--ink); }
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tier { min-width: 0; border: 1px solid var(--border); padding: 10px 6px; text-align: center; }
+  .tier.on { border: 2px solid var(--gold-400); background: var(--gold-100); }
+  .tier span { display: block; font-size: 12.5px; color: var(--muted); }
+  .tier b { display: block; font-size: 21px; color: var(--navy-800); font-variant-numeric: tabular-nums; }
+  .note { font-size: 13.5px; color: var(--muted); }
+  .send { border-top: 1px solid var(--border); padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .send .check { display: flex; gap: 9px; align-items: flex-start; font-size: 14.5px; color: var(--ink); cursor: pointer; }
+  .send .check input { accent-color: var(--navy-600); width: 18px; height: 18px; margin: 2px 0 0; flex: none; }
+  .send .btn, .panel .btn { width: 100%; text-align: center; font-size: 17px; }
+  .send .btn[disabled] { opacity: .6; cursor: wait; transform: none; }
+  .status { font-size: 14.5px; min-height: 1.2em; }
+  .status.ok { color: #1f7a5a; font-weight: 700; } .status.err { color: #c0392b; font-weight: 700; }
+  .sources { margin-top: 28px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; max-width: 80ch; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/">
+      <img src="/logo-dark-bg.svg" alt="Tech in Peace by CPI">
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <span class="nav-menu" id="site-menu">
+        <a href="/scan"><span class="nav-long">Website Scan</span><span class="nav-short">Scan</span></a>
+        <a href="/mac-support">Mac Support</a>
+        <a href="/wisp" aria-current="page">WISP</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/workshops">Workshops</a>
+        <a class="tel" href="tel:+13479734629">(347) 973-4629</a>
+      </span>
+      <a class="btn btn-gold" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book a call</a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero on-dark short" id="top">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Tech in Peace by CPI</span>
+        <h1>Is your tax office ready to show its WISP?</h1>
+        <p class="sub">Twelve questions for tax preparers. Three minutes. See your readiness score, your estimated exposure in dollars, and what it costs to cover it. Confidence, not jargon.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt">
+    <div class="wrap">
+      <form class="quiz" id="quiz" novalidate>
+        <div>
+          <div class="head"><h2>The twelve questions</h2></div>
+          <p class="intro">Pick the answer that is true today. Questions 1 to 10 are scored, 2 points each. Questions 11 and 12 size your estimate. "Not sure" counts as a no, because a plan needs a known answer.</p>
+          <div class="qs">
+      <fieldset class="q" id="fs-q1">
+        <legend><span class="n">1.</span> Which email do you use for client work?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q0" value="0"> <span>Business email: Google Workspace or Microsoft 365</span></label>
+          <label class="opt"><input type="radio" name="q0" value="1"> <span>Paid email from another provider</span></label>
+          <label class="opt"><input type="radio" name="q0" value="2"> <span>Free Gmail, Yahoo, AOL, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q2">
+        <legend><span class="n">2.</span> Where is that email backed up?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="0"> <span>A separate backup service</span></label>
+          <label class="opt"><input type="radio" name="q1" value="1"> <span>My email provider keeps it</span></label>
+          <label class="opt"><input type="radio" name="q1" value="2"> <span>Nowhere, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q3">
+        <legend><span class="n">3.</span> Do you use a second sign-in step on email and tax software?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2" value="0"> <span>On both</span></label>
+          <label class="opt"><input type="radio" name="q2" value="1"> <span>On one</span></label>
+          <label class="opt"><input type="radio" name="q2" value="2"> <span>On neither, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q4">
+        <legend><span class="n">4.</span> Do you have a written security plan with your office&#x27;s details?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="0"> <span>Yes, dated in the last 12 months</span></label>
+          <label class="opt"><input type="radio" name="q3" value="1"> <span>A template or an older plan</span></label>
+          <label class="opt"><input type="radio" name="q3" value="2"> <span>No</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q5">
+        <legend><span class="n">5.</span> Who is your named security lead?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="0"> <span>Named in writing</span></label>
+          <label class="opt"><input type="radio" name="q4" value="1"> <span>Me, informally</span></label>
+          <label class="opt"><input type="radio" name="q4" value="2"> <span>Nobody</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q6">
+        <legend><span class="n">6.</span> When did you last restore a file from backup as a test?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q5" value="0"> <span>In the last 12 months</span></label>
+          <label class="opt"><input type="radio" name="q5" value="1"> <span>We back up but never tested</span></label>
+          <label class="opt"><input type="radio" name="q5" value="2"> <span>No backup, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q7">
+        <legend><span class="n">7.</span> Are your computers and laptops encrypted?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q6" value="0"> <span>All of them</span></label>
+          <label class="opt"><input type="radio" name="q6" value="1"> <span>Some of them</span></label>
+          <label class="opt"><input type="radio" name="q6" value="2"> <span>None, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q8">
+        <legend><span class="n">8.</span> Do you have a list of every device that opens client data?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q7" value="0"> <span>A written list</span></label>
+          <label class="opt"><input type="radio" name="q7" value="1"> <span>In my head</span></label>
+          <label class="opt"><input type="radio" name="q7" value="2"> <span>No</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q9">
+        <legend><span class="n">9.</span> A laptop is stolen tonight. Who do you call first?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q8" value="0"> <span>I have written steps, starting with IT and the IRS Stakeholder Liaison</span></label>
+          <label class="opt"><input type="radio" name="q8" value="1"> <span>I know to call the IRS, nothing written</span></label>
+          <label class="opt"><input type="radio" name="q8" value="2"> <span>I would figure it out</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q10">
+        <legend><span class="n">10.</span> When someone leaves, how fast is their access removed?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q9" value="0"> <span>Same day, from a checklist</span></label>
+          <label class="opt"><input type="radio" name="q9" value="1"> <span>Within a week</span></label>
+          <label class="opt"><input type="radio" name="q9" value="2"> <span>Not sure, or we share logins</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q">
+        <legend><span class="n">11.</span> How many devices open client data?</legend>
+        <label class="f" for="inD">Count every computer, laptop, tablet and phone. An example is filled in. Change it to your number.<input id="inD" name="devices" type="number" inputmode="numeric" min="1" max="1000" value="3" required></label>
+      </fieldset>
+      <fieldset class="q">
+        <legend><span class="n">12.</span> Approximately how many returns do you process every year?</legend>
+        <label class="f" for="inN">A rough number is fine. An example is filled in. Change it to your number.<input id="inN" name="returns" type="number" inputmode="numeric" min="0" max="100000" value="300" required></label>
+      </fieldset>
+          </div>
+        </div>
+
+        <aside class="panel" aria-labelledby="rh">
+          <div>
+            <h2 id="rh">Your readiness score</h2>
+            <div class="score"><b id="score">0</b><span>out of 20 points</span><span class="pill none" id="band">Answer to begin</span></div>
+            <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+          </div>
+          <p id="msg" aria-live="polite">You have answered 0 of 12 questions.</p>
+
+          <h2>Your office</h2>
+          <div class="inputs">
+            <label class="f" for="inR">Client records you hold<input id="inR" name="records" type="number" inputmode="numeric" min="0" max="1000000" value="400"></label>
+            <label class="f" for="inF">Average fee per return ($)<input id="inF" name="fee" type="number" inputmode="numeric" min="0" max="100000" value="250"></label>
+          </div>
+
+          <h2>Estimated exposure</h2>
+          <table>
+            <tr><td>Breach response<small id="aNote">400 records x $181</small></td><td id="vA">$0</td></tr>
+            <tr><td>Filing days lost<small id="bNote"></small></td><td id="vB">$0</td></tr>
+            <tr><td>Disclosure penalty<small>$250 per record, capped at $10,000 a year</small></td><td id="vC">$0</td></tr>
+            <tr class="total"><td>Estimated exposure</td><td id="vT">$0</td></tr>
+          </table>
+          <div class="ceiling" id="ceil"></div>
+
+          <h2>Cost to cover it, per month</h2>
+          <div class="tiers">
+            <div class="tier" id="t0"><span>Plan</span><b id="p0">$74</b><span>$15 a device</span></div>
+            <div class="tier" id="t1"><span>Protect</span><b id="p1">$254</b><span>$75 a device</span></div>
+            <div class="tier" id="t2"><span>Concierge</span><b id="p2">$389</b><span>$120 a device</span></div>
+          </div>
+          <p class="note" id="priceNote">$29 a month per office, plus the device fee for each of your 3 devices. A device is any computer, laptop, tablet or phone that opens client tax data.</p>
+
+          <div class="send">
+            <h2>Email me my report</h2>
+            <label class="f" for="email">Your email address<input id="email" name="email" type="email" autocomplete="email" placeholder="you@yourfirm.com" required></label>
+            <label class="check" for="newsletter"><input id="newsletter" name="newsletter" type="checkbox"> <span>Also send me the monthly Tech in Peace newsletter.</span></label>
+            <button class="btn btn-navy" id="sendBtn" type="submit">Email my report</button>
+            <p class="status" id="status" role="status"></p>
+            <p class="note">Your email is used to send this report, and the newsletter only if you tick the box. See our <a href="/privacy#privacy">Privacy Policy</a>.</p>
+          </div>
+          <a class="btn btn-gold" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
+        </aside>
+      </form>
+
+      <div class="sources">
+        <span>This is a planning estimate. It is not a prediction, a quote or legal advice. The IRS does not set a fixed fine for a missing WISP.</span>
+        <span>Where the numbers come from: $181 per record is an average cost per sensitive record cited by Tax Protection Plus. Filing days lost assumes a 75 working day season and 3, 10 or 21 days down depending on your backup answer. These day counts are assumptions. The disclosure penalty follows IRC 6713. The legal ceiling uses the FTC's 2025 maximum of $53,088 per violation.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><img src="/logo-dark-bg.svg" alt="Tech in Peace by CPI"></div>
+    <address>Tech in Peace by CPI. Brooklyn, New York. · <a href="tel:+13479734629">(347) 973-4629</a></address>
+    <nav aria-label="Footer"><a href="/">Home</a><a href="/about">About</a><a href="/mac-support">Mac Support</a><a href="/workshops">Workshops</a><a href="/wisp">WISP</a><a href="/scan">Website Scan</a><a href="/privacy">Privacy</a></nav>
+    <span class="legal">© 2026 Tech in Peace by CPI · Cyber Protection Consulting Services Inc. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+  // Live score, same math as the emailed report (src/wisp-quiz.js scores it
+  // again on the server). Option 1 is worth 2 points, option 2 is 1, option 3 is 0.
+  (function () {
+    var POINTS = [2, 1, 0], N_Q = 10;
+    var $ = function (id) { return document.getElementById(id); };
+    var money = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
+    var form = $("quiz");
+    function picks() {
+      var out = [];
+      for (var i = 0; i < N_Q; i++) {
+        var c = form.querySelector('input[name="q' + i + '"]:checked');
+        out.push(c ? Number(c.value) : null);
+      }
+      return out;
+    }
+    var touched = {};
+    var BANDS = { none: "Answer to begin", good: "In good shape", mid: "Partly covered", low: "Starting point" };
+    var MSGS = {
+      good: "You have most of it in place. A yearly review keeps it that way. The Plan tier fits.",
+      mid: "You have the pieces. They need to be written down and checked. Start with Secure in a Day, then Protect.",
+      low: "Plenty of offices start here. One working session gets you a real plan. Start with Secure in a Day."
+    };
+    function num(id) { return Math.max(0, +$(id).value || 0); }
+    function render() {
+      var a = picks(), pts = a.map(function (x) { return x === null ? null : POINTS[x]; });
+      var R = num("inR"), N = num("inN"), F = num("inF"), D = Math.max(1, Math.round(+$("inD").value || 1));
+      var score = 0, answered = 0;
+      pts.forEach(function (p) { if (p !== null) { answered++; score += p; } });
+      var backup = pts[5], days = backup === 2 ? 3 : (backup === 0 ? 21 : 10);
+      var A = R * 181, B = Math.round((N * F / 75) * days), C = Math.min(R * 250, 10000);
+      var missing = [2, 3, 4, 8].filter(function (ix) { return pts[ix] === 0; }).length;
+      var band = answered < N_Q ? "none" : (score >= 16 ? "good" : (score >= 9 ? "mid" : "low"));
+      $("score").textContent = score;
+      $("bar").style.width = (score / 20 * 100) + "%";
+      $("band").textContent = BANDS[band]; $("band").className = "pill " + band;
+      $("msg").textContent = answered < N_Q ? "You have answered " + (answered + Object.keys(touched).length) + " of 12 questions." : MSGS[band];
+      $("aNote").textContent = R.toLocaleString("en-US") + " records x $181";
+      var why = backup === 2 ? "backup tested" : (backup === 0 ? "no backup" : (backup === 1 ? "backup not tested" : "backup question not answered yet"));
+      $("bNote").textContent = days + " days down assumed (" + why + ")";
+      $("vA").textContent = money(A); $("vB").textContent = money(B); $("vC").textContent = money(C); $("vT").textContent = money(A + B + C);
+      $("ceil").innerHTML = missing === 0
+        ? "<b>Legal maximum, not a forecast.</b> The FTC ceiling is $53,088 per violation. Your answers so far show no missing written items from questions 3, 4, 5 and 9."
+        : "<b>Legal maximum, not a forecast: " + money(missing * 53088) + ".</b> The FTC ceiling is $53,088 per violation. Your answers show " + missing + " missing written item" + (missing > 1 ? "s" : "") + " from questions 3, 4, 5 and 9. Small offices rarely see the full amount.";
+      [15, 75, 120].forEach(function (fee, i) { $("p" + i).textContent = money(29 + D * fee); });
+      var pick = band === "good" ? 0 : (band === "none" ? -1 : 1);
+      [0, 1, 2].forEach(function (i) { $("t" + i).className = "tier" + (i === pick ? " on" : ""); });
+      $("priceNote").textContent = "$29 a month per office, plus the device fee for each of your " + D + " device" + (D > 1 ? "s" : "") + ". A device is any computer, laptop, tablet or phone that opens client tax data.";
+      return a;
+    }
+    form.addEventListener("change", function (e) {
+      var fs = e.target.closest("fieldset"); if (fs) fs.classList.remove("missing");
+      render();
+    });
+    ["inR", "inN", "inF", "inD"].forEach(function (id) {
+      $(id).addEventListener("input", function () { if (id === "inD" || id === "inN") touched[id] = 1; render(); });
+    });
+
+    var status = $("status"), btn = $("sendBtn");
+    function say(text, kind) { status.textContent = text; status.className = "status" + (kind ? " " + kind : ""); }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var a = render();
+      var first = a.indexOf(null);
+      if (first !== -1) {
+        a.forEach(function (x, i) { if (x === null) $("fs-q" + (i + 1)).classList.add("missing"); });
+        say("Question " + (first + 1) + " needs an answer before we can send your report.", "err");
+        form.querySelector('input[name="q' + first + '"]').focus();
+        return;
+      }
+      var email = $("email").value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say("Enter your email address so we can send your report.", "err"); $("email").focus(); return; }
+      btn.disabled = true; say("Sending your report...");
+      fetch("/api/v1/wisp-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers: a, devices: +$("inD").value, returns: +$("inN").value, records: +$("inR").value, fee: +$("inF").value, email: email, newsletter_opt_in: $("newsletter").checked === true })
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (j) { return { ok: res.ok, j: j }; });
+      }).then(function (r) {
+        if (r.ok && r.j.report_emailed) say("Sent. Your report is on its way to " + email + ".", "ok");
+        else if (r.ok) say("We scored your answers but could not send the email. Please try again in a moment.", "err");
+        else {
+          say(r.j.error || "Something went wrong. Please try again in a moment.", "err");
+          if (r.j.field === "email") $("email").focus();
+        }
+      }).catch(function () {
+        say("We could not reach the server. Check your connection and try again.", "err");
+      }).then(function () { btn.disabled = false; });
+    });
+    render();
+  })();
+</script>
+
+<script>
+  // Mobile menu toggle. Links stay in the page for crawlers and no-JS visitors (footer repeats them).
+  (function () {
+    var btn = document.querySelector(".menu-toggle");
+    if (!btn) return;
+    var header = btn.closest("header");
+    function set(open) { header.classList.toggle("menu-open", open); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+    btn.addEventListener("click", function () { set(!header.classList.contains("menu-open")); });
+    header.querySelectorAll("#site-menu a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+    document.addEventListener("click", function (e) { if (!header.contains(e.target)) set(false); });
+  })();
+</script>
+</body>
+</html>

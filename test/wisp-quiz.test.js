@@ -7,7 +7,7 @@ import { createApp } from '../server.js';
 import { createMemoryLimiter } from '../src/ratelimit.js';
 import { createMemoryStore } from '../src/store.js';
 import { loadConfig } from '../src/config.js';
-import { scoreQuiz, validateQuizInput, POINTS } from '../src/wisp-quiz.js';
+import { scoreQuiz, validateQuizInput, POINTS, QUESTIONS } from '../src/wisp-quiz.js';
 import { renderWispEmail } from '../src/email/render-wisp.js';
 
 // compute() copied verbatim from the quiz page, so a change on either side
@@ -90,6 +90,19 @@ test('a perfect score has no tighten-up section and suggests Plan', () => {
   assert.equal(r.suggested_tier, 'Plan');
   assert.ok(!email.text.includes('WHERE TO TIGHTEN UP'));
   assert.match(email.text, /no missing written items/);
+});
+
+test('the quiz page asks exactly the questions the server scores', () => {
+  const page = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'landing', 'wisp-quiz.html'), 'utf8');
+  const unesc = (t) => t.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+  QUESTIONS.forEach((item, i) => {
+    const block = page.match(new RegExp(`<fieldset class="q" id="fs-q${i + 1}">([\\s\\S]*?)</fieldset>`))[1];
+    assert.equal(unesc(block.match(/<\/span> (.*?)<\/legend>/)[1]), item.q);
+    const opts = [...block.matchAll(/name="q(\d+)" value="(\d)"> <span>(.*?)<\/span>/g)];
+    assert.deepEqual(opts.map((m) => [Number(m[1]), Number(m[2]), unesc(m[3])]), item.o.map((o, j) => [i, j, o]));
+  });
+  assert.ok(page.includes('fetch("/api/v1/wisp-report"'));
+  assert.ok(!page.includes('—'), 'no em dashes');
 });
 
 // ---- HTTP -------------------------------------------------------------------
