@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WISP for Brooklyn Tax Preparers | Written Information Security Plan | Tech in Peace</title>
+<meta name="description" content="For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.">
+<link rel="canonical" href="https://www.techinpeace.com/wisp">
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.techinpeace.com/wisp">
+<meta property="og:title" content="WISP for Brooklyn Tax Preparers | Written Information Security Plan | Tech in Peace">
+<meta property="og:description" content="For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.">
+<meta property="og:image" content="https://www.techinpeace.com/logo-gold.png">
+<meta property="og:site_name" content="Tech in Peace by CPI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WISP for Brooklyn Tax Preparers | Written Information Security Plan | Tech in Peace">
+<meta name="twitter:description" content="For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.">
+<meta name="twitter:image" content="https://www.techinpeace.com/logo-gold.png">
+
+<link rel="icon" href="/logo-gold.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* WISP page for tax preparers. Same tokens, header, footer and sections as the Mac support page (DESIGN.md). */
+  :root {
+    color-scheme: light;
+    --navy-900: #101f36;
+    --navy-800: #142534;
+    --navy-700: #1b3060;
+    --navy-600: #203a7b;
+    --navy-100: #e8eff7;
+    --gold-500: #b9822a;
+    --gold-400: #e8ae5c;
+    --gold-300: #f0c889;
+    --gold-100: #faf3dd;
+    --paper: #f1f8fa;
+    --ink: #0d1a26;
+    --muted: #5d6b79;
+    --border: #d9dee4;
+    --white: #ffffff;
+    --radius: 2px;
+    --shadow: 0 10px 30px rgba(20, 37, 52, .12);
+    --font-display: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: "Noto Sans", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font-body); color: var(--ink); background: var(--white); line-height: 1.6; font-size: 16px; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase; }
+  p { margin: 0; }
+  a { color: var(--navy-600); }
+  a:focus-visible, .btn:focus-visible, summary:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-inline: 24px; }
+  @media (max-width: 480px) { .wrap { padding-inline: 16px; } }
+
+  .btn {
+    display: inline-block; padding: 13px 26px; border-radius: var(--radius);
+    font-family: var(--font-display); font-size: 19px; letter-spacing: .04em;
+    text-transform: uppercase; text-decoration: none; cursor: pointer; border: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,37,52,.25); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-900); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid var(--gold-400); }
+  .btn-navy { background: var(--navy-600); color: var(--white); }
+  @media (prefers-reduced-motion: reduce) { .btn, .btn:hover { transition: none; transform: none; } html { scroll-behavior: auto; } }
+
+  .eyebrow {
+    display: inline-block; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+    color: var(--navy-600); padding-bottom: 7px; border-bottom: 2px solid var(--gold-400); margin-bottom: 16px;
+  }
+  .on-dark .eyebrow { color: var(--gold-300); }
+
+  /* Header */
+  header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--navy-800); border-bottom: 2px solid var(--gold-400); }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding-block: 12px; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; color: var(--white); text-decoration: none; }
+  .logo img { height: 42px; width: auto; display: block; }
+  .wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .wordmark .name { font-weight: 700; font-size: 16px; letter-spacing: .14em; text-transform: uppercase; }
+  .wordmark .by { font-weight: 700; font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-400); margin-top: 5px; }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-links a { color: var(--navy-100); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .nav-links a:hover { color: var(--gold-300); }
+  .nav-links a.tel { color: var(--gold-300); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .nav .btn { padding: 9px 18px; font-size: 16px; color: var(--navy-900); white-space: nowrap; }
+  /* Mobile menu: links fold into a panel under the header; the gold button stays visible. */
+  .nav-menu { display: flex; gap: 20px; align-items: center; }
+  .menu-toggle { display: none; flex: none; width: 44px; height: 40px; padding: 0; background: transparent; border: 2px solid var(--gold-400); border-radius: var(--radius); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .menu-toggle span { display: block; width: 20px; height: 2px; background: var(--gold-300); transition: transform .2s ease, opacity .2s ease; }
+  .menu-toggle:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 3px; }
+  header.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  header.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
+  header.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-menu a { white-space: nowrap; }
+  @media (max-width: 1000px) {
+    .menu-toggle { display: inline-flex; }
+    .nav-links { margin-left: auto; }
+    .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--navy-800); border-top: 1px solid rgba(232,174,92,.35); border-bottom: 2px solid var(--gold-400); padding: 6px 24px 14px; box-shadow: 0 14px 24px rgba(16,31,54,.35); }
+    header.menu-open .nav-menu { display: flex; }
+    .nav-menu a { padding: 14px 0; font-size: 16px; border-bottom: 1px solid rgba(232,239,247,.14); }
+    .nav-menu a:last-child { border-bottom: none; }
+  }
+  @media (max-width: 480px) { .nav-menu { padding-inline: 16px; } .nav { gap: 10px; } .nav .btn { padding: 8px 11px; font-size: 15px; white-space: nowrap; } .logo { gap: 9px; } .logo img { height: 36px; } .wordmark .name, .logo .name { white-space: normal; font-size: 14px; letter-spacing: .1em; } }
+  @media (max-width: 400px) { .wordmark .name, .logo .name { font-size: 13px; letter-spacing: .08em; } }
+  @media (prefers-reduced-motion: reduce) { .menu-toggle span { transition: none; } }
+  @media (max-width: 420px) { .wordmark .name { font-size: 14px; letter-spacing: .1em; } .logo img { height: 36px; } .nav .btn { padding: 8px 12px; } }
+
+  /* Hero */
+  .hero {
+    position: relative; overflow: hidden; color: var(--white); padding-block: 76px 70px;
+    background:
+      radial-gradient(1000px 480px at 82% -10%, rgba(232,174,92,.16), transparent 60%),
+      linear-gradient(160deg, var(--navy-900), var(--navy-800) 55%, var(--navy-700));
+  }
+  .hero-copy { max-width: 820px; }
+  .hero h1 { font-size: clamp(44px, 6.4vw, 76px); margin-bottom: 20px; }
+  .hero h1 .line { display: block; overflow: hidden; padding-bottom: .04em; }
+  .hero h1 .line > span { display: inline-block; }
+  .hero h1 em { font-style: normal; color: var(--gold-300); }
+  .shine { background: linear-gradient(110deg, var(--gold-300) 40%, #fff6dc 50%, var(--gold-300) 60%); background-size: 250% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .sub { font-size: clamp(17px, 2vw, 20px); color: var(--navy-100); max-width: 620px; margin-bottom: 30px; }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 26px; padding: 0; list-style: none; font-size: 14px; color: rgba(232,239,247,.85); font-weight: 700; letter-spacing: .04em; }
+  .facts li { display: flex; align-items: center; gap: 8px; }
+  .facts li::before { content: ""; width: 7px; height: 7px; background: var(--gold-400); transform: rotate(45deg); }
+
+  /* Short answer band */
+  .answer-band { background: var(--gold-100); border-bottom: 1px solid var(--border); padding-block: 26px; }
+  .answer-band p { max-width: 900px; font-size: 16.5px; color: var(--navy-800); }
+  .answer-band b { color: var(--navy-800); }
+
+  /* Sections */
+  section.block { padding-block: 80px; }
+  section.alt { background: var(--paper); }
+  .head { max-width: 700px; margin-bottom: 36px; }
+  .head h2 { font-size: clamp(32px, 4vw, 46px); margin-bottom: 10px; }
+  .head p { color: var(--muted); font-size: 17px; }
+
+  /* What we fix */
+  .fix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 900px) { .fix { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .fix { grid-template-columns: 1fr; } }
+  .fix article { min-width: 0; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 24px; transition: box-shadow .15s ease; }
+  .fix article:hover { box-shadow: var(--shadow); }
+  .fix img { width: 46px; display: block; margin-bottom: 12px; }
+  .fix h3 { font-size: 26px; color: var(--navy-800); margin-bottom: 8px; }
+  .fix p { color: var(--muted); font-size: 15.5px; }
+
+  /* How it works */
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .how > div { min-width: 0; border-top: 3px solid var(--gold-400); padding-top: 18px; }
+  .how .n { font-family: var(--font-display); font-size: 40px; color: var(--gold-500); line-height: 1; }
+  .how h3 { font-size: 26px; margin: 8px 0 6px; color: var(--navy-800); }
+  .how p { color: var(--muted); font-size: 15.5px; }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
+
+  /* Two ways to get help */
+  .ways { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 44px; }
+  @media (max-width: 760px) { .ways { grid-template-columns: 1fr; } }
+  .ways > div { min-width: 0; background: var(--gold-100); border-left: 3px solid var(--gold-400); padding: 20px 22px; }
+  .ways h3 { font-size: 24px; color: var(--navy-800); margin-bottom: 6px; }
+  .ways p { font-size: 15.5px; color: var(--ink); }
+
+  /* Pricing */
+  .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; align-items: stretch; max-width: 780px; }
+  @media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+  .plan { min-width: 0; position: relative; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); border-radius: var(--radius); padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .plan.featured { border: 2px solid var(--gold-400); box-shadow: var(--shadow); }
+  .plan .pill { position: absolute; top: -13px; left: 24px; background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-900); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 12px; border-radius: 999px; }
+  .plan h3 { font-size: 26px; color: var(--navy-800); }
+  .plan .for { font-size: 14.5px; color: var(--muted); }
+  .plan .price { font-family: var(--font-display); font-size: 48px; line-height: 1; color: var(--navy-800); font-variant-numeric: tabular-nums; }
+  .plan .price small { font-family: var(--font-body); font-size: 15px; font-weight: 700; color: var(--muted); letter-spacing: 0; text-transform: none; }
+  .plan ul { list-style: none; padding: 0; margin: 6px 0 10px; flex: 1; }
+  .plan li { position: relative; padding: 7px 0 7px 30px; font-size: 15px; border-bottom: 1px solid var(--border); }
+  .plan li:last-child { border-bottom: none; }
+  .plan li::before { content: "✓"; position: absolute; left: 0; top: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--gold-100); color: var(--gold-500); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .plan .btn { text-align: center; }
+
+  /* Testimonials */
+  .tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 760px) { .tgrid { grid-template-columns: 1fr; } }
+  .tcard { margin: 0; min-width: 0; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold-400); padding: 26px; }
+  .tcard .qmark { font-family: var(--font-display); font-size: 60px; line-height: .6; color: var(--gold-400); margin-bottom: 8px; }
+  .tcard blockquote { margin: 0 0 14px; font-size: 16.5px; }
+  .tcard .tname { display: block; font-weight: 700; color: var(--navy-800); }
+  .tcard .trole { display: block; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+  /* FAQ */
+  .faq-list { max-width: 820px; }
+  details { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; background: var(--white); }
+  summary { list-style: none; cursor: pointer; padding: 18px 22px; font-weight: 700; font-size: 17px; color: var(--navy-800); display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--font-display); color: var(--gold-500); font-size: 26px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details .answer { padding: 0 22px 18px; color: var(--muted); }
+
+  /* Closing */
+  .closing { background: radial-gradient(900px 400px at 15% 0%, rgba(232,174,92,.14), transparent 60%), linear-gradient(160deg, var(--navy-800), var(--navy-900)); color: var(--white); padding-block: 76px; text-align: center; }
+  .closing img { width: 110px; margin-bottom: 18px; }
+  .closing h2 { font-size: clamp(34px, 5vw, 50px); margin-bottom: 12px; }
+  .closing p { color: var(--navy-100); max-width: 560px; margin: 0 auto 28px; }
+  .closing .hero-ctas { justify-content: center; }
+
+  footer { background: var(--navy-900); color: rgba(232,239,247,.75); padding-block: 28px; font-size: 14px; border-top: 2px solid var(--gold-400); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  footer .brand { display: flex; align-items: center; gap: 12px; }
+  footer .brand img { height: 34px; }
+  footer .brand b { color: var(--white); letter-spacing: .12em; text-transform: uppercase; font-size: 14px; }
+  footer address { font-style: normal; }
+  footer a { color: var(--gold-300); text-decoration: none; }
+  footer nav { display: flex; gap: 16px; flex-wrap: wrap; }
+  footer .legal { flex-basis: 100%; font-size: 13px; color: rgba(232,239,247,.6); }
+
+  /* WISP page additions */
+  .why { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start; }
+  .why h2 { font-size: clamp(30px, 3.6vw, 42px); color: var(--navy-800); }
+  .why .copy { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; font-size: 17px; }
+  .why .copy b { color: var(--navy-800); }
+  @media (max-width: 860px) { .why { grid-template-columns: 1fr; gap: 18px; } }
+  .fix.four { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1000px) { .fix.four { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .fix.four { grid-template-columns: 1fr; } }
+  .plans.three { grid-template-columns: repeat(3, 1fr); max-width: none; }
+  @media (max-width: 960px) { .plans.three { grid-template-columns: 1fr; max-width: 560px; } }
+  .plans.three .plan .price small { display: block; margin-top: 8px; }
+  .plan .office { font-size: 14.5px; color: var(--muted); font-weight: 700; }
+  .plan .example { font-weight: 700; color: var(--navy-800); border-top: 1px solid var(--border); padding-top: 12px; }
+  .pricing-lead { font-size: 22px; font-weight: 700; color: var(--navy-800); max-width: 40ch; margin-bottom: 10px; }
+  .pricing-note { max-width: 62ch; margin-bottom: 30px; }
+  .pricing-foot { margin-top: 28px; max-width: 62ch; font-weight: 700; color: var(--navy-800); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/">
+      <img src="/logo-dark-bg.svg" alt="Tech in Peace by CPI">
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <span class="nav-menu" id="site-menu">
+        <a href="/mac-support">Mac Support</a>
+        <a href="/workshops">Workshops</a>
+        <a href="/wisp" aria-current="page">WISP</a>
+        <a href="/scan">Security Scan</a>
+        <a href="/#pricing">Pricing</a>
+        <a class="tel" href="tel:+13479734629">(347) 973-4629</a>
+      </span>
+      <a class="btn btn-gold" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book a call</a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero on-dark" id="top">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Tech in Peace by CPI</span>
+        <h1><span class="line"><span>Your WISP, written for your office</span></span><span class="line"><span><em class="shine">and kept current.</em></span></span></h1>
+        <p class="sub">For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-gold" href="https://claude.ai/artifact/UHF5Cys5b3QoHQFVhsjNsh" target="_blank" rel="noopener">Take the 3-minute readiness quiz</a>
+          <a class="btn btn-outline" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
+        </div>
+        <ul class="facts">
+          <li>PTIN renewal closes December 31.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="why">
+    <div class="wrap why">
+      <h2>A template is a start. The plan has to be yours.</h2>
+      <div class="copy">
+        <p>You renew your PTIN every year. One line asks about your written data security plan. Federal law says every paid preparer needs one, at any size.</p>
+        <p>Most offices have a template in a folder. The plan has to name your systems, your people and your vendors. And someone has to keep it true through the year.</p>
+        <p><b>That is the part we do.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="what">
+    <div class="wrap">
+      <div class="head">
+        <h2>What you get</h2>
+      </div>
+      <div class="fix four">
+        <article>
+          <img src="/key-outline.png" alt="">
+          <h3>A plan that is yours</h3>
+          <p>We write your WISP with you. Your devices. Your software. Your staff. Signed and dated.</p>
+        </article>
+        <article>
+          <img src="/key-outline.png" alt="">
+          <h3>Proof it is working</h3>
+          <p>Every device reports in. You get a one-page report each month. File it with your plan.</p>
+        </article>
+        <article>
+          <img src="/key-outline.png" alt="">
+          <h3>Backup you have seen work</h3>
+          <p>We restore a real file with you watching. Then we do it again each year.</p>
+        </article>
+        <article>
+          <img src="/key-outline.png" alt="">
+          <h3>A person to call</h3>
+          <p>We are in Brooklyn. You get a name, not a ticket queue.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="how">
+    <div class="wrap">
+      <div class="head">
+        <h2>How it works</h2>
+      </div>
+      <div class="how">
+        <div><span class="n">1</span><h3>Take the quiz.</h3><p>Ten questions. Three minutes. You see where you stand.</p></div>
+        <div><span class="n">2</span><h3>Secure in a Day.</h3><p>One working session. You leave with a finished WISP and monitoring turned on.</p></div>
+        <div><span class="n">3</span><h3>Stay current.</h3><p>We watch the devices, test the backup, and update the plan before your next renewal.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <div class="head">
+        <h2>Pricing</h2>
+      </div>
+      <p class="pricing-lead">$29 a month per office, plus a monthly fee for each device.</p>
+      <p class="pricing-note">A device is any computer, laptop, tablet or phone that opens client tax data. Count them. Multiply by your tier's device fee. Add $29. That is your monthly total.</p>
+      <div class="plans three">
+        <div class="plan">
+          <h3>Plan</h3>
+          <p class="price">$15 <small>per device, per month</small></p>
+          <p class="office">plus $29 per office</p>
+          <p class="for">For the solo preparer who wants the plan kept current.</p>
+          <ul>
+            <li>Your WISP, written for your office</li>
+            <li>Yearly review before PTIN renewal</li>
+            <li>Device monitoring with a monthly report</li>
+            <li>Domain and email health check</li>
+          </ul>
+          <p class="example">3 devices: $74 a month</p>
+        </div>
+        <div class="plan featured">
+          <h3>Protect</h3>
+          <p class="price">$75 <small>per device, per month</small></p>
+          <p class="office">plus $29 per office</p>
+          <p class="for">For the office that wants backup and a help desk.</p>
+          <ul>
+            <li>Everything in Plan</li>
+            <li>Backup with a tested restore</li>
+            <li>Remote IT help desk</li>
+            <li>Staff training with sign-offs</li>
+          </ul>
+          <p class="example">3 devices: $254 a month</p>
+        </div>
+        <div class="plan">
+          <h3>Concierge</h3>
+          <p class="price">$120 <small>per device, per month</small></p>
+          <p class="office">plus $29 per office</p>
+          <p class="for">For the office that wants us on site.</p>
+          <ul>
+            <li>Everything in Protect</li>
+            <li>On-site visits in Brooklyn</li>
+            <li>Quarterly review and evidence binder</li>
+            <li>Incident support and reporting help</li>
+          </ul>
+          <p class="example">3 devices: $389 a month</p>
+        </div>
+      </div>
+      <p class="pricing-foot">Secure in a Day workshop: $497, one time. No long contract. Add or remove a device any month.</p>
+    </div>
+  </section>
+
+  <section class="block alt" id="faq">
+    <div class="wrap">
+      <div class="head">
+        <h2>Questions preparers ask</h2>
+      </div>
+      <div class="faq-list">
+        <details><summary>I already have a free template. Is that enough?</summary><div class="answer">It is a good start. The rule asks for a plan that describes your office and is kept up to date. We turn the template into that.</div></details>
+        <details><summary>My tax software is secure. Why do I need this?</summary><div class="answer">Your software protects its own systems. The rule names you as the one responsible for your office, your email and your devices.</div></details>
+        <details><summary>I am a solo preparer. Does this apply to me?</summary><div class="answer">Yes. The rule applies at any size. A solo plan is shorter and simpler.</div></details>
+        <details><summary>What does "per device" mean on my bill?</summary><div class="answer">Count each computer, laptop, tablet or phone that opens client tax data. Multiply by your tier's device fee. Add $29. That is your monthly total.</div></details>
+        <details><summary>Do you work on Macs?</summary><div class="answer">Yes. Macs and Windows.</div></details>
+        <details><summary>What happens if something goes wrong?</summary><div class="answer">Your plan lists who to call and in what order. On Concierge, we make those calls with you.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing on-dark">
+    <div class="wrap">
+      <img src="/logo-mark.png" alt="">
+      <h2>Walk into tax season with it handled.</h2>
+      <p>Your clients hand you their most private paperwork. Show them the plan that protects it. Confidence, not jargon.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="https://claude.ai/artifact/UHF5Cys5b3QoHQFVhsjNsh" target="_blank" rel="noopener">Take the quiz</a>
+        <a class="btn btn-outline" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><img src="/logo-dark-bg.svg" alt="Tech in Peace by CPI"></div>
+    <address>Tech in Peace by CPI. Brooklyn, New York. · <a href="tel:+13479734629">(347) 973-4629</a></address>
+    <nav aria-label="Footer"><a href="/">Home</a><a href="/about">About</a><a href="/mac-support">Mac Support</a><a href="/workshops">Workshops</a><a href="/wisp">WISP</a><a href="/scan">Security Scan</a><a href="/privacy">Privacy</a></nav>
+    <span class="legal">© 2026 Tech in Peace by CPI · Cyber Protection Consulting Services Inc. All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- ============ Structured data (JSON-LD). FAQ text matches the visible FAQ word for word. ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Written Information Security Plan (WISP) for tax preparers",
+  "name": "WISP for Brooklyn Tax Preparers",
+  "description": "For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Tech in Peace by CPI",
+    "url": "https://www.techinpeace.com/",
+    "telephone": "+1-347-973-4629",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Brooklyn",
+      "addressRegion": "NY",
+      "addressCountry": "US"
+    }
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Brooklyn"
+  },
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Plan",
+      "price": "15",
+      "priceCurrency": "USD",
+      "description": "$15 per device, per month, plus $29 per office."
+    },
+    {
+      "@type": "Offer",
+      "name": "Protect",
+      "price": "75",
+      "priceCurrency": "USD",
+      "description": "$75 per device, per month, plus $29 per office."
+    },
+    {
+      "@type": "Offer",
+      "name": "Concierge",
+      "price": "120",
+      "priceCurrency": "USD",
+      "description": "$120 per device, per month, plus $29 per office."
+    },
+    {
+      "@type": "Offer",
+      "name": "Secure in a Day workshop",
+      "price": "497",
+      "priceCurrency": "USD",
+      "description": "One time."
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "I already have a free template. Is that enough?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a good start. The rule asks for a plan that describes your office and is kept up to date. We turn the template into that."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "My tax software is secure. Why do I need this?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your software protects its own systems. The rule names you as the one responsible for your office, your email and your devices."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I am a solo preparer. Does this apply to me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The rule applies at any size. A solo plan is shorter and simpler."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does \"per device\" mean on my bill?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Count each computer, laptop, tablet or phone that opens client tax data. Multiply by your tier's device fee. Add $29. That is your monthly total."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you work on Macs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Macs and Windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if something goes wrong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your plan lists who to call and in what order. On Concierge, we make those calls with you."
+      }
+    }
+  ]
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+  // Motion: Lenis smooth scroll + GSAP ScrollTrigger. Everything is visible without JS or with reduced motion.
+  (function () {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (window.Lenis) {
+      var lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          var id = a.getAttribute("href");
+          if (id.length < 2) return;
+          var el = document.querySelector(id);
+          if (!el) return;
+          e.preventDefault();
+          lenis.scrollTo(el, { offset: -70 });
+        });
+      });
+    }
+
+    // Hero: lines rise into place, then the gold line shines once.
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.from(".hero h1 .line > span", { yPercent: 110, duration: .9, stagger: .14 })
+      .from(".hero .sub, .hero .hero-ctas, .facts", { y: 18, opacity: 0, duration: .6, stagger: .1 }, "-=.45")
+      .to(".shine", { backgroundPosition: "0% 0", duration: 1.4, ease: "power2.inOut" }, "-=.3");
+
+    // Gentle rise for section content.
+    gsap.utils.toArray(".head, .fix article, .how > div, .ways > div, .plan, .tcard, details, .closing .wrap > *").forEach(function (el) {
+      gsap.from(el, { y: 24, opacity: 0, duration: .7, ease: "power2.out", immediateRender: false,
+        scrollTrigger: { trigger: el, start: "top 88%", once: true } });
+    });
+  })();
+</script>
+
+<script>
+  // Mobile menu toggle. Links stay in the page for crawlers and no-JS visitors (footer repeats them).
+  (function () {
+    var btn = document.querySelector(".menu-toggle");
+    if (!btn) return;
+    var header = btn.closest("header");
+    function set(open) { header.classList.toggle("menu-open", open); btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+    btn.addEventListener("click", function () { set(!header.classList.contains("menu-open")); });
+    header.querySelectorAll("#site-menu a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+    document.addEventListener("click", function (e) { if (!header.contains(e.target)) set(false); });
+  })();
+</script>
+</body>
+</html>
