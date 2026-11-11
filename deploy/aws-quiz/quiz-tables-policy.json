@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "QuizSubmissionsAndRateLimit",
+      "Effect": "Allow",
+      "Action": ["dynamodb:PutItem", "dynamodb:UpdateItem"],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:306499034564:table/techinpeace-quiz-submissions",
+        "arn:aws:dynamodb:us-east-1:306499034564:table/techinpeace-quiz-rate"
+      ]
+    }
+  ]
+}

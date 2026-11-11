@@ -4,9 +4,6 @@
 //   POST /api/v1/scan    the JSON API (for the ChatGPT app): the scan result
 //                        object plus a report link. CORS from config, rate
 //                        limited per IP per hour.
-//   POST /api/v1/wisp-report  the WISP readiness quiz: scores the answers,
-//                        emails the risk report to the person who took it,
-//                        and saves the submission. Rate limited per IP.
 //   GET  /api/report/:id a saved scan, for report links.
 //
 // createApp() takes injectable audit/send functions so the full HTTP flow can
@@ -16,51 +13,17 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runAudit, normaliseDomain, domainInputProblem } from './src/audit.js';
-import { sendReport, sendRendered } from './src/email/mailer.js';
+import { sendReport } from './src/email/mailer.js';
 import { loadConfig } from './src/config.js';
 import { createApiLimiter } from './src/ratelimit.js';
-import { createStore, buildScanRecord, buildQuizRecord, newScanId, SCAN_ID_RE } from './src/store.js';
+import { createStore, buildScanRecord, newScanId, SCAN_ID_RE } from './src/store.js';
 import { renderEmail } from './src/email/render.js';
-import { renderWispEmail } from './src/email/render-wisp.js';
-import { validateQuizInput, scoreQuiz } from './src/wisp-quiz.js';
+import { emailInputProblem } from './src/email/address.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Catch the most common mail-provider typos so a mistyped address doesn't
-// silently swallow the report.
-const EMAIL_DOMAIN_TYPOS = {
-  'gmial.com': 'gmail.com',
-  'gamil.com': 'gmail.com',
-  'gmal.com': 'gmail.com',
-  'gmai.com': 'gmail.com',
-  'gmail.co': 'gmail.com',
-  'gmail.con': 'gmail.com',
-  'hotmial.com': 'hotmail.com',
-  'hotmal.com': 'hotmail.com',
-  'hotmail.co': 'hotmail.com',
-  'outlok.com': 'outlook.com',
-  'outloook.com': 'outlook.com',
-  'yaho.com': 'yahoo.com',
-  'yahooo.com': 'yahoo.com',
-  'iclould.com': 'icloud.com',
-  'icoud.com': 'icloud.com',
-};
-
-export function emailInputProblem(email) {
-  const e = String(email).trim();
-  if (!EMAIL_RE.test(e)) {
-    return 'That email address doesn’t look right. Check it follows the format you@example.com.';
-  }
-  const domain = e.split('@')[1].toLowerCase();
-  const suggestion = EMAIL_DOMAIN_TYPOS[domain];
-  if (suggestion) {
-    return `Did you mean @${suggestion}? "${domain}" looks like a typo — please double-check so your report reaches you.`;
-  }
-  return null;
-}
+export { emailInputProblem };
 
 function clientIp(req) {
   return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
@@ -69,7 +32,6 @@ function clientIp(req) {
 export function createApp({
   audit = runAudit,
   send = sendReport,
-  sendEmail = sendRendered,
   rateLimit = {},
   config = loadConfig(),
   apiLimiter,
@@ -202,59 +164,12 @@ export function createApp({
     }
   });
 
-  // WISP readiness quiz. The email is required: the report goes to the
-  // person who took the quiz. A copy goes to config.quizNotifyTo when set.
-  app.post('/api/v1/wisp-report', async (req, res) => {
-    const ip = clientIp(req);
-    try {
-      const limiter = await limiterReady;
-      // Own counter, so quiz reports and scans do not share a limit.
-      if ((await limiter.hit(`wisp-quiz|${ip}`)).limited) {
-        return res.status(429).json({ error: 'Too many reports from this address. Please try again in an hour.' });
-      }
-    } catch (err) {
-      console.error('Rate limiter failed:', err.message);
-    }
-
-    const body = req.body ?? {};
-    const cleanEmail = typeof body.email === 'string' ? body.email.trim() : '';
-    const emailProblem = cleanEmail ? emailInputProblem(cleanEmail) : 'Enter your email address so we can send your report.';
-    if (emailProblem) return res.status(400).json({ error: emailProblem, field: 'email' });
-    const input = validateQuizInput(body);
-    if (input.error) return res.status(400).json({ error: input.error, field: input.field });
-
-    const result = scoreQuiz(input.value);
-    const takenAt = new Date().toISOString();
-    const rendered = renderWispEmail(result, takenAt);
-    let emailed = false;
-    try {
-      emailed = Boolean((await sendEmail(cleanEmail, rendered, 'wisp-quiz'))?.delivered);
-    } catch (err) {
-      console.error('WISP report email failed:', err.message);
-    }
-    if (config.quizNotifyTo) {
-      const note = { ...rendered, subject: `WISP quiz: ${cleanEmail} scored ${result.score} of ${result.max_score}` };
-      await sendEmail(config.quizNotifyTo, note, 'wisp-quiz-copy').catch((err) => console.error('WISP copy email failed:', err.message));
-    }
-
-    const id = newScanId();
-    try {
-      const newsletterOptIn = body.newsletter_opt_in === true;
-      const record = buildQuizRecord({ id, result, takenAt, email: cleanEmail, newsletterOptIn, consentAt: newsletterOptIn ? takenAt : null, rendered });
-      await (await storeReady).save(record);
-    } catch (err) {
-      console.error('Saving WISP quiz failed:', err.message);
-    }
-    res.json({ ...result, report_emailed: emailed });
-  });
-
   // A saved scan for a report link. Returns the report only, never the email.
   app.get('/api/report/:id', async (req, res) => {
     if (!SCAN_ID_RE.test(req.params.id)) return res.status(404).json({ error: 'Report not found.' });
     try {
       const record = await (await storeReady).get(req.params.id);
-      // Quiz submissions share the table but are never served by this link.
-      if (!record || record.source === 'wisp-quiz') return res.status(404).json({ error: 'Report not found. Links expire after a while; run a new scan.' });
+      if (!record) return res.status(404).json({ error: 'Report not found. Links expire after a while; run a new scan.' });
       res.json({ report: JSON.parse(record.result_json) });
     } catch (err) {
       console.error('Report lookup failed:', err);

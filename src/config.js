@@ -17,7 +17,5 @@ export function loadConfig(env = process.env) {
     // Secret mixed into the IP hash so stored rate-limit keys cannot be reversed.
     rateSalt: env.RATE_SALT || null,
     apiScansPerHour: Number(env.API_SCANS_PER_HOUR ?? 10),
-    // Optional address that gets a copy of every WISP quiz report.
-    quizNotifyTo: env.QUIZ_NOTIFY_TO || null,
   };
 }

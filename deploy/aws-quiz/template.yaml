@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Tech in Peace quiz API: one Lambda that serves every quiz at
+  /api/quiz/<name>/report, scores the answers, emails the report through SES,
+  and saves each submission. Separate from the scanner stack so the two are
+  deployed and changed independently. CloudFront sends /api/quiz/* here.
+  Uses an EXISTING execution role (the deploying identity cannot create roles);
+  that role needs quiz-tables-policy.json added.
+
+Parameters:
+  ExecutionRoleArn:
+    Type: String
+    Default: arn:aws:iam::306499034564:role/lambda-exec-app
+    Description: Existing Lambda role with Logs, SES send, and quiz-tables-policy.json
+  LambdaCodeBucket:
+    Type: String
+    Default: cyber-protection-artifacts-306499034564-us-east-1
+  LambdaCodeKey:
+    Type: String
+    Description: S3 key of the quiz Lambda zip
+  MailFrom:
+    Type: String
+    Default: "Tech in Peace <scanner@techinpeace.com>"
+  NotifyTo:
+    Type: String
+    Default: ""
+    Description: Optional address that gets a copy of every quiz report. Empty sends no copies.
+  AllowedOrigins:
+    Type: String
+    Default: ""
+    Description: Comma-separated browser origins allowed to call the quiz API from another site (CORS)
+  RateSalt:
+    Type: String
+    NoEcho: true
+    Description: Secret mixed into hashed IPs for the rate limit. Generated at deploy, never stored in git.
+  ReportsPerHour:
+    Type: Number
+    Default: 5
+
+Resources:
+  # One row per quiz submission. Rows expire on their own after 12 months.
+  SubmissionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-submissions"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: submission_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: submission_id
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+  # Rate-limit counters: a salted hash of the IP plus the hour, never the IP.
+  RateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${AWS::StackName}-rate"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: key
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+
+  QuizFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-api"
+      Runtime: nodejs22.x
+      Handler: quiz-lambda.handler
+      Timeout: 15
+      MemorySize: 256
+      Role: !Ref ExecutionRoleArn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: !Ref LambdaCodeKey
+      Environment:
+        Variables:
+          NODE_ENV: production
+          EMAIL_TRANSPORT: ses
+          MAIL_FROM: !Ref MailFrom
+          PREVIEW_DIR: /tmp/previews
+          QUIZ_TABLE: !Ref SubmissionsTable
+          RATE_TABLE: !Ref RateTable
+          RATE_SALT: !Ref RateSalt
+          QUIZ_REPORTS_PER_HOUR: !Ref ReportsPerHour
+          QUIZ_NOTIFY_TO: !Ref NotifyTo
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
+
+  # HTTP API, as for the scanner: CloudFront can send POST bodies to it
+  # without signing.
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Sub "${AWS::StackName}-api"
+      ProtocolType: HTTP
+
+  HttpApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt QuizFunction.Arn
+      PayloadFormatVersion: "2.0"
+
+  HttpApiRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: "ANY /api/quiz/{proxy+}"
+      Target: !Sub "integrations/${HttpApiIntegration}"
+
+  HttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: "$default"
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 20
+        ThrottlingRateLimit: 10
+
+  ApiInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref QuizFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*"
+
+Outputs:
+  ApiDomain:
+    Description: Origin domain for the CloudFront /api/quiz/* behavior
+    Value: !Select [2, !Split ["/", !GetAtt HttpApi.ApiEndpoint]]
+  FunctionName:
+    Value: !Ref QuizFunction
+  SubmissionsTableName:
+    Value: !Ref SubmissionsTable

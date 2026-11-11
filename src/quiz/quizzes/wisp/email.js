@@ -3,8 +3,8 @@
 // the only new lines are the section headings and the per-question
 // "Full points" line, which repeats the quiz's own top answer.
 
-import { CPI, esc, LOGO_CID, NEED_A_HAND, SIGNATURE } from './render.js';
-import { money, FTC_MAX_PER_VIOLATION, OFFICE_FEE } from '../wisp-quiz.js';
+import { CPI, esc, LOGO_CID, NEED_A_HAND, SIGNATURE } from '../../../email/render.js';
+import { money, FTC_MAX_PER_VIOLATION, OFFICE_FEE } from './scoring.js';
 
 export const BOOK_URL = 'https://calendly.com/cpconsulting/15min';
 const BOOK_LABEL = 'Book Secure in a Day';

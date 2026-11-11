@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   staging.techinpeace.com: a private S3 bucket behind its own CloudFront
-  distribution, mirroring the live techinpeace.com setup. /api/* goes to the
-  same scanner API as live. Search engines are told not to index it.
+  distribution, mirroring the live techinpeace.com setup. /api/quiz/* goes to
+  the quiz API; the rest of /api/* goes to the same scanner API as live. Search engines are told not to index it.
   Nothing here touches the live bucket, distribution or stack.
 
 Parameters:
@@ -17,6 +17,10 @@ Parameters:
     Type: String
     Default: xerftm3br1.execute-api.us-east-1.amazonaws.com
     Description: The live scanner API, shared with staging
+  QuizApiDomain:
+    Type: String
+    Default: ""
+    Description: The quiz API's domain (output ApiDomain of the techinpeace-quiz stack). Empty sends /api/quiz/* to the scanner like the rest of /api/*.
   CleanUrlsFunctionArn:
     Type: String
     Default: arn:aws:cloudfront::306499034564:function/techinpeace-cleanurls
@@ -24,6 +28,7 @@ Parameters:
 
 Conditions:
   HasCertificate: !Not [!Equals [!Ref CertificateArn, ""]]
+  HasQuizApi: !Not [!Equals [!Ref QuizApiDomain, ""]]
 
 Resources:
   SiteBucket:
@@ -112,6 +117,12 @@ Resources:
           - Id: lambda-api
             DomainName: !Ref ApiOriginDomain
             CustomOriginConfig: { OriginProtocolPolicy: https-only, OriginSSLProtocols: [TLSv1.2] }
+          - !If
+            - HasQuizApi
+            - Id: quiz-api
+              DomainName: !Ref QuizApiDomain
+              CustomOriginConfig: { OriginProtocolPolicy: https-only, OriginSSLProtocols: [TLSv1.2] }
+            - !Ref "AWS::NoValue"
         DefaultCacheBehavior:
           TargetOriginId: s3-site
           ViewerProtocolPolicy: redirect-to-https
@@ -124,6 +135,18 @@ Resources:
             - EventType: viewer-request
               FunctionARN: !GetAtt CleanUrlsFunction.FunctionMetadata.FunctionARN
         CacheBehaviors:
+          # Quizzes first: the more specific path must come before /api/*.
+          - !If
+            - HasQuizApi
+            - PathPattern: /api/quiz/*
+              TargetOriginId: quiz-api
+              ViewerProtocolPolicy: redirect-to-https
+              AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+              Compress: false
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+              OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+              ResponseHeadersPolicyId: !Ref HeadersPolicy
+            - !Ref "AWS::NoValue"
           - PathPattern: /api/*
             TargetOriginId: lambda-api
             ViewerProtocolPolicy: redirect-to-https

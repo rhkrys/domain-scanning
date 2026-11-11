@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createApp } from '../server.js';
+import { createQuizApp } from '../src/quiz/app.js';
+import { loadQuizConfig } from '../src/quiz/config.js';
+import { createMemoryQuizStore } from '../src/quiz/store.js';
 import { createMemoryLimiter } from '../src/ratelimit.js';
-import { createMemoryStore } from '../src/store.js';
-import { loadConfig } from '../src/config.js';
-import { scoreQuiz, validateQuizInput, POINTS, QUESTIONS } from '../src/wisp-quiz.js';
-import { renderWispEmail } from '../src/email/render-wisp.js';
+import { QUIZZES } from '../src/quiz/quizzes/index.js';
+import { scoreQuiz, validateQuizInput, POINTS, QUESTIONS } from '../src/quiz/quizzes/wisp/scoring.js';
+import { renderWispEmail } from '../src/quiz/quizzes/wisp/email.js';
 
 // compute() copied verbatim from the quiz page, so a change on either side
 // that breaks the match fails here.
@@ -101,26 +102,35 @@ test('the quiz page asks exactly the questions the server scores', () => {
     const opts = [...block.matchAll(/name="q(\d+)" value="(\d)"> <span>(.*?)<\/span>/g)];
     assert.deepEqual(opts.map((m) => [Number(m[1]), Number(m[2]), unesc(m[3])]), item.o.map((o, j) => [i, j, o]));
   });
-  assert.ok(page.includes('fetch("/api/v1/wisp-report"'));
+  assert.ok(page.includes('fetch("/api/quiz/wisp/report"'));
   assert.ok(!page.includes('—'), 'no em dashes');
 });
 
 // ---- HTTP -------------------------------------------------------------------
 
+test('every registered quiz has the full shape', () => {
+  for (const [slug, q] of Object.entries(QUIZZES)) {
+    assert.equal(q.slug, slug);
+    for (const fn of ['validate', 'score', 'render', 'summary']) assert.equal(typeof q[fn], 'function', `${slug}.${fn}`);
+    assert.equal(typeof q.title, 'string');
+  }
+});
+
 let server;
 let base;
 const sent = [];
-const store = createMemoryStore();
+const store = createMemoryQuizStore();
 
 before(async () => {
-  const app = createApp({
+  const app = createQuizApp({
     sendEmail: async (to, rendered, label) => {
       sent.push({ to, rendered, label });
       return { delivered: true, mode: 'test' };
     },
-    config: loadConfig({ QUIZ_NOTIFY_TO: 'owner@example.org' }),
-    apiLimiter: createMemoryLimiter({ max: 2 }),
+    config: loadQuizConfig({ QUIZ_NOTIFY_TO: 'owner@example.org' }),
+    limiter: createMemoryLimiter({ max: 2 }),
     store,
+    now: () => new Date(TAKEN),
   });
   await new Promise((resolve) => {
     server = app.listen(0, resolve);
@@ -130,15 +140,16 @@ before(async () => {
 
 after(() => server.close());
 
-const post = (body, ip = '203.0.113.9') =>
-  fetch(`${base}/api/v1/wisp-report`, {
+const post = (body, ip = '203.0.113.9', slug = 'wisp') =>
+  fetch(`${base}/api/quiz/${slug}/report`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
     body: JSON.stringify(body),
   });
 
-test('POST /api/v1/wisp-report emails the report, sends the copy, and returns the score', async () => {
+test('POST /api/quiz/wisp/report emails the report, sends the copy, saves it, and returns the score', async () => {
   sent.length = 0;
+  store.items.clear();
   const res = await post({ ...SAMPLE, email: ' preparer@example.com ', newsletter_opt_in: true });
   assert.equal(res.status, 200);
   const json = await res.json();
@@ -148,12 +159,24 @@ test('POST /api/v1/wisp-report emails the report, sends the copy, and returns th
   assert.equal(json.exposure.total, 72400 + 10000 + 10000);
   assert.deepEqual(sent.map((s) => s.to), ['preparer@example.com', 'owner@example.org']);
   assert.match(sent[0].rendered.subject, /^Your WISP readiness report: 12 of 20/);
-  assert.match(sent[1].rendered.subject, /^WISP quiz: preparer@example.com scored 12 of 20/);
+  assert.equal(sent[1].rendered.subject, 'WISP readiness quiz: preparer@example.com scored 12 of 20, Partly covered');
+  const [rec] = [...store.items.values()];
+  assert.equal(rec.quiz, 'wisp');
+  assert.equal(rec.email, 'preparer@example.com');
+  assert.equal(rec.newsletter_opt_in, true);
+  assert.equal(rec.consent_at, TAKEN);
+  assert.equal(rec.expires_at, Date.parse(TAKEN) / 1000 + 365 * 86400);
+  assert.equal(JSON.parse(rec.result_json).score, 12);
 });
 
 test('the server scores the answers itself and ignores a score sent by the browser', async () => {
   const json = await (await post({ ...SAMPLE, email: 'a@example.com', score: 20, band: 'good' }, '203.0.113.10')).json();
   assert.equal(json.score, 12);
+});
+
+test('an unknown quiz is a 404', async () => {
+  assert.equal((await post({ ...SAMPLE, email: 'a@example.com' }, '203.0.113.14', 'nope')).status, 404);
+  assert.equal((await post({ ...SAMPLE, email: 'a@example.com' }, '203.0.113.14', 'constructor')).status, 404);
 });
 
 test('email is required and checked for typos', async () => {
@@ -171,26 +194,21 @@ test('missing answers are rejected before any email is sent', async () => {
   assert.equal(sent.length, 0);
 });
 
-test('reports are rate limited per IP, separately from scans', async () => {
+test('reports are rate limited per IP', async () => {
   const ip = '203.0.113.13';
   assert.equal((await post({ ...SAMPLE, email: 'c@example.com' }, ip)).status, 200);
   assert.equal((await post({ ...SAMPLE, email: 'c@example.com' }, ip)).status, 200);
   assert.equal((await post({ ...SAMPLE, email: 'c@example.com' }, ip)).status, 429);
 });
 
-test('quiz submissions are saved but never served as scan reports', async () => {
+test('without the opt-in no consent is stored, and no copy goes out when none is set', async () => {
   const saved = [];
-  const spyStore = { save: async (r) => { saved.push(r); return store.save(r); }, get: (id) => store.get(id) };
-  const app = createApp({ sendEmail: async () => ({ delivered: true }), config: loadConfig({}), apiLimiter: createMemoryLimiter(), store: spyStore });
+  const mails = [];
+  const app = createQuizApp({ sendEmail: async (to) => { mails.push(to); return { delivered: true }; }, config: loadQuizConfig({}), limiter: createMemoryLimiter(), store: { save: async (r) => saved.push(r) } });
   const srv = await new Promise((resolve) => { const s = app.listen(0, () => resolve(s)); });
-  const url = `http://127.0.0.1:${srv.address().port}`;
-  await fetch(`${url}/api/v1/wisp-report`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...SAMPLE, email: 'd@example.com' }) });
-  const rec = saved[0];
-  assert.equal(rec.source, 'wisp-quiz');
-  assert.equal(rec.email, 'd@example.com');
-  assert.equal(rec.newsletter_opt_in, false);
-  assert.ok(!('consent_at' in rec));
-  assert.ok(rec.expires_at - Date.now() / 1000 > 360 * 86400);
-  assert.equal((await fetch(`${url}/api/report/${rec.scan_id}`)).status, 404);
+  await fetch(`http://127.0.0.1:${srv.address().port}/api/quiz/wisp/report`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...SAMPLE, email: 'd@example.com', newsletter_opt_in: 'yes' }) });
   srv.close();
+  assert.deepEqual(mails, ['d@example.com']);
+  assert.equal(saved[0].newsletter_opt_in, false);
+  assert.ok(!('consent_at' in saved[0]));
 });

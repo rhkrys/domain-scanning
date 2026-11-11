@@ -453,7 +453,7 @@
 </footer>
 
 <script>
-  // Live score, same math as the emailed report (src/wisp-quiz.js scores it
+  // Live score, same math as the emailed report (src/quiz/quizzes/wisp/scoring.js scores it
   // again on the server). Option 1 is worth 2 points, option 2 is 1, option 3 is 0.
   (function () {
     var POINTS = [2, 1, 0], N_Q = 10;
@@ -525,7 +525,7 @@
       var email = $("email").value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say("Enter your email address so we can send your report.", "err"); $("email").focus(); return; }
       btn.disabled = true; say("Sending your report...");
-      fetch("/api/v1/wisp-report", {
+      fetch("/api/quiz/wisp/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers: a, devices: +$("inD").value, returns: +$("inN").value, records: +$("inR").value, fee: +$("inF").value, email: email, newsletter_opt_in: $("newsletter").checked === true })
