@@ -93,17 +93,31 @@ test('a perfect score has no tighten-up section and suggests Plan', () => {
   assert.match(email.text, /no missing written items/);
 });
 
-test('the quiz page asks exactly the questions the server scores', () => {
-  const page = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'landing', 'wisp-quiz.html'), 'utf8');
-  const unesc = (t) => t.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
-  QUESTIONS.forEach((item, i) => {
-    const block = page.match(new RegExp(`<fieldset class="q" id="fs-q${i + 1}">([\\s\\S]*?)</fieldset>`))[1];
-    assert.equal(unesc(block.match(/<\/span> (.*?)<\/legend>/)[1]), item.q);
-    const opts = [...block.matchAll(/name="q(\d+)" value="(\d)"> <span>(.*?)<\/span>/g)];
-    assert.deepEqual(opts.map((m) => [Number(m[1]), Number(m[2]), unesc(m[3])]), item.o.map((o, j) => [i, j, o]));
+for (const pageName of ['wisp.html', 'wisp-quiz.html']) {
+  test(`${pageName} asks exactly the questions the server scores`, () => {
+    const page = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'landing', pageName), 'utf8');
+    const unesc = (t) => t.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+    QUESTIONS.forEach((item, i) => {
+      const block = page.match(new RegExp(`<fieldset class="q" id="fs-q${i + 1}">([\\s\\S]*?)</fieldset>`))[1];
+      assert.equal(unesc(block.match(/<\/span> (.*?)<\/legend>/)[1]), item.q);
+      const opts = [...block.matchAll(/name="q(\d+)" value="(\d)"> <span>(.*?)<\/span>/g)];
+      assert.deepEqual(opts.map((m) => [Number(m[1]), Number(m[2]), unesc(m[3])]), item.o.map((o, j) => [i, j, o]));
+    });
+    // Questions 11 and 12 start empty, and the page uses the shared quiz script.
+    assert.match(page, /id="fs-q11"[\s\S]*?<input id="inD"[^>]*placeholder="For example, 3"/);
+    assert.match(page, /id="fs-q12"[\s\S]*?<input id="inN"[^>]*placeholder="For example, 300"/);
+    assert.ok(!/<input id="in[DN]"[^>]*value=/.test(page), 'questions 11 and 12 have no prefilled value');
+    assert.ok(page.includes('<script src="/wisp-quiz.js" defer></script>'));
+    assert.ok(page.includes('<form class="quiz" id="quiz-form"'));
+    assert.equal((page.match(/id="quiz"/g) ?? []).length <= 1, true, 'ids are unique');
+    assert.ok(!page.includes('—'), 'no em dashes');
   });
-  assert.ok(page.includes('fetch("/api/quiz/wisp/report"'));
-  assert.ok(!page.includes('—'), 'no em dashes');
+}
+
+test('the shared quiz script posts to the quiz Lambda', () => {
+  const js = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public', 'wisp-quiz.js'), 'utf8');
+  assert.ok(js.includes('fetch("/api/quiz/wisp/report"'));
+  assert.ok(js.includes('getElementById("quiz-form")'));
 });
 
 // ---- HTTP -------------------------------------------------------------------

@@ -237,6 +237,8 @@
   .pricing-note { max-width: 62ch; margin-bottom: 30px; }
   .pricing-foot { margin-top: 28px; max-width: 62ch; font-weight: 700; color: var(--navy-800); }
 </style>
+<link rel="stylesheet" href="/wisp-quiz.css">
+<script src="/wisp-quiz.js" defer></script>
 </head>
 <body>
 <header>
@@ -267,7 +269,7 @@
         <h1><span class="line"><span>Your WISP, written for your office</span></span><span class="line"><span><em class="shine">and kept current.</em></span></span></h1>
         <p class="sub">For Brooklyn tax preparers. A security plan with your real details in it, monitoring on every device, and backup that has been tested. One office fee. One fee per device.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold" href="/wisp/quiz">Take the 3-minute readiness quiz</a>
+          <a class="btn btn-gold" href="#quiz">Take the 3-minute readiness quiz</a>
           <a class="btn btn-outline" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
         </div>
         <ul class="facts">
@@ -327,6 +329,174 @@
         <div><span class="n">1</span><h3>Take the quiz.</h3><p>Ten questions. Three minutes. You see where you stand.</p></div>
         <div><span class="n">2</span><h3>Secure in a Day.</h3><p>One working session. You leave with a finished WISP and monitoring turned on.</p></div>
         <div><span class="n">3</span><h3>Stay current.</h3><p>We watch the devices, test the backup, and update the plan before your next renewal.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="quiz">
+    <div class="wrap">
+      <div class="head">
+        <h2>Is your tax office ready to show its WISP?</h2>
+        <p>Twelve questions for tax preparers. Three minutes. See your readiness score, your estimated exposure in dollars, and what it costs to cover it. Confidence, not jargon.</p>
+      </div>
+      <form class="quiz" id="quiz-form" novalidate>
+        <div>
+          <h3 class="qh">The twelve questions</h3>
+          <p class="intro">Pick the answer that is true today. Questions 1 to 10 are scored, 2 points each. Questions 11 and 12 size your estimate. "Not sure" counts as a no, because a plan needs a known answer.</p>
+          <div class="qs">
+      <fieldset class="q" id="fs-q1">
+        <legend><span class="n">1.</span> Which email do you use for client work?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q0" value="0"> <span>Business email: Google Workspace or Microsoft 365</span></label>
+          <label class="opt"><input type="radio" name="q0" value="1"> <span>Paid email from another provider</span></label>
+          <label class="opt"><input type="radio" name="q0" value="2"> <span>Free Gmail, Yahoo, AOL, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q2">
+        <legend><span class="n">2.</span> Where is that email backed up?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="0"> <span>A separate backup service</span></label>
+          <label class="opt"><input type="radio" name="q1" value="1"> <span>My email provider keeps it</span></label>
+          <label class="opt"><input type="radio" name="q1" value="2"> <span>Nowhere, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q3">
+        <legend><span class="n">3.</span> Do you use a second sign-in step on email and tax software?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2" value="0"> <span>On both</span></label>
+          <label class="opt"><input type="radio" name="q2" value="1"> <span>On one</span></label>
+          <label class="opt"><input type="radio" name="q2" value="2"> <span>On neither, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q4">
+        <legend><span class="n">4.</span> Do you have a written security plan with your office&#x27;s details?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="0"> <span>Yes, dated in the last 12 months</span></label>
+          <label class="opt"><input type="radio" name="q3" value="1"> <span>A template or an older plan</span></label>
+          <label class="opt"><input type="radio" name="q3" value="2"> <span>No</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q5">
+        <legend><span class="n">5.</span> Who is your named security lead?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="0"> <span>Named in writing</span></label>
+          <label class="opt"><input type="radio" name="q4" value="1"> <span>Me, informally</span></label>
+          <label class="opt"><input type="radio" name="q4" value="2"> <span>Nobody</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q6">
+        <legend><span class="n">6.</span> When did you last restore a file from backup as a test?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q5" value="0"> <span>In the last 12 months</span></label>
+          <label class="opt"><input type="radio" name="q5" value="1"> <span>We back up but never tested</span></label>
+          <label class="opt"><input type="radio" name="q5" value="2"> <span>No backup, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q7">
+        <legend><span class="n">7.</span> Are your computers and laptops encrypted?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q6" value="0"> <span>All of them</span></label>
+          <label class="opt"><input type="radio" name="q6" value="1"> <span>Some of them</span></label>
+          <label class="opt"><input type="radio" name="q6" value="2"> <span>None, or not sure</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q8">
+        <legend><span class="n">8.</span> Do you have a list of every device that opens client data?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q7" value="0"> <span>A written list</span></label>
+          <label class="opt"><input type="radio" name="q7" value="1"> <span>In my head</span></label>
+          <label class="opt"><input type="radio" name="q7" value="2"> <span>No</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q9">
+        <legend><span class="n">9.</span> A laptop is stolen tonight. Who do you call first?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q8" value="0"> <span>I have written steps, starting with IT and the IRS Stakeholder Liaison</span></label>
+          <label class="opt"><input type="radio" name="q8" value="1"> <span>I know to call the IRS, nothing written</span></label>
+          <label class="opt"><input type="radio" name="q8" value="2"> <span>I would figure it out</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q10">
+        <legend><span class="n">10.</span> When someone leaves, how fast is their access removed?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q9" value="0"> <span>Same day, from a checklist</span></label>
+          <label class="opt"><input type="radio" name="q9" value="1"> <span>Within a week</span></label>
+          <label class="opt"><input type="radio" name="q9" value="2"> <span>Not sure, or we share logins</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q" id="fs-q11">
+        <legend><span class="n">11.</span> How many devices open client data?</legend>
+        <label class="f" for="inD">Count every computer, laptop, tablet and phone. Enter a number.<input id="inD" name="devices" type="number" inputmode="numeric" min="1" max="1000" placeholder="For example, 3" required></label>
+      </fieldset>
+      <fieldset class="q" id="fs-q12">
+        <legend><span class="n">12.</span> Approximately how many returns do you process every year?</legend>
+        <label class="f" for="inN">A rough number is fine.<input id="inN" name="returns" type="number" inputmode="numeric" min="0" max="100000" placeholder="For example, 300" required></label>
+      </fieldset>
+          </div>
+        </div>
+
+        <aside class="panel" aria-labelledby="rh">
+          <div>
+            <h3 id="rh">Your readiness score</h3>
+            <div class="score"><b id="score">0</b><span>out of 20 points</span><span class="pill none" id="band">Answer to begin</span></div>
+            <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+          </div>
+          <p id="msg" aria-live="polite">You have answered 0 of 12 questions.</p>
+
+          <h3>Your office</h3>
+          <div class="inputs">
+            <label class="f" for="inR">Client records you hold<input id="inR" name="records" type="number" inputmode="numeric" min="0" max="1000000" value="400"></label>
+            <label class="f" for="inF">Average fee per return ($)<input id="inF" name="fee" type="number" inputmode="numeric" min="0" max="100000" value="250"></label>
+          </div>
+
+          <h3>Estimated exposure</h3>
+          <table>
+            <tr><td>Breach response<small id="aNote">400 records x $181</small></td><td id="vA">$0</td></tr>
+            <tr><td>Filing days lost<small id="bNote"></small></td><td id="vB">$0</td></tr>
+            <tr><td>Disclosure penalty<small>$250 per record, capped at $10,000 a year</small></td><td id="vC">$0</td></tr>
+            <tr class="total"><td>Estimated exposure</td><td id="vT">$0</td></tr>
+          </table>
+          <div class="ceiling" id="ceil"></div>
+
+          <h3>Cost to cover it, per month</h3>
+          <div class="tiers">
+            <div class="tier" id="t0"><span>Plan</span><b id="p0">?</b><span>$15 a device</span></div>
+            <div class="tier" id="t1"><span>Protect</span><b id="p1">?</b><span>$75 a device</span></div>
+            <div class="tier" id="t2"><span>Concierge</span><b id="p2">?</b><span>$120 a device</span></div>
+          </div>
+          <p class="note" id="priceNote">$29 a month per office, plus the device fee for each device. Answer question 11 to see your monthly total.</p>
+
+          <div class="send">
+            <h3>Email me my report</h3>
+            <label class="f" for="email">Your email address<input id="email" name="email" type="email" autocomplete="email" placeholder="you@yourfirm.com" required></label>
+            <label class="check" for="newsletter"><input id="newsletter" name="newsletter" type="checkbox"> <span>Also send me the monthly Tech in Peace newsletter.</span></label>
+            <button class="btn btn-navy" id="sendBtn" type="submit">Email my report</button>
+            <p class="status" id="status" role="status"></p>
+            <p class="note">Your email is used to send this report, and the newsletter only if you tick the box. See our <a href="/privacy#privacy">Privacy Policy</a>.</p>
+          </div>
+          <a class="btn btn-gold" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
+        </aside>
+      </form>
+
+      <div class="sources">
+        <span>This is a planning estimate. It is not a prediction, a quote or legal advice. The IRS does not set a fixed fine for a missing WISP.</span>
+        <span>Where the numbers come from: $181 per record is an average cost per sensitive record cited by Tax Protection Plus. Filing days lost assumes a 75 working day season and 3, 10 or 21 days down depending on your backup answer. These day counts are assumptions. The disclosure penalty follows IRC 6713. The legal ceiling uses the FTC's 2025 maximum of $53,088 per violation.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="template">
+    <div class="wrap">
+      <div class="template-box">
+        <div>
+          <h2>Start with the WISP template</h2>
+          <p>Our written information security plan template for tax preparers. Fill it in yourself, or bring it to Secure in a Day and we finish it with you.</p>
+        </div>
+        <div>
+          <!-- PLACEHOLDER: replace href with the Gumroad product link for the WISP template. -->
+          <a class="btn btn-gold" href="#gumroad-link-needed" data-gumroad="wisp-template">Download the WISP template</a>
+          <span class="placeholder-note">Placeholder: Gumroad link needed</span>
+        </div>
       </div>
     </div>
   </section>
@@ -405,7 +575,7 @@
       <h2>Walk into tax season with it handled.</h2>
       <p>Your clients hand you their most private paperwork. Show them the plan that protects it. Confidence, not jargon.</p>
       <div class="hero-ctas">
-        <a class="btn btn-gold" href="/wisp/quiz">Take the quiz</a>
+        <a class="btn btn-gold" href="#quiz">Take the quiz</a>
         <a class="btn btn-outline" href="https://calendly.com/cpconsulting/15min" target="_blank" rel="noopener">Book Secure in a Day</a>
       </div>
     </div>
