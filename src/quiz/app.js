@@ -25,6 +25,13 @@ async function createQuizLimiter(config) {
   return createMemoryLimiter({ max: config.reportsPerHour });
 }
 
+// "WISP policy Results <scanner@techinpeace.com>": the quiz's name, the configured address.
+export function senderFor(quiz, mailFrom) {
+  const address = /<([^>]+)>/.exec(mailFrom)?.[1] ?? mailFrom;
+  if (!quiz.fromName) return mailFrom;
+  return `"${quiz.fromName.replace(/["\\\r\n]/g, '')}" <${address}>`;
+}
+
 function clientIp(req) {
   return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
 }
@@ -80,7 +87,7 @@ export function createQuizApp({
 
     const result = quiz.score(input.value);
     const takenAt = now().toISOString();
-    const rendered = quiz.render(result, takenAt);
+    const rendered = { ...quiz.render(result, takenAt), from: senderFor(quiz, config.mailFrom) };
 
     let emailed = false;
     try {

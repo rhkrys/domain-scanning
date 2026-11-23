@@ -82,7 +82,8 @@ export async function sendReport(to, report, rendered = renderEmail(report)) {
 // only names the local preview file.
 export async function sendRendered(to, rendered, label = 'email') {
   const email = rendered;
-  const from = process.env.MAIL_FROM ?? 'CPI <scanner@localhost>';
+  // rendered.from lets a caller (a quiz) pick its own sender name.
+  const from = rendered.from ?? process.env.MAIL_FROM ?? 'CPI <scanner@localhost>';
   const logo = await getLogo();
 
   if (sesConfigured()) {

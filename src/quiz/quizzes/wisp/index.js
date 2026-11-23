@@ -5,6 +5,7 @@
 //   render    turns the result into the email: { subject, text, html }
 //   summary   one line for the copy sent to Tech in Peace
 //   page      where the quiz lives on the site (used in tests and docs)
+//   fromName  optional sender name for this quiz's emails
 
 import { validateQuizInput, scoreQuiz } from './scoring.js';
 import { renderWispEmail } from './email.js';
@@ -13,6 +14,8 @@ export default {
   slug: 'wisp',
   title: 'WISP readiness quiz',
   page: '/wisp/quiz',
+  // Sender name on the report email; the address comes from MAIL_FROM.
+  fromName: 'WISP policy Results',
   validate: validateQuizInput,
   score: scoreQuiz,
   render: renderWispEmail,

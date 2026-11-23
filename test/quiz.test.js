@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createQuizApp } from '../src/quiz/app.js';
+import { createQuizApp, senderFor } from '../src/quiz/app.js';
 import { loadQuizConfig } from '../src/quiz/config.js';
 import { createMemoryQuizStore } from '../src/quiz/store.js';
 import { createMemoryLimiter } from '../src/ratelimit.js';
@@ -130,6 +130,12 @@ test('every registered quiz has the full shape', () => {
   }
 });
 
+test('the sender keeps the configured address and uses the quiz name', () => {
+  assert.equal(senderFor({ fromName: 'WISP policy Results' }, 'Tech in Peace <scanner@techinpeace.com>'), '"WISP policy Results" <scanner@techinpeace.com>');
+  assert.equal(senderFor({}, 'Tech in Peace <scanner@techinpeace.com>'), 'Tech in Peace <scanner@techinpeace.com>');
+  assert.equal(senderFor({ fromName: 'A "B"\r\nBcc: x@y.z' }, 'scanner@techinpeace.com'), '"A BBcc: x@y.z" <scanner@techinpeace.com>');
+});
+
 let server;
 let base;
 const sent = [];
@@ -172,6 +178,7 @@ test('POST /api/quiz/wisp/report emails the report, sends the copy, saves it, an
   assert.equal(json.report_emailed, true);
   assert.equal(json.exposure.total, 72400 + 10000 + 10000);
   assert.deepEqual(sent.map((s) => s.to), ['preparer@example.com', 'owner@example.org']);
+  assert.equal(sent[0].rendered.from, '"WISP policy Results" <scanner@techinpeace.com>');
   assert.match(sent[0].rendered.subject, /^Your WISP readiness report: 12 of 20/);
   assert.equal(sent[1].rendered.subject, 'WISP readiness quiz: preparer@example.com scored 12 of 20, Partly covered');
   const [rec] = [...store.items.values()];

@@ -16,5 +16,7 @@ export function loadQuizConfig(env = process.env) {
     reportsPerHour: Number(env.QUIZ_REPORTS_PER_HOUR ?? 5),
     // Optional address that gets a copy of every quiz report.
     notifyTo: env.QUIZ_NOTIFY_TO || null,
+    // Sender for quiz emails. A quiz's fromName replaces the name, keeping the address.
+    mailFrom: env.MAIL_FROM || 'Tech in Peace <scanner@techinpeace.com>',
   };
 }
