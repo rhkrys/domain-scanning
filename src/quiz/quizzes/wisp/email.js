@@ -4,7 +4,7 @@
 // "Full points" line, which repeats the quiz's own top answer.
 
 import { CPI, esc, LOGO_CID, NEED_A_HAND, SIGNATURE } from '../../../email/render.js';
-import { money, FTC_MAX_PER_VIOLATION, OFFICE_FEE } from './scoring.js';
+import { money, FTC_MAX_PER_VIOLATION } from './scoring.js';
 
 export const BOOK_URL = 'https://calendly.com/cpconsulting/15min';
 const BOOK_LABEL = 'Book Secure in a Day';
@@ -49,11 +49,6 @@ function exposureRows(r) {
   ];
 }
 
-function priceNote(r) {
-  const d = r.office.devices;
-  return `$${OFFICE_FEE} a month per office, plus the device fee for each of your ${d} device${d > 1 ? 's' : ''}. A device is any computer, laptop, tablet or phone that opens client tax data.`;
-}
-
 const gaps = (r) => r.answers.filter((a) => a.points < 2);
 const inPlace = (r) => r.answers.filter((a) => a.points === 2);
 
@@ -88,12 +83,6 @@ export function renderWispText(r, takenAt) {
   }
   L.push(`Estimated exposure: ${money(r.exposure.total)}`);
   L.push(ceilingLine(r));
-  L.push('');
-  L.push('COST TO COVER IT, PER MONTH');
-  for (const t of r.prices) {
-    L.push(`${t.name}: ${money(t.monthly)} ($${t.perDevice} a device)${t.name === r.suggested_tier ? ', suggested for your score' : ''}`);
-  }
-  L.push(priceNote(r));
   L.push('');
   L.push(`${BOOK_LABEL}: ${BOOK_URL}`);
   L.push('');
@@ -131,17 +120,6 @@ export function renderWispHtml(r, takenAt) {
   const expRows = exposureRows(r)
     .map(([name, note, value]) => `<tr><td style="${TD}">${esc(name)}<span style="${MUTED}">${esc(note)}</span></td><td style="${TD};text-align:right;white-space:nowrap">${esc(value)}</td></tr>`)
     .join('');
-  const tierCells = r.prices
-    .map((t) => {
-      const on = t.name === r.suggested_tier;
-      return `<td style="width:33%;padding:10px 6px;text-align:center;border:1px solid ${on ? CPI.gold : CPI.border};background:${on ? CPI.paperAlt : CPI.surface};vertical-align:top">
-          <span style="${MUTED}">${esc(t.name)}</span>
-          <span style="display:block;font-family:${CPI.fontDisplay};font-size:22px;color:${CPI.navy};margin:4px 0">${esc(money(t.monthly))}</span>
-          <span style="${MUTED}">$${t.perDevice} a device</span>
-          ${on ? `<span style="display:block;margin-top:6px;font-size:11px;font-weight:700;color:${CPI.navyDeep};text-transform:uppercase;letter-spacing:0.06em">Suggested</span>` : ''}
-        </td>`;
-    })
-    .join('<td style="width:6px"></td>');
 
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="x-apple-disable-message-reformatting">
@@ -190,10 +168,7 @@ export function renderWispHtml(r, takenAt) {
       </div>
 
       <div style="padding:14px 20px 4px">
-        <h2 style="${H2}">Cost to cover it, per month</h2>
-        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:separate"><tr>${tierCells}</tr></table>
-        <p style="${P};font-size:13px;color:${CPI.muted};margin-top:10px">${esc(priceNote(r))}</p>
-        <p style="margin:14px 0 6px"><a href="${BOOK_URL}" style="display:inline-block;background:${CPI.gold};color:${CPI.navyDeep};font-weight:700;font-size:15px;text-decoration:none;padding:11px 18px;border-radius:2px">${BOOK_LABEL}</a></p>
+        <p style="margin:6px 0 6px"><a href="${BOOK_URL}" style="display:inline-block;background:${CPI.gold};color:${CPI.navyDeep};font-weight:700;font-size:15px;text-decoration:none;padding:11px 18px;border-radius:2px">${BOOK_LABEL}</a></p>
       </div>
 
       <div style="padding:6px 20px 16px">

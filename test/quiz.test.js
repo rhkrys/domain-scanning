@@ -57,7 +57,6 @@ test('scoring matches the quiz page for 500 random offices', () => {
     assert.equal(mine.exposure.total, page.total);
     assert.equal(mine.missing_written_items, page.missing);
     assert.equal(mine.legal_ceiling, page.ceiling);
-    assert.deepEqual(mine.prices.map((p) => p.monthly), page.prices);
   }
 });
 
@@ -78,17 +77,19 @@ test('risk report email snapshot', () => {
   assert.equal(text, fs.readFileSync(file, 'utf8'));
   assert.equal(email.subject, 'Your WISP readiness report: 12 of 20, Partly covered');
   assert.ok(!email.text.includes('—') && !email.html.includes('—'), 'no em dashes');
+  for (const p of ['$15', '$29', '$75', '$120', '$254', 'Concierge', 'Protect:', 'Plan tier', 'a device', 'Cost to cover']) {
+    assert.ok(!email.text.includes(p) && !email.html.includes(p), `report still mentions ${p}`);
+  }
   assert.match(email.html, /name="viewport" content="width=device-width,initial-scale=1"/);
-  for (const s of ['Where to tighten up', 'Estimated exposure', 'Cost to cover it, per month', 'https://calendly.com/cpconsulting/15min', '$254']) {
+  for (const s of ['Where to tighten up', 'Estimated exposure', 'https://calendly.com/cpconsulting/15min', '$92,400']) {
     assert.ok(email.html.includes(s), s);
   }
 });
 
-test('a perfect score has no tighten-up section and suggests Plan', () => {
+test('a perfect score has no tighten-up section', () => {
   const r = scoreQuiz({ ...SAMPLE, answers: Array(10).fill(0) });
   const email = renderWispEmail(r, TAKEN);
   assert.equal(r.score, 20);
-  assert.equal(r.suggested_tier, 'Plan');
   assert.ok(!email.text.includes('WHERE TO TIGHTEN UP'));
   assert.match(email.text, /no missing written items/);
 });

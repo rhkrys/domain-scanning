@@ -32,16 +32,9 @@ export const PENALTY_PER_RECORD = 250;
 export const PENALTY_CAP = 10000;
 export const SEASON_DAYS = 75;
 
-export const TIERS = [
-  { name: 'Plan', perDevice: 15 },
-  { name: 'Protect', perDevice: 75 },
-  { name: 'Concierge', perDevice: 120 },
-];
-export const OFFICE_FEE = 29;
-
 export const BANDS = {
-  good: { label: 'In good shape', message: 'You have most of it in place. A yearly review keeps it that way. The Plan tier fits.' },
-  mid: { label: 'Partly covered', message: 'You have the pieces. They need to be written down and checked. Start with Secure in a Day, then Protect.' },
+  good: { label: 'In good shape', message: 'You have most of it in place. A yearly review keeps it that way.' },
+  mid: { label: 'Partly covered', message: 'You have the pieces. They need to be written down and checked. Start with Secure in a Day.' },
   low: { label: 'Starting point', message: 'Plenty of offices start here. One working session gets you a real plan. Start with Secure in a Day.' },
 };
 
@@ -87,7 +80,6 @@ export function scoreQuiz({ answers, devices, returns, records, fee }) {
   const penalty = Math.min(records * PENALTY_PER_RECORD, PENALTY_CAP);
   const missing = WRITTEN_ITEMS.filter((ix) => points[ix] === 0).length;
   const band = score >= 16 ? 'good' : score >= 9 ? 'mid' : 'low';
-  const prices = TIERS.map((t) => ({ name: t.name, perDevice: t.perDevice, monthly: OFFICE_FEE + devices * t.perDevice }));
   return {
     score,
     max_score: QUESTIONS.length * 2,
@@ -112,9 +104,6 @@ export function scoreQuiz({ answers, devices, returns, records, fee }) {
     },
     missing_written_items: missing,
     legal_ceiling: missing * FTC_MAX_PER_VIOLATION,
-    prices,
-    // The tier the quiz page highlights: Plan for a good score, Protect otherwise.
-    suggested_tier: band === 'good' ? 'Plan' : 'Protect',
   };
 }
 
