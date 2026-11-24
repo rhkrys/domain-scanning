@@ -11,8 +11,8 @@
   var money = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
   var BANDS = { none: "Answer to begin", good: "In good shape", mid: "Partly covered", low: "Starting point" };
   var MSGS = {
-    good: "You have most of it in place. A yearly review keeps it that way. The Plan tier fits.",
-    mid: "You have the pieces. They need to be written down and checked. Start with Secure in a Day, then Protect.",
+    good: "You have most of it in place. A yearly review keeps it that way.",
+    mid: "You have the pieces. They need to be written down and checked. Start with Secure in a Day.",
     low: "Plenty of offices start here. One working session gets you a real plan. Start with Secure in a Day."
   };
 
@@ -49,13 +49,6 @@
     $("ceil").innerHTML = missing === 0
       ? "<b>Legal maximum, not a forecast.</b> The FTC ceiling is $53,088 per violation. Your answers so far show no missing written items from questions 3, 4, 5 and 9."
       : "<b>Legal maximum, not a forecast: " + money(missing * 53088) + ".</b> The FTC ceiling is $53,088 per violation. Your answers show " + missing + " missing written item" + (missing > 1 ? "s" : "") + " from questions 3, 4, 5 and 9. Small offices rarely see the full amount.";
-    var noD = !filled("inD");
-    [15, 75, 120].forEach(function (fee, i) { $("p" + i).textContent = noD ? "?" : money(29 + D * fee); });
-    var pick = band === "good" ? 0 : (band === "none" ? -1 : 1);
-    [0, 1, 2].forEach(function (i) { $("t" + i).className = "tier" + (i === pick ? " on" : ""); });
-    $("priceNote").textContent = noD
-      ? "$29 a month per office, plus the device fee for each device. Answer question 11 to see your monthly total."
-      : "$29 a month per office, plus the device fee for each of your " + D + " device" + (D > 1 ? "s" : "") + ". A device is any computer, laptop, tablet or phone that opens client tax data.";
     return a;
   }
 

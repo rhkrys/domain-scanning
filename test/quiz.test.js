@@ -111,6 +111,10 @@ for (const pageName of ['wisp.html', 'wisp-quiz.html']) {
     assert.ok(page.includes('<form class="quiz" id="quiz-form"'));
     assert.equal((page.match(/id="quiz"/g) ?? []).length <= 1, true, 'ids are unique');
     assert.ok(!page.includes('—'), 'no em dashes');
+    // No Tech in Peace prices or plan names on the WISP pages (exposure estimates are fine).
+    for (const p of ['$15', '$29', '$75', '$120', '$497', 'Concierge', 'per device', 'office fee', 'id="pricing"', 'class="tier']) {
+      assert.ok(!page.includes(p), `${pageName} still mentions ${p}`);
+    }
   });
 }
 
@@ -118,6 +122,7 @@ test('the shared quiz script posts to the quiz Lambda', () => {
   const js = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public', 'wisp-quiz.js'), 'utf8');
   assert.ok(js.includes('fetch("/api/quiz/wisp/report"'));
   assert.ok(js.includes('getElementById("quiz-form")'));
+  for (const p of ['$29', 'Plan tier', 'then Protect', 'priceNote']) assert.ok(!js.includes(p), `quiz script still mentions ${p}`);
 });
 
 // ---- HTTP -------------------------------------------------------------------
