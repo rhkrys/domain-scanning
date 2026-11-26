@@ -60,6 +60,9 @@
 
   .callout { background: var(--gold-100); border-left: 3px solid var(--gold-400); padding: 14px 18px; margin: 16px 0; font-size: 15px; }
   .consent { background: #f1f8fa; border: 1px solid var(--border); border-radius: 2px; padding: 16px 18px; margin: 14px 0; font-style: italic; color: var(--navy-800); font-size: 15px; }
+  a.mail { overflow-wrap: anywhere; }
+  th, td { overflow-wrap: break-word; hyphens: auto; }
+  @media (max-width: 560px) { .wrap { padding: 0 12px; } .doc { padding: 28px 16px; } table { font-size: 13.5px; } th, td { padding: 8px; } }
   .ph { background: var(--gold-100); color: #8a5a12; padding: 0 5px; border-radius: 2px; font-weight: 700; font-style: normal; }
   .contact { background: #f1f8fa; border: 1px solid var(--border); padding: 18px 20px; margin-top: 16px; font-size: 15.5px; line-height: 1.8; }
   a.mail { font-weight: 700; }
@@ -99,20 +102,24 @@
     <span class="eyebrow">Legal</span>
     <h1>Privacy Policy</h1>
     <p class="who">Chlamys Piste Inc. (CPI) &nbsp;|&nbsp; techinpeace.com</p>
-    <p class="dates">Effective date: September 24, 2026 &nbsp;&nbsp; Last updated: October 25, 2026</p>
+    <p class="dates">Effective date: <em class="ph">[CONFIRM]</em> &nbsp;&nbsp; Last updated: November 26, 2026</p>
+    <p class="muted">Draft for attorney review. Items marked <em class="ph">[CONFIRM]</em> could not be confirmed from our website code.</p>
     <div class="rule"></div>
 
     <h2><span class="num">1.</span>Our privacy promise</h2>
     <p>We help people protect their data. We hold ourselves to the same standard.</p>
-    <p>We collect the least information we need to run our domain and website security scanner, send our newsletter, and follow up with you by phone or text when you ask us to. We do not sell your personal information. We do not rent it. We do not use it for cross-site behavioral advertising. We do not share your phone number with anyone for their own marketing.</p>
+    <p>We collect the least information we need to run our domain and website security scanner and our quizzes, send our newsletter, and follow up with you by phone or text when you ask us to. We do not sell your personal information. We do not rent it. We do not use it for cross-site behavioral advertising. We do not share your phone number with anyone for their own marketing.</p>
     <p>This policy explains what we collect, why, how long we keep it, who we share it with, and the choices you have.</p>
 
     <h2><span class="num">2.</span>Who we are</h2>
-    <p>Chlamys Piste Inc. ("CPI," "we," "us") is a Delaware corporation and a security and AI consulting firm based in New York, New York. We operate techinpeace.com and related pages, forms, and tools (together, the "Services").</p>
-    <p>This policy covers three Services:</p>
+    <p>Chlamys Piste Inc. ("CPI," "we," "us") is a Delaware corporation and a security and AI consulting firm based in New York, New York. We operate techinpeace.com and related pages, forms, and tools (together, the "Services"). Tech in Peace is our brand name. <em class="ph">[CONFIRM]</em></p>
+    <p>This policy covers these Services:</p>
     <ul>
       <li><strong>The Domain and Website Security Scanner (the "Scanner"):</strong> a free tool that checks the public security setup of a website or email domain.</li>
+      <li><strong>Quizzes:</strong> short self-assessments, such as the WISP readiness quiz for tax preparers, that email you a report.</li>
       <li><strong>The Newsletter:</strong> our email updates on security, privacy, and trust.</li>
+      <li><strong>The Waitlist:</strong> the sign-up form on our home page for plans that have not launched yet.</li>
+      <li><strong>Purchases, inquiries, and bookings</strong> made through Gumroad and HoneyBook, as described in Section 3.5.</li>
       <li><strong>Phone and SMS follow-up:</strong> calls and text messages we send only after you give us permission.</li>
     </ul>
     <p>It does not cover paid client engagements. Those are governed by your service agreement and any data processing terms signed with it.</p>
@@ -126,31 +133,63 @@
       <tbody>
         <tr><td>Domain name you enter</td><td>To run the scan</td><td>Yes</td></tr>
         <tr><td>Public DNS, email authentication (SPF, DKIM, DMARC), SSL/TLS, HTTP security header, and website software (such as PHP) results for that domain</td><td>To produce your report</td><td>Yes (created by the scan)</td></tr>
+        <tr><td>Your confirmation that you own the domain or have permission to scan it, and that you agree to our Terms of Use and this policy</td><td>To make sure scans are authorized</td><td>Yes. The form will not run without it</td></tr>
         <tr><td>Email address, from the optional email field on the scan form or passed by an app that runs the scan for you</td><td>To send you the report</td><td>Optional. The scan works without it</td></tr>
-        <tr><td>Your newsletter choice and the time you ticked the box</td><td>To send the newsletter only if you ask, and to prove you asked</td><td>Optional. The box is unchecked unless you tick it</td></tr>
-        <tr><td>Name, organization, role</td><td>To tailor the report and any follow-up</td><td>Optional</td></tr>
-        <tr><td>IP address, browser type, time of request</td><td>To stop abuse, rate-limit automated scans, and keep the tool running</td><td>Yes (collected automatically). For the scan limit we store only a scrambled form of your IP address, never the address itself</td></tr>
+        <tr><td>An email address you enter after the scan to send the report to yourself or someone else</td><td>To send a copy of the report to that address</td><td>Optional</td></tr>
+        <tr><td>Your newsletter choice and the time you ticked the box</td><td>To add you to the newsletter only if you ask, and to prove you asked</td><td>Optional. The box is unchecked unless you tick it</td></tr>
+        <tr><td>A copy of the report email we sent</td><td>So we can resend a report without scanning again</td><td>Yes, if a report was emailed</td></tr>
+        <tr><td>IP address</td><td>To stop abuse and limit automated scans</td><td>Yes (collected automatically). The scan form uses it only in server memory for about a minute. For scans run through an app, we store only a scrambled form of your IP address, never the address itself</td></tr>
       </tbody>
     </table>
     <p>We check only the public records attached to your domain. We never read your inbox or ask for a password. Your email is used to send this report, and the newsletter only if you tick the box.</p>
+    <p>If you enter someone else's email address to send them the report, make sure they expect it. We use that address only to send that report.</p>
     <p>Each scan gets a private report link so you can come back to your results. The page behind it shows the scan results only, never your email address. The link stops working when the scan record is deleted (see Section 9).</p>
     <div class="callout">Only scan domains you own or have permission to assess. By using the scanner, you confirm you have that authority. We may block scans we believe are abusive.</div>
 
-    <h3>3.2 Newsletter</h3>
-    <p>You can join the newsletter list by ticking "Also send me the monthly Tech in Peace newsletter." under the email field on the scan form. The box is unchecked by default, and running a scan never adds you on its own. We send the newsletter through Substack and Gumroad.</p>
-    <p><strong>How to unsubscribe:</strong> every newsletter has a one-click unsubscribe link. Click it and you are off the list. You can also email us and we will remove you.</p>
+    <h3>3.2 Quizzes</h3>
+    <p>Our quizzes, such as the WISP readiness quiz, score your answers and email you a report. An email address is required, because the report is sent by email. The quiz form has a newsletter box that is unchecked by default. Taking a quiz never adds you to the newsletter on its own.</p>
+    <table>
+      <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td>Email address</td><td>To send you the report</td><td>Yes</td></tr>
+        <tr><td>Your quiz answers</td><td>To score the quiz and write your report</td><td>Yes</td></tr>
+        <tr><td>Office details: number of devices that open client data, returns filed per year, client records you hold, and average fee per return</td><td>To estimate your dollar exposure in the report</td><td>Yes</td></tr>
+        <tr><td>Your score, the report we produce, and a copy of the report email</td><td>So we can resend the report and answer your questions about it</td><td>Yes (created by the quiz)</td></tr>
+        <tr><td>Your newsletter choice and the time you ticked the box</td><td>To add you to the newsletter only if you ask, and to prove you asked</td><td>Optional. The box is unchecked unless you tick it</td></tr>
+        <tr><td>IP address</td><td>To limit how many reports one connection can request</td><td>Yes (collected automatically). We store only a scrambled form of your IP address, never the address itself</td></tr>
+      </tbody>
+    </table>
+    <p>Your report comes from our quiz email address. We do not currently receive our own copy of each report. <em class="ph">[CONFIRM]</em></p>
+
+    <h3>3.3 Newsletter</h3>
+    <p>We send our newsletter through Beehiiv. We add you to the newsletter only when you opt in, for example by ticking "Also send me the monthly Tech in Peace newsletter." on the scan form or a quiz form. That box is unchecked by default. When you tick it, we record your choice and the time, and then add your email address to our Beehiiv list. <em class="ph">[CONFIRM: our website code does not connect to Beehiiv. How and when are opted-in addresses added to Beehiiv?]</em></p>
+    <p><strong>How to unsubscribe:</strong> every newsletter email has an unsubscribe link. Click it and you are off the list. You can also email us and we will remove you.</p>
     <table>
       <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
       <tbody>
         <tr><td>Email address</td><td>To deliver the newsletter</td><td>Yes</td></tr>
-        <tr><td>First name</td><td>To personalize the greeting</td><td>Optional</td></tr>
-        <tr><td>Topics or industry you pick</td><td>To send content that fits you</td><td>Optional</td></tr>
+        <tr><td>First name <em class="ph">[CONFIRM]</em></td><td>To personalize the greeting</td><td>Optional</td></tr>
+        <tr><td>Topics or industry you pick <em class="ph">[CONFIRM]</em></td><td>To send content that fits you</td><td>Optional</td></tr>
         <tr><td>Sign-up date, source, and consent record</td><td>To prove you opted in</td><td>Yes (collected automatically)</td></tr>
-        <tr><td>Opens and link clicks</td><td>To see which topics are useful</td><td>See Section 8 to limit this</td></tr>
+        <tr><td>Opens and link clicks <em class="ph">[CONFIRM]</em></td><td>To see which topics are useful</td><td>See Section 8 to limit this</td></tr>
       </tbody>
     </table>
 
-    <h3>3.3 Phone and SMS follow-up</h3>
+    <h3>3.4 Waitlist</h3>
+    <p>The waitlist form on our home page asks only for your email address. When you submit it, your browser sends it straight to Gumroad, which adds you to our Gumroad follower list. We use it to tell you when a plan opens. <em class="ph">[CONFIRM: are waitlist sign-ups also added to the Beehiiv newsletter? If so, only with their agreement.]</em></p>
+
+    <h3>3.5 Purchases through Gumroad, and inquiries and bookings through HoneyBook</h3>
+    <p>You can buy digital products from us through Gumroad, and you can send us an inquiry or book our services through HoneyBook. Each of these services collects your information under its own privacy policy and shares some of it with us. We add you to the Beehiiv newsletter only if you agree.</p>
+    <table>
+      <thead><tr><th>Service</th><th>What it shares with us</th><th>Why we use it</th></tr></thead>
+      <tbody>
+        <tr><td>Gumroad (purchases)</td><td>Your name, email address, what you bought, the price paid, and the date. Gumroad processes your payment. We do not receive your full card number. <em class="ph">[CONFIRM]</em></td><td>To deliver your purchase, answer questions about it, and send updates about products you bought</td></tr>
+        <tr><td>HoneyBook (inquiries and bookings)</td><td>The details you enter on the inquiry or booking form, such as your name, email address, phone number, company, project details, and the time you booked, plus any proposals, contracts, invoices, and payments with us. <em class="ph">[CONFIRM]</em></td><td>To respond to your inquiry, schedule and deliver services, and keep records of our work together</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.6 Phone and SMS follow-up</h3>
+    <p class="muted"><em class="ph">[CONFIRM: no form on our website currently asks for a phone number. Keep this section only if phone and text follow-up is still offered.]</em></p>
     <table>
       <thead><tr><th>What we collect</th><th>Why we collect it</th><th>Required?</th></tr></thead>
       <tbody>
@@ -160,30 +199,32 @@
         <tr><td>Notes from a call you schedule with us</td><td>To follow up on what you asked about</td><td>Only if a call happens</td></tr>
       </tbody>
     </table>
-    <div class="callout">Giving us your phone number is never a condition of using the scanner, reading the newsletter, or buying our services.</div>
+    <div class="callout">Giving us your phone number is never a condition of using the scanner, taking a quiz, reading the newsletter, or buying our services.</div>
 
     <h2><span class="num">4.</span>How we use information</h2>
     <p>We use your information only to:</p>
     <ul>
-      <li>Run scans and deliver reports you request.</li>
+      <li>Run scans and quizzes and deliver the reports you request.</li>
       <li>Send the newsletter you signed up for.</li>
+      <li>Tell waitlist members when a plan opens.</li>
+      <li>Deliver purchases and services, and respond to inquiries and bookings.</li>
       <li>Call or text you when you have agreed to it.</li>
       <li>Answer your questions and schedule consultations you ask for.</li>
       <li>Protect the Services from spam, fraud, and abuse.</li>
       <li>Fix errors and improve the Services, using aggregated or de-identified data where we can.</li>
       <li>Meet legal obligations and enforce our terms.</li>
     </ul>
-    <p>We may use combined, de-identified scan statistics (for example, "40% of scanned domains lack DMARC") in articles and reports. These statistics never name you, your organization, or your domain.</p>
+    <p>We may use combined, de-identified scan and quiz statistics (for example, "40% of scanned domains lack DMARC") in articles and reports. These statistics never name you, your organization, or your domain.</p>
 
     <h2><span class="num">5.</span>What we do not do</h2>
     <ul>
       <li>We do not sell or rent your personal information.</li>
       <li>We do not use your data for cross-context behavioral advertising.</li>
-      <li>We do not publish or share your individual scan results.</li>
+      <li>We do not publish or share your individual scan results or quiz answers.</li>
       <li>We do not share your phone number or SMS consent with third parties or affiliates for their marketing.</li>
-      <li>We do not add you to the newsletter just because you ran a scan, unless you check the box to subscribe.</li>
-      <li>We do not use your personal information or scan results to train AI models without your separate, clear permission.</li>
-      <li>We do not collect sensitive data such as health, financial account, or government ID information through these Services.</li>
+      <li>We do not add you to the newsletter because you ran a scan, took a quiz, joined the waitlist, bought something, or contacted us, unless you agree to subscribe.</li>
+      <li>We do not use your personal information, scan results, or quiz answers to train AI models without your separate, clear permission.</li>
+      <li>We do not ask for sensitive data such as health, financial account, or government ID information through these Services. The quiz asks only for counts and averages about your office, never client names or client records themselves.</li>
     </ul>
 
     <h2><span class="num">6.</span>Text messages and calls</h2>
@@ -203,22 +244,23 @@
     <h3>6.4 Mobile information</h3>
     <p>No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Text messaging opt-in data and consent will not be shared with any third parties, except service providers that deliver messages on our behalf.</p>
 
-    <h2><span class="num">7.</span>When we share information</h2>
+    <h2><span class="num">7.</span>Service providers and when we share information</h2>
     <p>We share personal information only with the service providers listed below, only as much as each one needs, and only to run the Services. Each provider is bound by contract or terms to protect it and use it only for us.</p>
     <table>
-      <thead><tr><th>Provider type</th><th>Purpose</th><th>Provider</th></tr></thead>
+      <thead><tr><th>Provider</th><th>What it does</th><th>What data it handles</th></tr></thead>
       <tbody>
-        <tr><td>Cloud hosting</td><td>Runs the scanner and website, and stores scan records</td><td>Amazon Web Services</td></tr>
-        <tr><td>Email delivery</td><td>Sends your scan report and transactional email</td><td>Amazon Web Services (Amazon SES), Google Workspace</td></tr>
-        <tr><td>Newsletter</td><td>Sends our email newsletter</td><td>Substack, Gumroad</td></tr>
-        <tr><td>Payments</td><td>Processes payments and invoices for paid services</td><td>Stripe</td></tr>
-        <tr><td>SMS and voice</td><td>Sends texts and places calls</td><td>Zoom</td></tr>
-        <tr><td>Video meetings</td><td>Hosts video consultations you schedule</td><td>Zoom</td></tr>
-        <tr><td>Scheduling</td><td>Books consultations you request</td><td>HoneyBook, Calendly</td></tr>
-        <tr><td>CRM</td><td>Keeps track of your requests and preferences</td><td>HoneyBook</td></tr>
-        <tr><td>Workshop registration</td><td>Handles ticketing and sign-ups for workshops and events</td><td>Eventbrite</td></tr>
-        <tr><td>Online store and waitlist</td><td>Sells digital products and manages our follow and waitlist email list</td><td>Gumroad</td></tr>
-        <tr><td>DNS, security, and bot protection</td><td>Protects the site from attacks</td><td>Amazon Web Services (Route&nbsp;53, CloudFront)</td></tr>
+        <tr><td>Amazon Web Services (S3, CloudFront, Lambda, API Gateway, DynamoDB)</td><td>Hosts the website, runs the scanner and quizzes, and stores scan and quiz records</td><td>Everything you submit through the scan and quiz forms, the reports we produce, scrambled IP addresses for rate limits, and the technical details of each web request</td></tr>
+        <tr><td>Amazon Simple Email Service (Amazon SES), part of Amazon Web Services</td><td>Sends scan and quiz reports by email</td><td>Your email address and the report we send you</td></tr>
+        <tr><td>Google Workspace <em class="ph">[CONFIRM]</em></td><td>Our own email accounts, for replies and support</td><td>Emails you send us and our replies</td></tr>
+        <tr><td>Google Fonts</td><td>Provides the fonts our pages use</td><td>Your browser requests font files from Google, so Google receives your IP address and basic browser details</td></tr>
+        <tr><td>Beehiiv</td><td>Sends our newsletter and manages the subscriber list</td><td>Your email address, any details you give at sign-up, your consent record, and newsletter opens and clicks <em class="ph">[CONFIRM]</em></td></tr>
+        <tr><td>Gumroad</td><td>Sells our digital products and runs our waitlist (follower) list</td><td>Purchase details and the email addresses of buyers and waitlist members</td></tr>
+        <tr><td>HoneyBook</td><td>Handles inquiries, bookings, proposals, contracts, and invoices, and keeps track of your requests</td><td>The details you enter on HoneyBook forms and our records of work with you</td></tr>
+        <tr><td>Calendly</td><td>Books consultations you request. The scan page loads Calendly's booking calendar, and other pages link to Calendly</td><td>The details you enter when you book, such as your name, email address, and chosen time</td></tr>
+        <tr><td>Zoom <em class="ph">[CONFIRM]</em></td><td>Hosts workshops and video consultations, and places calls and texts</td><td>Your name, email address, phone number if you give it, and meeting details</td></tr>
+        <tr><td>Stripe <em class="ph">[CONFIRM]</em></td><td>Processes payments and invoices for paid services</td><td>Payment details you give Stripe directly</td></tr>
+        <tr><td>Eventbrite <em class="ph">[CONFIRM]</em></td><td>Handles ticketing and sign-ups for workshops and events</td><td>Your registration details</td></tr>
+        <tr><td>GoDaddy</td><td>Manages our domain name and DNS records</td><td>No personal information from our forms</td></tr>
       </tbody>
     </table>
     <p>We may also disclose information when:</p>
@@ -230,50 +272,61 @@
     </ul>
 
     <h2><span class="num">8.</span>Cookies and tracking</h2>
-    <p>We use only the cookies needed to run the site, keep forms working, and block bots. We do not use advertising cookies or third-party ad pixels.</p>
-    <p>If we use analytics, we choose privacy-friendly tools that do not build personal profiles, and we ask first where the law requires. Our newsletter may track opens and clicks. You can block this by turning off image loading in your email app, or by asking us to disable tracking for your address.</p>
+    <p>Our own pages do not set cookies or store anything in your browser. We do not use analytics tools, advertising cookies, or tracking pixels on our website.</p>
+    <p>Some third-party services load when you visit:</p>
+    <ul>
+      <li><strong>Google Fonts:</strong> every page loads its fonts from Google, which receives your IP address and basic browser details.</li>
+      <li><strong>Calendly:</strong> the scan page loads Calendly's booking script from assets.calendly.com when the page opens, and shows a Calendly booking calendar with your results. Calendly receives your IP address and basic browser details, and may set its own cookies under its own privacy policy.</li>
+      <li><strong>Gumroad:</strong> when you submit the waitlist form, your browser sends your email address to Gumroad. Gumroad may set its own cookies under its own privacy policy.</li>
+    </ul>
+    <p>Some pages also refer to animation scripts hosted on cdnjs.cloudflare.com and cdn.jsdelivr.net. Our site's security settings currently block these scripts, so your browser does not load them. <em class="ph">[CONFIRM]</em></p>
+    <p>Our scan and quiz report emails do not contain tracking pixels. Our newsletter may track opens and clicks. You can block this by turning off image loading in your email app, or by asking us to disable tracking for your address. <em class="ph">[CONFIRM]</em></p>
 
     <h2><span class="num">9.</span>How long we keep information</h2>
     <table>
       <thead><tr><th>Information</th><th>How long we keep it</th></tr></thead>
       <tbody>
-        <tr><td>Scan results linked to your email</td><td>12 months, then deleted or de-identified</td></tr>
-        <tr><td>Anonymous scans (no email given)</td><td>90 days</td></tr>
-        <tr><td>Newsletter choice and consent time from the scan form</td><td>With the scan record (12 months), and on the newsletter list until you unsubscribe</td></tr>
-        <tr><td>Scrambled IP address used for the scan limit</td><td>About two hours</td></tr>
-        <tr><td>Newsletter subscriber data</td><td>Until you unsubscribe, then deleted within 30 days (we keep a minimal suppression record so we never email you again)</td></tr>
-        <tr><td>Newsletter inactive for 24 months</td><td>Removed from the list</td></tr>
+        <tr><td>Scan results linked to your email</td><td>12 months, then deleted automatically</td></tr>
+        <tr><td>Anonymous scans (no email given)</td><td>90 days, then deleted automatically</td></tr>
+        <tr><td>Quiz answers, office details, and quiz reports (always linked to your email)</td><td>12 months, then deleted automatically, the same as scans that include an email</td></tr>
+        <tr><td>Newsletter choice and consent time from the scan or quiz form</td><td>With the scan or quiz record (12 months), and on the newsletter list until you unsubscribe</td></tr>
+        <tr><td>Scrambled IP address used for scan and quiz limits</td><td>About two hours</td></tr>
+        <tr><td>Newsletter subscriber data in Beehiiv</td><td>Until you unsubscribe, then deleted within 30 days (we keep a minimal suppression record so we never email you again) <em class="ph">[CONFIRM]</em></td></tr>
+        <tr><td>Newsletter inactive for 24 months</td><td>Removed from the list <em class="ph">[CONFIRM]</em></td></tr>
+        <tr><td>Waitlist email addresses in Gumroad</td><td>Until the plan opens or you ask us to remove you <em class="ph">[CONFIRM]</em></td></tr>
+        <tr><td>Purchase, inquiry, and booking records</td><td>As long as needed for the work and our tax and legal records <em class="ph">[CONFIRM]</em></td></tr>
         <tr><td>SMS and call consent records</td><td>5 years after consent ends, as legal proof of consent</td></tr>
         <tr><td>SMS opt-out (STOP) records</td><td>Kept so we never text you again</td></tr>
-        <tr><td>Server and security logs</td><td>90 days, unless needed to investigate an incident</td></tr>
+        <tr><td>Server and security logs</td><td>90 days, unless needed to investigate an incident <em class="ph">[CONFIRM]</em></td></tr>
         <tr><td>Support emails and call notes</td><td>24 months after last contact</td></tr>
       </tbody>
     </table>
+    <p>Automatic deletion can take a few days after the date above. Our database backups can keep a deleted scan or quiz record for up to 35 more days, after which it is gone.</p>
 
-    <h2><span class="num">10.</span>Your rights and choices</h2>
-    <p>Wherever you live, you can ask us to:</p>
+    <h2><span class="num">10.</span>Your choices and requests</h2>
     <ul>
-      <li>Tell you what personal information we hold about you and send you a copy.</li>
-      <li>Correct information that is wrong.</li>
-      <li>Delete your information.</li>
-      <li>Stop using your information for marketing.</li>
-      <li>Stop analytics tracking tied to you.</li>
+      <li><strong>Unsubscribe from the newsletter:</strong> click the unsubscribe link in any newsletter email, or email us.</li>
+      <li><strong>Leave the waitlist:</strong> use the unsubscribe link in any Gumroad email, or email us.</li>
+      <li><strong>Get a copy of your data:</strong> email us and we will tell you what personal information we hold about you and send you a copy.</li>
+      <li><strong>Correct your data:</strong> email us if something we hold is wrong.</li>
+      <li><strong>Delete your data:</strong> email us and we will delete your scan records, quiz records, and newsletter data, and ask our service providers to do the same. We may keep a minimal record that you asked, so we do not contact you again.</li>
+      <li><strong>Stop marketing:</strong> email us, use an unsubscribe link, or reply STOP to a text.</li>
     </ul>
-    <p>Residents of California, Colorado, Connecticut, Virginia, and other states with privacy laws may have additional rights. We honor them. We do not sell or share personal information for cross-context behavioral advertising, so there is nothing to opt out of on that front. We will honor Global Privacy Control browser signals as an opt-out request.</p>
-    <p>To make a request, email <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a> with the subject "Privacy Request." We will confirm your identity using only what we already have, usually your email or phone number. We will respond within 30 days, or sooner if the law requires. You may use an authorized agent. We will not treat you differently for using your rights. If we deny your request, you may appeal by replying to our decision.</p>
+    <p>Residents of California, Colorado, Connecticut, Virginia, and other states with privacy laws may have additional rights. We do not sell or share personal information for cross-context behavioral advertising, so there is nothing to opt out of on that front. We will treat Global Privacy Control browser signals as an opt-out request. <em class="ph">[CONFIRM]</em></p>
+    <p>To make a request, email <span class="ph">[PRIVACY CONTACT EMAIL]</span> with the subject "Privacy Request." We will confirm your identity using only what we already have, usually your email address or phone number. We will respond within 30 days, or sooner if the law requires. You may use an authorized agent. We will not treat you differently for making a request. If we deny your request, you may appeal by replying to our decision.</p>
 
     <h2><span class="num">11.</span>Security</h2>
-    <p>We protect your information with encryption in transit, access limited to people who need it, multi-factor authentication on our accounts, vendor review, and a written incident response plan. We follow the New York SHIELD Act.</p>
+    <p>We protect your information with encryption in transit, encryption of our scan and quiz databases at rest, access limited to people who need it, multi-factor authentication on our accounts, vendor review, and a written incident response plan. <em class="ph">[CONFIRM]</em></p>
     <p>No system is perfectly secure. If a breach puts your personal information at risk, we will notify you and the authorities as the law requires, without unreasonable delay.</p>
 
     <h2><span class="num">12.</span>Children</h2>
-    <p>Our Services are for businesses and adults. We do not knowingly collect personal information from anyone under 16. If you believe a child gave us information, email us and we will delete it.</p>
+    <p>Our website and Services are not meant for children. They are for businesses and adults. We do not knowingly collect personal information from anyone under 16 <em class="ph">[CONFIRM]</em>. If you believe a child gave us information, email us at <span class="ph">[PRIVACY CONTACT EMAIL]</span> and we will delete it.</p>
 
     <h2><span class="num">13.</span>Where we process data</h2>
     <p>We store and process data in the United States. If you contact us from outside the U.S., your information will be transferred here. Where required, we use appropriate safeguards and will share details on request.</p>
 
     <h2><span class="num">14.</span>Changes to this policy</h2>
-    <p>If we make a material change, we will post the new version here and email subscribers at least 30 days before it takes effect. We will not use information collected under an earlier version for a materially different purpose without telling you and, where required, getting your consent.</p>
+    <p>When we change this policy, we post the new version here and update the "Last updated" date at the top. If we make a material change, we will also email subscribers at least 30 days before it takes effect. We will not use information collected under an earlier version for a materially different purpose without telling you and, where required, getting your consent.</p>
 
     <h2><span class="num">15.</span>Contact us</h2>
     <div class="contact">
@@ -281,7 +334,7 @@
       Attn: Privacy<br>
       99 Wall Street, Suite 4734<br>
       New York, NY 10005, United States<br>
-      Email: <a class="mail" href="mailto:support@cyberprotectionconsultingservices.com">support@cyberprotectionconsultingservices.com</a><br>
+      Email: <span class="ph">[PRIVACY CONTACT EMAIL]</span><br>
       Phone: <a class="mail" href="tel:+13479734629">(347) 973-4629</a>
     </div>
   </article>
